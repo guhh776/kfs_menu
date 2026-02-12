@@ -2217,7 +2217,7 @@
                     setHeaderLoading(false);
                     showGpsNotify(err.code);
                 },
-                { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false }
+                { timeout: 12000, maximumAge: 30000, enableHighAccuracy: true }
             );
         }
 
@@ -2275,21 +2275,35 @@
         function retryGeolocationFromSheet() {
             const btn = document.getElementById('gpsRetryBtn');
             const txt = document.getElementById('gpsRetryText');
-            if (txt) txt.textContent = currentLang === 'uz' ? 'Aniqlanmoqda...' : 'Определяется...';
+            const uz  = currentLang === 'uz';
+
+            if (txt) txt.textContent = uz ? 'Aniqlanmoqda...' : 'Определяется...';
             if (btn) btn.disabled = true;
+
+            // Safety reset — agar browser callback qaytarmasa
+            const safetyTimer = setTimeout(() => {
+                if (btn) btn.disabled = false;
+                if (txt) txt.textContent = uz ? 'GPS bilan aniqlash' : 'Определить по GPS';
+            }, 15000);
+
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
-                    if (txt) txt.textContent = currentLang === 'uz' ? 'GPS bilan aniqlash' : 'Определить по GPS';
+                    clearTimeout(safetyTimer);
+                    if (txt) txt.textContent = uz ? 'GPS bilan aniqlash' : 'Определить по GPS';
                     if (btn) btn.disabled = false;
                     await onLocationObtained(pos);
                     renderSavedLocations();
                 },
                 (err) => {
-                    if (txt) txt.textContent = currentLang === 'uz' ? 'GPS bilan aniqlash' : 'Определить по GPS';
+                    clearTimeout(safetyTimer);
+                    if (txt) txt.textContent = uz ? 'GPS bilan aniqlash' : 'Определить по GPS';
                     if (btn) btn.disabled = false;
-                    // silently ignore — user can type manually
                 },
-                { timeout: 10000, maximumAge: 0, enableHighAccuracy: false }
+                {
+                    enableHighAccuracy: true,  // mobil GPS uchun shart
+                    timeout: 12000,
+                    maximumAge: 30000          // 30 soniya cache — tezroq javob
+                }
             );
         }
 
