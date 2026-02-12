@@ -814,9 +814,41 @@
         .min-order-bar .min-need { font-size: 0.78rem; font-weight: 800; color: #E65100; flex-shrink: 0; }
 
         /* ========================
-           CHECKOUT SHEET
+           LOCATION PERMISSION SHEET
         ======================== */
+        /* ========================
+           LOCATION NOTIFICATION BANNER
+        ======================== */
+        .loc-notify-banner {
+            display: none;
+            align-items: center;
+            gap: 0.65rem;
+            background: #FFF8E1;
+            border-bottom: 2px solid #FFE082;
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            animation: bannerSlide 0.3s ease;
+        }
+        .loc-notify-banner.visible { display: flex; }
+        @keyframes bannerSlide {
+            from { transform: translateY(-100%); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        .loc-notify-icon { font-size: 1.3rem; flex-shrink: 0; }
+        .loc-notify-txt  { flex: 1; font-size: 0.8rem; font-weight: 600; color: #5D4037; line-height: 1.4; }
+        .loc-notify-btn  {
+            background: #E4002B; color: #fff; border: none;
+            border-radius: 10px; padding: 0.45rem 0.85rem;
+            font-size: 0.78rem; font-weight: 700; cursor: pointer;
+            font-family: 'Poppins', sans-serif; flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .loc-notify-btn:active { opacity: 0.85; }
+
         .checkout-overlay {
+
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5);
@@ -1658,6 +1690,15 @@
     </div>
 
     <!-- ========================
+         LOCATION NOTIFY BANNER (sticky, no close)
+    ======================== -->
+    <div id="locNotifyBanner" class="loc-notify-banner">
+        <span class="loc-notify-icon">📍</span>
+        <span class="loc-notify-txt" id="locNotifyTxt">Yetkazib berish uchun joylashuvga ruxsat bering</span>
+        <button class="loc-notify-btn" id="locNotifyBtn" onclick="retryGeolocation()">Ruxsat berish</button>
+    </div>
+
+    <!-- ========================
          CHECKOUT SHEET
     ======================== -->
     <div id="checkoutOverlay" class="checkout-overlay" onclick="closeCheckout()"></div>
@@ -1827,6 +1868,11 @@
                 <div class="add-location-btn-icon">+</div>
                 <span class="add-location-btn-text">Yangi manzil qo'shish</span>
             </button>
+            <!-- GPS retry button -->
+            <button id="gpsRetryBtn" class="add-location-btn" onclick="retryGeolocationFromSheet()" style="background:#F0F7FF;margin-top:0.5rem">
+                <div class="add-location-btn-icon" style="background:#E3F2FD;color:#1565C0">📡</div>
+                <span class="add-location-btn-text" id="gpsRetryText" style="color:#1565C0">GPS bilan aniqlash</span>
+            </button>
         </div>
     </div>
 
@@ -1929,6 +1975,28 @@
                 contactLabel: "Muammo bo'lsa bog'laning",
                 goOrdersBtn: "Buyurtmalarimga o'tish →",
                 orderCancelled: "Buyurtma bekor qilindi",
+                locDeniedTitle: "Joylashuv ruxsati yo'q",
+                locUnavailTitle: "GPS o'chiq",
+                locDeniedSub: "Yetkazib berish manzilini aniqlash uchun joylashuv ruxsati kerak.",
+                locUnavailSub: "Telefoningizda GPS o'chiq. Yoqib, qayta urining.",
+                locRetry: "Qayta urinish",
+                locSkip: "O'tkazib yuborish",
+                // iOS steps
+                iosStep1Denied: "iPhone → <b>Sozlamalar</b> ga o'ting",
+                iosStep2Denied: "<b>Maxfiylik → Joylashuv xizmatlari</b>",
+                iosStep3Denied: "Brauzeringizni (Safari/Chrome) toping",
+                iosStep4Denied: "<b>Ilovadan foydalanayotganda</b> ni tanlang",
+                // iOS GPS off steps
+                iosStep1Unavail: "iPhone → <b>Sozlamalar</b> ga o'ting",
+                iosStep2Unavail: "<b>Maxfiylik → Joylashuv xizmatlari</b>",
+                iosStep3Unavail: "<b>Joylashuv xizmatlarini</b> yoqing",
+                // Android steps
+                andStep1Denied: "Telefon <b>Sozlamalari</b> ga o'ting",
+                andStep2Denied: "<b>Ilovalar</b> → Brauzeringizni toping",
+                andStep3Denied: "<b>Ruxsatlar → Joylashuv</b>",
+                andStep4Denied: "<b>Ilovadan foydalanayotganda</b> ni tanlang",
+                andStep1Unavail: "Siqib oling: <b>Tezkor sozlamalar</b>",
+                andStep2Unavail: "<b>Joylashuv</b> tugmasini toping va yoqing",
             },
             ru: {
                 searchPlaceholder: "Поиск",
@@ -1990,6 +2058,25 @@
                 contactLabel: "Если проблема — свяжитесь",
                 goOrdersBtn: "Перейти к заказам →",
                 orderCancelled: "Заказ отменён",
+                locDeniedTitle: "Нет разрешения на геолокацию",
+                locUnavailTitle: "GPS выключен",
+                locDeniedSub: "Нам нужно разрешение на геолокацию для определения адреса доставки.",
+                locUnavailSub: "GPS вашего телефона выключен. Включите и попробуйте снова.",
+                locRetry: "Попробовать снова",
+                locSkip: "Пропустить",
+                iosStep1Denied: "iPhone → откройте <b>Настройки</b>",
+                iosStep2Denied: "<b>Конфиденциальность → Геолокация</b>",
+                iosStep3Denied: "Найдите ваш браузер (Safari/Chrome)",
+                iosStep4Denied: "Выберите <b>При использовании</b>",
+                iosStep1Unavail: "iPhone → откройте <b>Настройки</b>",
+                iosStep2Unavail: "<b>Конфиденциальность → Геолокация</b>",
+                iosStep3Unavail: "Включите <b>Службы геолокации</b>",
+                andStep1Denied: "Откройте <b>Настройки</b> телефона",
+                andStep2Denied: "<b>Приложения</b> → найдите браузер",
+                andStep3Denied: "<b>Разрешения → Геолокация</b>",
+                andStep4Denied: "Выберите <b>При использовании</b>",
+                andStep1Unavail: "Откройте <b>Быстрые настройки</b>",
+                andStep2Unavail: "Найдите <b>Геолокация</b> и включите",
             }
         };
 
@@ -2104,6 +2191,10 @@
             const catPageTitle = document.querySelector('#categoriesPage .page-title');
             if (catPageTitle) catPageTitle.textContent = t('allCategories');
 
+            // GPS retry button in location sheet
+            const gpsRetryText = document.getElementById('gpsRetryText');
+            if (gpsRetryText) gpsRetryText.textContent = currentLang === 'uz' ? 'GPS bilan aniqlash' : 'Определить по GPS';
+
             // Side menu items
             document.querySelectorAll('[data-i18n-menu]').forEach(el => {
                 el.textContent = t(el.dataset.i18nMenu);
@@ -2177,13 +2268,121 @@
                 },
                 (err) => {
                     setHeaderLoading(false);
-                    console.info('Geolocation denied:', err.message);
-                },
+                    console.info('Geolocation error:', err.code, err.message);
+                    showLocNotify(err.code);                },
                 {
                     timeout: 10000,
                     maximumAge: 300000,
                     enableHighAccuracy: false  // faster on mobile
                 }
+            );
+        }
+
+        // ========================
+        // LOCATION NOTIFY BANNER
+        // ========================
+        function showLocNotify(errCode) {
+            const isUnavail = errCode === 2;
+            const banner = document.getElementById('locNotifyBanner');
+            const txt    = document.getElementById('locNotifyTxt');
+            const btn    = document.getElementById('locNotifyBtn');
+            if (!banner) return;
+
+            if (isUnavail) {
+                txt.textContent = currentLang === 'uz'
+                    ? '📍 GPS o\'chiq — telefoningizda yoqing va qayta urining'
+                    : '📍 GPS выключен — включите в телефоне и попробуйте снова';
+                btn.textContent = currentLang === 'uz' ? 'Qayta urinish' : 'Попробовать';
+            } else {
+                txt.textContent = currentLang === 'uz'
+                    ? '📍 Yetkazib berish uchun joylashuvga ruxsat bering'
+                    : '📍 Разрешите геолокацию для доставки';
+                btn.textContent = currentLang === 'uz' ? 'Ruxsat berish' : 'Разрешить';
+            }
+            banner.classList.add('visible');
+        }
+
+        function hideLocNotify() {
+            const banner = document.getElementById('locNotifyBanner');
+            if (banner) banner.classList.remove('visible');
+        }
+
+        function retryGeolocation() {
+            const btn = document.getElementById('locNotifyBtn');
+            if (btn) btn.textContent = currentLang === 'uz' ? 'Aniqlanmoqda...' : 'Определяется...';
+
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    hideLocNotify();
+                    savedLocations = savedLocations.filter(l => !l.isGps);
+                    const gpsLoc = {
+                        id: 'gps_' + Date.now(),
+                        street: `📡 ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
+                        apt: '', floor: '', note: '',
+                        isGps: true, lat: latitude, lng: longitude
+                    };
+                    savedLocations.unshift(gpsLoc);
+                    selectedLocationId = gpsLoc.id;
+                    saveLocationsToStorage();
+                    setHeaderLoading(false);
+                    updateHeaderLocation();
+                    try {
+                        const address = await reverseGeocode(latitude, longitude);
+                        if (address) {
+                            gpsLoc.street = address;
+                            saveLocationsToStorage();
+                            updateHeaderLocation();
+                        }
+                    } catch(e) {}
+                },
+                (err) => {
+                    setHeaderLoading(false);
+                    showLocNotify(err.code);
+                },
+                { timeout: 10000, maximumAge: 0, enableHighAccuracy: false }
+            );
+        }
+
+        function retryGeolocationFromSheet() {
+            const btn = document.getElementById('gpsRetryBtn');
+            const txt = document.getElementById('gpsRetryText');
+            if (txt) txt.textContent = currentLang === 'uz' ? 'Aniqlanmoqda...' : 'Определяется...';
+            if (btn) btn.disabled = true;
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    hideLocNotify();
+                    savedLocations = savedLocations.filter(l => !l.isGps);
+                    const gpsLoc = {
+                        id: 'gps_' + Date.now(),
+                        street: `📡 ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
+                        apt: '', floor: '', note: '',
+                        isGps: true, lat: latitude, lng: longitude
+                    };
+                    savedLocations.unshift(gpsLoc);
+                    selectedLocationId = gpsLoc.id;
+                    saveLocationsToStorage();
+                    updateHeaderLocation();
+                    renderSavedLocations();
+                    if (txt) txt.textContent = currentLang === 'uz' ? 'GPS bilan aniqlash' : 'Определить по GPS';
+                    if (btn) btn.disabled = false;
+                    try {
+                        const address = await reverseGeocode(latitude, longitude);
+                        if (address) {
+                            gpsLoc.street = address;
+                            saveLocationsToStorage();
+                            updateHeaderLocation();
+                            renderSavedLocations();
+                        }
+                    } catch(e) {}
+                },
+                (err) => {
+                    if (txt) txt.textContent = currentLang === 'uz' ? 'GPS bilan aniqlash' : 'Определить по GPS';
+                    if (btn) btn.disabled = false;
+                    showLocNotify(err.code);
+                },
+                { timeout: 10000, maximumAge: 0, enableHighAccuracy: false }
             );
         }
 
