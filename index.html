@@ -2130,62 +2130,87 @@
         function requestAutoGeolocation() {
             if (!('geolocation' in navigator)) return;
 
-            // If GPS location already saved — no need to ask again
-            const hasGps = savedLocations.some(l => l.isGps);
-            if (hasGps) return;
+            // If GPS location already saved — just update display
+            const existingGps = savedLocations.find(l => l.isGps);
+            if (existingGps) {
+                if (!selectedLocationId) selectedLocationId = existingGps.id;
+                updateHeaderLocation();
+                return;
+            }
+
+            setHeaderLoading(true);
 
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
                     const { latitude, longitude } = pos.coords;
-                    setHeaderLoading(true);
+
+                    // 1. Show coords immediately as fallback
+                    const fallbackAddr = `📡 ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+
+                    savedLocations = savedLocations.filter(l => !l.isGps);
+                    const gpsLoc = {
+                        id: 'gps_' + Date.now(),
+                        street: fallbackAddr,
+                        apt: '', floor: '', note: '',
+                        isGps: true,
+                        lat: latitude,
+                        lng: longitude
+                    };
+                    savedLocations.unshift(gpsLoc);
+                    selectedLocationId = gpsLoc.id;
+                    saveLocationsToStorage();
+                    setHeaderLoading(false);
+                    updateHeaderLocation(); // show immediately with coords
+
+                    // 2. Try to get real address from Nominatim
                     try {
                         const address = await reverseGeocode(latitude, longitude);
-                        // Remove any old GPS location first
-                        savedLocations = savedLocations.filter(l => !l.isGps);
-
-                        const gpsLoc = {
-                            id: 'gps_' + Date.now(),
-                            street: address,
-                            apt: '',
-                            floor: '',
-                            note: '',
-                            isGps: true,
-                            lat: latitude,
-                            lng: longitude
-                        };
-                        savedLocations.unshift(gpsLoc); // add to top
-                        selectedLocationId = gpsLoc.id;
-                        saveLocationsToStorage();
-                        updateHeaderLocation();
+                        if (address) {
+                            gpsLoc.street = address;
+                            saveLocationsToStorage();
+                            updateHeaderLocation(); // update with real address
+                        }
                     } catch(e) {
-                        console.warn('Reverse geocode failed:', e);
-                    } finally {
-                        setHeaderLoading(false);
+                        console.info('Reverse geocode failed, using coords:', e.message);
+                        // Already showing coords — no action needed
                     }
                 },
                 (err) => {
-                    // User denied or error — silent fail, user can add manually
-                    console.info('Geolocation denied or unavailable:', err.message);
+                    setHeaderLoading(false);
+                    console.info('Geolocation denied:', err.message);
                 },
-                { timeout: 10000, maximumAge: 60000 }
+                {
+                    timeout: 10000,
+                    maximumAge: 300000,
+                    enableHighAccuracy: false  // faster on mobile
+                }
             );
         }
 
         async function reverseGeocode(lat, lng) {
             const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=uz,ru`;
-            const res = await fetch(url, {
-                headers: { 'Accept-Language': 'uz,ru' }
-            });
-            const data = await res.json();
-            const a = data.address || {};
-            // Build a short readable address
-            const parts = [];
-            if (a.road || a.pedestrian || a.street) parts.push(a.road || a.pedestrian || a.street);
-            if (a.house_number) parts.push(a.house_number);
-            if (!parts.length && a.suburb) parts.push(a.suburb);
-            if (!parts.length && a.neighbourhood) parts.push(a.neighbourhood);
-            if (!parts.length && a.city_district) parts.push(a.city_district);
-            return parts.length ? parts.join(', ') : (data.display_name || 'Joriy joylashuv');
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 8000); // 8 sec timeout
+            try {
+                const res = await fetch(url, {
+                    signal: controller.signal,
+                    headers: { 'Accept-Language': 'uz,ru' }
+                });
+                clearTimeout(timer);
+                const data = await res.json();
+                const a = data.address || {};
+                const parts = [];
+                if (a.road || a.pedestrian || a.street) parts.push(a.road || a.pedestrian || a.street);
+                if (a.house_number) parts.push(a.house_number);
+                if (!parts.length && a.suburb) parts.push(a.suburb);
+                if (!parts.length && a.neighbourhood) parts.push(a.neighbourhood);
+                if (!parts.length && a.city_district) parts.push(a.city_district);
+                if (!parts.length && a.city) parts.push(a.city);
+                return parts.length ? parts.join(', ') : (data.display_name ? data.display_name.split(',').slice(0,2).join(',').trim() : null);
+            } catch(e) {
+                clearTimeout(timer);
+                throw e;
+            }
         }
 
         function setHeaderLoading(isLoading) {
