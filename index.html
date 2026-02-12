@@ -817,53 +817,18 @@
            LOCATION PERMISSION SHEET
         ======================== */
         /* ========================
-           GPS NOTIFICATION CARD
+           GPS NOTIFICATION (small, non-blocking)
         ======================== */
         .gps-notify-card {
             display: none;
-            margin: 1.25rem 1rem;
-            background: #fff;
-            border-radius: 18px;
-            padding: 1.35rem 1.25rem 1.25rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.09);
-            flex-direction: column;
             align-items: center;
-            text-align: center;
-            gap: 0.5rem;
-            animation: fadeInCard 0.35s ease;
+            gap: 0.6rem;
+            background: #FFF8E1;
+            border-bottom: 2px solid #FFE082;
+            padding: 0.65rem 1rem;
         }
         .gps-notify-card.visible { display: flex; }
-        @keyframes fadeInCard {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .gnc-pulse {
-            width: 64px; height: 64px; border-radius: 50%;
-            background: #FFF0F0;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.9rem; margin-bottom: 0.25rem;
-            position: relative;
-        }
-        .gnc-pulse::after {
-            content: '';
-            position: absolute; inset: -6px;
-            border-radius: 50%;
-            border: 3px solid rgba(228,0,43,0.2);
-            animation: pulseRing 1.8s ease-out infinite;
-        }
-        @keyframes pulseRing {
-            0%   { transform: scale(0.9); opacity: 0.8; }
-            100% { transform: scale(1.3); opacity: 0; }
-        }
-        .gnc-title { font-size: 1rem; font-weight: 800; color: #202124; }
-        .gnc-sub { font-size: 0.82rem; color: #888; line-height: 1.5; margin-bottom: 0.25rem; }
-        .gnc-status {
-            font-size: 0.75rem; font-weight: 700; color: #E65100;
-            background: #FFF3E0; border-radius: 20px;
-            padding: 0.25rem 0.75rem; margin-bottom: 0.4rem;
-        }
-        .gnc-status.checking { color: #1565C0; background: #E3F2FD; }
-        .gnc-status.success  { color: #2E7D32; background: #E8F5E9; }
+        .gnc-title { font-size: 0.8rem; font-weight: 600; color: #5D4037; flex: 1; }
 
         .checkout-overlay {
 
@@ -1707,14 +1672,10 @@
         </div>
     </div>
 
-    <!-- ========================
-         GPS NOTIFICATION CARD
-    ======================== -->
+    <!-- GPS small banner (non-blocking) -->
     <div id="gpsNotifyCard" class="gps-notify-card">
-        <div class="gnc-pulse">📍</div>
-        <div class="gnc-title" id="gncTitle">GPS o'chiq</div>
-        <div class="gnc-sub" id="gncSub">Yetkazib berish uchun qurilmangizda GPS ni yoqing</div>
-        <div class="gnc-status" id="gncStatus">GPS kutilmoqda...</div>
+        <span style="font-size:1.1rem">📍</span>
+        <span class="gnc-title" id="gncTitle">Manzil aniqlanmagan — buyurtma berishda kiritasiz</span>
     </div>
 
     <!-- ========================
@@ -2261,79 +2222,26 @@
         }
 
         // ========================
-        // GPS NOTIFICATION + AUTO POLLING
+        // GPS NOTIFICATION (non-blocking)
         // ========================
-        let gpsReady    = false;   // true = location obtained
-        let gpsPolling  = null;    // setInterval id
-
         function showGpsNotify(errCode) {
-            const card   = document.getElementById('gpsNotifyCard');
-            const title  = document.getElementById('gncTitle');
-            const sub    = document.getElementById('gncSub');
-            const status = document.getElementById('gncStatus');
+            const card  = document.getElementById('gpsNotifyCard');
+            const title = document.getElementById('gncTitle');
             if (!card) return;
-
             const uz = currentLang === 'uz';
-            const isGpsOff = errCode === 2;
-
-            title.textContent  = uz ? 'GPS kerak' : 'Нужен GPS';
-            sub.textContent    = isGpsOff
-                ? (uz ? 'Qurilmangizda GPS o\'chiq. Telefon sozlamalaridan yoqing — sayt avtomatik aniqlab oladi.'
-                      : 'GPS выключен. Включите в настройках телефона — сайт определит автоматически.')
-                : (uz ? 'Joylashuvga ruxsat bering — buyurtma yetkazib berish uchun kerak.'
-                      : 'Разрешите геолокацию — нужна для доставки.');
-            status.textContent = uz ? '⏳ GPS kutilmoqda...' : '⏳ Ожидаем GPS...';
-            status.className   = 'gnc-status';
+            title.textContent = uz
+                ? '📍 Manzil aniqlanmagan — buyurtma berishda kiritasiz'
+                : '📍 Адрес не определён — укажите при оформлении';
             card.classList.add('visible');
-
-            // Block checkout button
-            setCheckoutBlocked(true);
-
-            // Start background polling every 5 sec
-            stopGpsPolling();
-            gpsPolling = setInterval(() => {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => { onLocationObtained(pos); },
-                    () => { /* still no GPS, keep waiting */ },
-                    { timeout: 4000, maximumAge: 0, enableHighAccuracy: false }
-                );
-            }, 5000);
         }
 
         function hideGpsNotify() {
-            const card   = document.getElementById('gpsNotifyCard');
-            const status = document.getElementById('gncStatus');
-            if (card) {
-                const uz = currentLang === 'uz';
-                if (status) {
-                    status.textContent = uz ? '✅ Joylashuv aniqlandi!' : '✅ Местоположение найдено!';
-                    status.className   = 'gnc-status success';
-                }
-                setTimeout(() => card.classList.remove('visible'), 1200);
-            }
-            stopGpsPolling();
-            setCheckoutBlocked(false);
-        }
-
-        function stopGpsPolling() {
-            if (gpsPolling) { clearInterval(gpsPolling); gpsPolling = null; }
-        }
-
-        function setCheckoutBlocked(blocked) {
-            // Block both: bottom bar open + cart checkout button
-            const bar = document.getElementById('bottomCartBar');
-            const btn = document.querySelector('.checkout-btn');
-            if (bar) bar.style.pointerEvents = blocked ? 'none' : '';
-            if (bar) bar.style.opacity       = blocked ? '0.45' : '';
-            if (btn) btn.disabled            = blocked;
+            const card = document.getElementById('gpsNotifyCard');
+            if (card) card.classList.remove('visible');
         }
 
         async function onLocationObtained(pos) {
             const { latitude, longitude } = pos.coords;
-            stopGpsPolling();
-            gpsReady = true;
-
-            // Save GPS location
             savedLocations = savedLocations.filter(l => !l.isGps);
             const gpsLoc = {
                 id: 'gps_' + Date.now(),
@@ -2348,7 +2256,12 @@
             updateHeaderLocation();
             hideGpsNotify();
 
-            // Try to get real address
+            // If came from checkout → continue
+            if (checkoutAfterLocation) {
+                checkoutAfterLocation = false;
+                setTimeout(() => { closeLocationSheet(); openCheckout(); }, 300);
+            }
+
             try {
                 const address = await reverseGeocode(latitude, longitude);
                 if (address) {
@@ -2357,19 +2270,6 @@
                     updateHeaderLocation();
                 }
             } catch(e) {}
-        }
-
-        function retryGeolocation() {
-            const status = document.getElementById('gncStatus');
-            if (status) {
-                status.textContent = currentLang === 'uz' ? '🔍 Aniqlanmoqda...' : '🔍 Определяется...';
-                status.className   = 'gnc-status checking';
-            }
-            navigator.geolocation.getCurrentPosition(
-                (pos) => { onLocationObtained(pos); },
-                (err) => { showGpsNotify(err.code); },
-                { timeout: 10000, maximumAge: 0, enableHighAccuracy: false }
-            );
         }
 
         function retryGeolocationFromSheet() {
@@ -2387,7 +2287,7 @@
                 (err) => {
                     if (txt) txt.textContent = currentLang === 'uz' ? 'GPS bilan aniqlash' : 'Определить по GPS';
                     if (btn) btn.disabled = false;
-                    showGpsNotify(err.code);
+                    // silently ignore — user can type manually
                 },
                 { timeout: 10000, maximumAge: 0, enableHighAccuracy: false }
             );
@@ -2492,7 +2392,13 @@
             saveLocationsToStorage();
             renderSavedLocations();
             updateHeaderLocation();
-            setTimeout(closeLocationSheet, 300);
+            setTimeout(() => {
+                closeLocationSheet();
+                if (checkoutAfterLocation) {
+                    checkoutAfterLocation = false;
+                    openCheckout();
+                }
+            }, 300);
         }
 
         function deleteLocation(id) {
@@ -2544,6 +2450,11 @@
             hideAddForm();
             renderSavedLocations();
             updateHeaderLocation();
+
+            if (checkoutAfterLocation) {
+                checkoutAfterLocation = false;
+                setTimeout(() => { closeLocationSheet(); openCheckout(); }, 300);
+            }
         }
 
         function updateHeaderLocation() {
@@ -2788,7 +2699,16 @@
             renderProducts();
         }
 
+        let checkoutAfterLocation = false; // flag: location sheet dan keyin checkout ochilsin
+
         function checkout() {
+            // Manzil yo'q → location sheet
+            if (!selectedLocationId) {
+                checkoutAfterLocation = true;
+                closeCart();
+                openLocationSheet();
+                return;
+            }
             openCheckout();
         }
 
