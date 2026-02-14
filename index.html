@@ -105,7 +105,7 @@
 
         .location-btn-icon {
             flex-shrink: 0;
-            color: #E4002B;
+            color: #FAB95B;
         }
 
         .location-btn-text {
@@ -171,6 +171,85 @@
         }
         
         /* Categories Section */
+
+        /* ── Hero Banner ──────────────────────────────────── */
+        .hero-banner {
+            background: linear-gradient(135deg, #FAB95B 0%, #F5A53A 100%);
+            padding: 1.4rem 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 140px; height: 140px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 50%;
+        }
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -50px; right: 60px;
+            width: 100px; height: 100px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+        .hero-logo {
+            width: 72px;
+            height: 72px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+        .hero-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 6px;
+        }
+        .hero-logo-placeholder {
+            font-size: 2rem;
+        }
+        .hero-text {
+            flex: 1;
+            z-index: 1;
+        }
+        .hero-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 0.2rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        .hero-sub {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+        .hero-badge {
+            position: absolute;
+            top: 0.8rem;
+            right: 1rem;
+            background: #fff;
+            color: #F5A53A;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
         .categories-section {
             padding: 1.5rem 1rem 1rem;
         }
@@ -277,7 +356,7 @@
         .product-image {
             width: 100%;
             height: 110px;
-            background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEB 100%);
+            background: linear-gradient(135deg, #FFFBF0 0%, #FFF3D4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -347,7 +426,7 @@
         .detail-image {
             width: 100%;
             height: 300px;
-            background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEB 100%);
+            background: linear-gradient(135deg, #FFFBF0 0%, #FFF3D4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -493,14 +572,14 @@
         }
         
         .cart-row {
-            background: #E4002B;
+            background: #FAB95B;
             border-radius: 16px;
             padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            box-shadow: 0 4px 16px rgba(228, 0, 43, 0.3);
+            box-shadow: 0 4px 16px rgba(250, 185, 91, 0.3);
         }
         
         .cart-row-total {
@@ -711,7 +790,7 @@
             font-size: 2.5rem;
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEB 100%);
+            background: linear-gradient(135deg, #FFFBF0 0%, #FFF3D4 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -742,7 +821,7 @@
         .remove-btn {
             background: none;
             border: none;
-            color: #E4002B;
+            color: #FAB95B;
             cursor: pointer;
             padding: 0.5rem;
         }
@@ -792,7 +871,7 @@
         .checkout-btn {
             width: 100%;
             padding: 1rem;
-            background: #E4002B;
+            background: #FAB95B;
             border: none;
             border-radius: 12px;
             color: #FFFFFF;
@@ -800,7 +879,7 @@
             font-weight: 700;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
-            box-shadow: 0 4px 12px rgba(228, 0, 43, 0.3);
+            box-shadow: 0 4px 12px rgba(250, 185, 91, 0.3);
         }
         
         .checkout-btn:active {
@@ -898,7 +977,7 @@
         .checkout-addr-icon { font-size: 1.2rem; flex-shrink: 0; }
         .checkout-addr-txt { font-size: 0.88rem; font-weight: 600; color: #202124; flex: 1; }
         .checkout-addr-change {
-            font-size: 0.75rem; font-weight: 700; color: #E4002B;
+            font-size: 0.75rem; font-weight: 700; color: #FAB95B;
             background: none; border: none; cursor: pointer;
             font-family: 'Poppins', sans-serif; flex-shrink: 0;
         }
@@ -913,7 +992,7 @@
         .checkout-row-val { font-size: 0.85rem; font-weight: 700; color: #202124; }
         .checkout-divider { height: 1px; background: #E0E0E0; margin: 0.5rem 0; }
         .checkout-total-label { font-size: 0.95rem; font-weight: 800; color: #202124; }
-        .checkout-total-val { font-size: 1.1rem; font-weight: 800; color: #E4002B; }
+        .checkout-total-val { font-size: 1.1rem; font-weight: 800; color: #FAB95B; }
         /* Stale location warning */
         .stale-loc-warn {
             display: none;
@@ -928,17 +1007,17 @@
         .stale-loc-warn.visible { display: flex; }
         .stale-loc-warn-txt { font-size: 0.8rem; color: #5D4037; flex: 1; line-height: 1.45; font-weight: 500; }
         .stale-loc-warn-btn {
-            background: none; border: none; color: #E4002B;
+            background: none; border: none; color: #FAB95B;
             font-size: 0.8rem; font-weight: 700; cursor: pointer;
             font-family: 'Poppins', sans-serif; padding: 0; flex-shrink: 0; margin-top: 1px;
         }
 
         .confirm-btn {
-            width: 100%; padding: 1rem; background: #E4002B;
+            width: 100%; padding: 1rem; background: #FAB95B;
             border: none; border-radius: 14px; color: #fff;
             font-size: 1.05rem; font-weight: 700; cursor: pointer;
             font-family: 'Poppins', sans-serif;
-            box-shadow: 0 4px 16px rgba(228,0,43,0.3);
+            box-shadow: 0 4px 16px rgba(250,185,91,0.3);
             transition: opacity 0.2s;
         }
         .confirm-btn:active { opacity: 0.85; transform: scale(0.98); }
@@ -1012,11 +1091,11 @@
             transition: background 0.4s;
         }
         .ost-step.active .ost-dot {
-            background: #E4002B;
-            border-color: #E4002B;
-            box-shadow: 0 0 0 4px rgba(228,0,43,0.15);
+            background: #FAB95B;
+            border-color: #FAB95B;
+            box-shadow: 0 0 0 4px rgba(250,185,91,0.15);
         }
-        .ost-step.active span { color: #E4002B; }
+        .ost-step.active span { color: #FAB95B; }
         .ost-step.done .ost-dot {
             background: #4CAF50;
             border-color: #4CAF50;
@@ -1040,7 +1119,7 @@
         .cancel-timer-ring svg { transform: rotate(-90deg); }
         .cancel-timer-ring circle.bg { fill: none; stroke: #F5F5F5; stroke-width: 5; }
         .cancel-timer-ring circle.prog {
-            fill: none; stroke: #E4002B; stroke-width: 5;
+            fill: none; stroke: #FAB95B; stroke-width: 5;
             stroke-linecap: round;
             stroke-dasharray: 201;
             stroke-dashoffset: 0;
@@ -1049,15 +1128,15 @@
         .cancel-timer-num {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 1.15rem; font-weight: 800; color: #E4002B;
+            font-size: 1.15rem; font-weight: 800; color: #FAB95B;
         }
         .cancel-order-btn {
-            background: none; border: 2px solid #E4002B; border-radius: 12px;
-            color: #E4002B; padding: 0.6rem 1.4rem;
+            background: none; border: 2px solid #FAB95B; border-radius: 12px;
+            color: #FAB95B; padding: 0.6rem 1.4rem;
             font-size: 0.85rem; font-weight: 700; cursor: pointer;
             font-family: 'Poppins', sans-serif;
         }
-        .cancel-order-btn:active { background: #FFF0F0; }
+        .cancel-order-btn:active { background: #FFF8E8; }
         .cancel-expired { font-size: 0.8rem; color: #999; display: none; padding: 0.4rem 0; }
         .contact-box {
             background: #F5F5F5; border-radius: 14px;
@@ -1170,7 +1249,7 @@
         }
 
         .location-item.selected {
-            border-color: #E4002B;
+            border-color: #FAB95B;
             background: #FFF5F6;
         }
 
@@ -1221,14 +1300,14 @@
         }
 
         .location-item-delete:active {
-            color: #E4002B;
+            color: #FAB95B;
         }
 
         .selected-check {
             position: absolute;
             top: 0.6rem;
             right: 0.6rem;
-            background: #E4002B;
+            background: #FAB95B;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -1259,7 +1338,7 @@
         }
 
         .add-location-btn:active {
-            border-color: #E4002B;
+            border-color: #FAB95B;
             background: #FFF5F6;
         }
 
@@ -1273,7 +1352,7 @@
             justify-content: center;
             flex-shrink: 0;
             font-size: 1.4rem;
-            color: #E4002B;
+            color: #FAB95B;
         }
 
         .add-location-btn-text {
@@ -1328,7 +1407,7 @@
 
         .form-input:focus {
             outline: none;
-            border-color: #E4002B;
+            border-color: #FAB95B;
         }
 
         .form-row {
@@ -1362,7 +1441,7 @@
         .btn-save-location {
             flex: 2;
             padding: 0.8rem;
-            background: #E4002B;
+            background: #FAB95B;
             border: none;
             border-radius: 10px;
             font-size: 0.9rem;
@@ -1370,7 +1449,7 @@
             color: #FFFFFF;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
-            box-shadow: 0 3px 10px rgba(228,0,43,0.25);
+            box-shadow: 0 3px 10px rgba(250,185,91,0.25);
         }
 
         .btn-save-location:active {
@@ -1408,7 +1487,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #E4002B;
+            background: #FAB95B;
             animation: pulse 1.2s ease-in-out infinite;
         }
 
@@ -1461,7 +1540,7 @@
             background: #F8F8F8;
             transition: all 0.2s; margin-bottom: 0.75rem;
         }
-        .lang-option.active-lang { border-color: #E4002B; background: #FFF5F6; }
+        .lang-option.active-lang { border-color: #FAB95B; background: #FFF5F6; }
         .lang-option:active { transform: scale(0.98); }
         .lang-option-flag { 
             flex-shrink: 0; 
@@ -1476,7 +1555,7 @@
         .lang-option-native { font-size: 0.8rem; color: #999; font-weight: 500; }
         .lang-check {
             width: 26px; height: 26px; border-radius: 50%;
-            background: #E4002B; display: none;
+            background: #FAB95B; display: none;
             align-items: center; justify-content: center; flex-shrink: 0;
         }
         .lang-option.active-lang .lang-check { display: flex; }
@@ -1499,7 +1578,7 @@
                 <!-- Location Button -->
                 <button class="location-btn" onclick="openLocationSheet()">
                     <div class="location-btn-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#E4002B">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#FAB95B">
                             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
                     </div>
@@ -1529,6 +1608,20 @@
             </div>
         </div>
         
+        <!-- HERO BANNER -->
+        <div class="hero-banner" id="heroBanner">
+            <div class="hero-logo" id="heroLogoBox">
+                <!-- Logo rasmingizni shu yerga qo'ying: -->
+                <!-- <img src="logo.png" alt="Logo"> -->
+                <span class="hero-logo-placeholder">🍗</span>
+            </div>
+            <div class="hero-text">
+                <div class="hero-title" id="heroTitle">KFC Riston</div>
+                <div class="hero-sub" id="heroSub">Tez va mazali taom yetkazish</div>
+            </div>
+            <div class="hero-badge">24/7</div>
+        </div>
+
         <div class="categories-section">
             <div class="section-title">
                 <h2>Категории</h2>
@@ -2083,6 +2176,8 @@
                 checkoutDeliveryFree: "Bepul",
                 checkoutTotalLabel: "Jami to'lov",
                 confirmBtn: "✅ Tasdiqlash",
+                heroTitle: "KFC Riston",
+                heroSub: "Tez va mazali taom yetkazish",
                 successTitle: "Buyurtma berildi! 🎉",
                 successSub: "Buyurtmangiz qabul qilindi.\nAdmin tez orada tasdiqlaydi.",
                 cancelTimerLabel: "Bekor qilish imkoni",
@@ -2166,6 +2261,8 @@
                 checkoutDeliveryFree: "Бесплатно",
                 checkoutTotalLabel: "Итого к оплате",
                 confirmBtn: "✅ Подтвердить",
+                heroTitle: "KFC Рiston",
+                heroSub: "Быстрая и вкусная доставка еды",
                 successTitle: "Заказ принят! 🎉",
                 successSub: "Ваш заказ получен.\nАдмин скоро подтвердит.",
                 cancelTimerLabel: "Можно отменить",
@@ -2237,7 +2334,11 @@
             if (si) si.placeholder = t('searchPlaceholder');
 
             // Categories section title
-            const catTitle = document.querySelector('.categories-section .section-title h2');
+            const heroTitle = document.getElementById('heroTitle');
+                const heroSub = document.getElementById('heroSub');
+                if (heroTitle) heroTitle.textContent = t('heroTitle');
+                if (heroSub) heroSub.textContent = t('heroSub');
+                const catTitle = document.querySelector('.categories-section .section-title h2');
             if (catTitle) catTitle.textContent = t('categories');
 
             // View all
@@ -2507,11 +2608,11 @@
                     <div class="location-item ${loc.id === selectedLocationId ? 'selected' : ''}" onclick="selectLocation('${loc.id}')">
                         <div class="location-item-icon">
                             ${loc.isGps
-                                ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="${loc.id === selectedLocationId ? '#E4002B' : '#999'}">
+                                ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="${loc.id === selectedLocationId ? '#FAB95B' : '#999'}">
                                     <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-                                    <circle cx="12" cy="12" r="8" fill="none" stroke="${loc.id === selectedLocationId ? '#E4002B' : '#999'}" stroke-width="2"/>
+                                    <circle cx="12" cy="12" r="8" fill="none" stroke="${loc.id === selectedLocationId ? '#FAB95B' : '#999'}" stroke-width="2"/>
                                    </svg>`
-                                : `<svg width="22" height="22" viewBox="0 0 24 24" fill="${loc.id === selectedLocationId ? '#E4002B' : '#999'}">
+                                : `<svg width="22" height="22" viewBox="0 0 24 24" fill="${loc.id === selectedLocationId ? '#FAB95B' : '#999'}">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                                    </svg>`
                             }
@@ -2579,7 +2680,7 @@
         function saveNewLocation() {
             const street = document.getElementById('inputStreet').value.trim();
             if (!street) {
-                document.getElementById('inputStreet').style.borderColor = '#E4002B';
+                document.getElementById('inputStreet').style.borderColor = '#FAB95B';
                 document.getElementById('inputStreet').focus();
                 return;
             }
@@ -2880,7 +2981,7 @@
                 addrTxt.style.color = '#202124';
             } else {
                 addrTxt.textContent = t('checkoutAddrEmpty');
-                addrTxt.style.color = '#E4002B';
+                addrTxt.style.color = '#FAB95B';
             }
 
             // Stale GPS check (>5 soat)
