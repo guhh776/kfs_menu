@@ -1050,6 +1050,146 @@
         }
         .success-title { font-size: 1.5rem; font-weight: 800; color: #202124; margin-bottom: 0.5rem; }
         .success-sub { font-size: 0.9rem; color: #666; margin-bottom: 2rem; line-height: 1.5; }
+
+        /* ── Phone Verification ───────────────────────────── */
+        .phone-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .phone-overlay.active { opacity: 1; visibility: visible; }
+
+        .phone-sheet {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #fff;
+            border-radius: 24px 24px 0 0;
+            padding: 1.5rem 1.25rem 2rem;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
+            z-index: 9001;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .phone-sheet.active { transform: translateY(0); }
+
+        .phone-handle {
+            width: 40px; height: 4px;
+            background: #E0E0E0;
+            border-radius: 2px;
+            margin: 0 auto 1.2rem;
+        }
+        .phone-icon {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+        .phone-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #202124;
+            text-align: center;
+            margin-bottom: 0.4rem;
+        }
+        .phone-sub {
+            font-size: 0.83rem;
+            color: #888;
+            text-align: center;
+            margin-bottom: 1.4rem;
+            line-height: 1.4;
+        }
+        .phone-input-wrap {
+            display: flex;
+            align-items: center;
+            background: #F5F5F5;
+            border-radius: 14px;
+            padding: 0.15rem 0.15rem 0.15rem 1rem;
+            margin-bottom: 0.8rem;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .phone-input-wrap:focus-within { border-color: #FAB95B; background: #fff; }
+        .phone-prefix {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #202124;
+            flex-shrink: 0;
+            margin-right: 0.3rem;
+        }
+        .phone-input-wrap input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #202124;
+            outline: none;
+            padding: 0.75rem 0;
+            letter-spacing: 1px;
+        }
+        .phone-error {
+            font-size: 0.8rem;
+            color: #E53935;
+            text-align: center;
+            margin-bottom: 0.8rem;
+            min-height: 1.1rem;
+        }
+        .phone-btn {
+            width: 100%;
+            padding: 0.95rem;
+            background: #FAB95B;
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .phone-btn:active { transform: scale(0.98); }
+        .phone-btn:disabled { opacity: 0.6; }
+
+        .otp-sent-msg {
+            font-size: 0.82rem;
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .otp-input-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+        .otp-input-wrap input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 14px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 6px;
+            outline: none;
+            color: #202124;
+            transition: border-color 0.2s;
+        }
+        .otp-input-wrap input:focus { border-color: #FAB95B; }
+        .phone-resend {
+            text-align: center;
+            font-size: 0.82rem;
+            color: #FAB95B;
+            cursor: pointer;
+            margin-top: 0.8rem;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        #recaptcha-container { display: none; }
         /* ── Order Status Tracker ── */
         .order-status-track {
             display: flex;
@@ -1560,6 +1700,82 @@
         }
         .lang-option.active-lang .lang-check { display: flex; }
     </style>
+  <!-- Firebase Phone Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCEY4cXlL183nu4-g79uq-ZcOKioiA3mu8",
+      authDomain: "kfc-menu-80a10.firebaseapp.com",
+      projectId: "kfc-menu-80a10",
+      storageBucket: "kfc-menu-80a10.firebasestorage.app",
+      messagingSenderId: "719883913547",
+      appId: "1:719883913547:web:ee9af34086b3a1156080ce"
+    };
+
+    const fbApp = initializeApp(firebaseConfig);
+    const auth = getAuth(fbApp);
+    auth.languageCode = 'uz';
+    let confirmationResult = null;
+
+    window.sendOTP = async function() {
+      const raw = document.getElementById('phoneInput').value.trim().replace(/\D/g,'');
+      const phone = '+998' + raw;
+      if (raw.length < 9) { showPhoneError("Telefon raqamni to'liq kiriting"); return; }
+
+      const btn = document.getElementById('sendOtpBtn');
+      btn.disabled = true; btn.textContent = '⏳ Yuborilmoqda...';
+      hidePhoneError();
+
+      try {
+        if (!window._rcv) {
+          window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible', callback: ()=>{} });
+        }
+        confirmationResult = await signInWithPhoneNumber(auth, phone, window._rcv);
+        document.getElementById('phoneStep1').style.display = 'none';
+        document.getElementById('phoneStep2').style.display = 'block';
+        document.getElementById('otpSentMsg').textContent = phone + ' ga SMS yuborildi ✅';
+        setTimeout(()=>document.getElementById('otpInput').focus(), 200);
+      } catch(e) {
+        console.error(e);
+        let msg = 'Xato yuz berdi. Qayta urining.';
+        if (e.code === 'auth/invalid-phone-number') msg = "Telefon raqam noto'g'ri";
+        if (e.code === 'auth/too-many-requests') msg = 'Juda ko'p urinish. Kuting.';
+        showPhoneError(msg);
+        btn.disabled = false; btn.textContent = '📩 SMS yuborish';
+        if (window._rcv) { window._rcv.clear(); window._rcv = null; }
+      }
+    };
+
+    window.verifyOTP = async function() {
+      const code = document.getElementById('otpInput').value.trim();
+      if (code.length < 4) { showPhoneError('Kodni kiriting'); return; }
+      const btn = document.getElementById('verifyOtpBtn');
+      btn.disabled = true; btn.textContent = '⏳ Tekshirilmoqda...';
+      hidePhoneError();
+      try {
+        const result = await confirmationResult.confirm(code);
+        const phone = result.user.phoneNumber;
+        window._verifiedPhone = phone;
+        localStorage.setItem('kfc_verified_phone', phone);
+        closePhoneVerify();
+        window._pendingCheckout && window._pendingCheckout();
+      } catch(e) {
+        let msg = "Noto'g'ri kod.";
+        if (e.code === 'auth/code-expired') msg = "Kod muddati o'tdi. Qayta SMS yuborish.";
+        showPhoneError(msg);
+        btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+      }
+    };
+
+    window.resendOTP = function() {
+      document.getElementById('phoneStep1').style.display = 'block';
+      document.getElementById('phoneStep2').style.display = 'none';
+      if (window._rcv) { window._rcv.clear(); window._rcv = null; }
+      hidePhoneError();
+    };
+  </script>
 </head>
 <body>
     <!-- HOME PAGE -->
@@ -2496,7 +2712,7 @@
             // If came from checkout → continue
             if (checkoutAfterLocation) {
                 checkoutAfterLocation = false;
-                setTimeout(() => { closeLocationSheet(); openCheckout(); }, 300);
+                setTimeout(() => { closeLocationSheet(); openPhoneVerify(openCheckout); }, 300);
             }
 
             try {
@@ -2647,7 +2863,7 @@
                 closeLocationSheet();
                 if (checkoutAfterLocation) {
                     checkoutAfterLocation = false;
-                    openCheckout();
+                    openPhoneVerify(openCheckout);
                 }
             }, 300);
         }
@@ -2704,7 +2920,7 @@
 
             if (checkoutAfterLocation) {
                 checkoutAfterLocation = false;
-                setTimeout(() => { closeLocationSheet(); openCheckout(); }, 300);
+                setTimeout(() => { closeLocationSheet(); openPhoneVerify(openCheckout); }, 300);
             }
         }
 
@@ -2966,6 +3182,51 @@
         // ========================
         // CHECKOUT SHEET
         // ========================
+
+        // ── Phone Verification ──────────────────────────────
+        function openPhoneVerify(onSuccess) {
+            window._pendingCheckout = onSuccess;
+
+            // Agar avval tasdiqlangan bo'lsa — to'g'ri o'tamiz
+            const saved = localStorage.getItem('kfc_verified_phone');
+            if (saved) {
+                window._verifiedPhone = saved;
+                onSuccess();
+                return;
+            }
+
+            // Reset
+            document.getElementById('phoneStep1').style.display = 'block';
+            document.getElementById('phoneStep2').style.display = 'none';
+            document.getElementById('phoneInput').value = '';
+            document.getElementById('phoneError').textContent = '';
+            document.getElementById('sendOtpBtn').disabled = false;
+            document.getElementById('sendOtpBtn').textContent = '📩 SMS yuborish';
+
+            document.getElementById('phoneOverlay').classList.add('active');
+            document.getElementById('phoneSheet').classList.add('active');
+            setTimeout(() => document.getElementById('phoneInput').focus(), 400);
+        }
+
+        function closePhoneVerify() {
+            document.getElementById('phoneOverlay').classList.remove('active');
+            document.getElementById('phoneSheet').classList.remove('active');
+        }
+
+        function showPhoneError(msg) {
+            const e1 = document.getElementById('phoneError');
+            const e2 = document.getElementById('phoneError2');
+            if (e1) e1.textContent = msg;
+            if (e2) e2.textContent = msg;
+        }
+
+        function hidePhoneError() {
+            const e1 = document.getElementById('phoneError');
+            const e2 = document.getElementById('phoneError2');
+            if (e1) e1.textContent = '';
+            if (e2) e2.textContent = '';
+        }
+
         function openCheckout() {
             // Fill address
             const locs = JSON.parse(localStorage.getItem('kfc_locations') || '[]');
@@ -3069,7 +3330,8 @@
                 address: selLoc ? [selLoc.street, selLoc.apt ? `kv.${selLoc.apt}` : '', selLoc.floor ? `${selLoc.floor}-qavat` : ''].filter(Boolean).join(', ') : '',
                 total,
                 status: 'pending',
-                tg_user_id: tgUserId
+                tg_user_id: tgUserId,
+                phone: window._verifiedPhone || localStorage.getItem('kfc_verified_phone') || null
             };
 
             // Confirm tugmasini loading qilish
@@ -3297,5 +3559,49 @@
 
         init();
     </script>
+
+    <!-- ── Phone Verification Sheet ── -->
+    <div id="recaptcha-container"></div>
+    <div id="phoneOverlay" class="phone-overlay" onclick="closePhoneVerify()"></div>
+    <div id="phoneSheet" class="phone-sheet">
+        <div class="phone-handle"></div>
+
+        <!-- Step 1: Raqam kiritish -->
+        <div id="phoneStep1">
+            <div class="phone-icon">📱</div>
+            <div class="phone-title">Telefon raqamingiz</div>
+            <div class="phone-sub">Buyurtma tasdiqlash uchun SMS yuboramiz</div>
+
+            <div class="phone-input-wrap">
+                <span class="phone-prefix">+998</span>
+                <input type="tel" id="phoneInput" placeholder="90 123 45 67"
+                    maxlength="12" inputmode="numeric"
+                    oninput="this.value=this.value.replace(/[^0-9 ]/g,'')">
+            </div>
+            <div class="phone-error" id="phoneError"></div>
+            <button class="phone-btn" id="sendOtpBtn" onclick="sendOTP()">
+                📩 SMS yuborish
+            </button>
+        </div>
+
+        <!-- Step 2: Kod kiritish -->
+        <div id="phoneStep2" style="display:none;">
+            <div class="phone-icon">🔐</div>
+            <div class="phone-title">Kodni kiriting</div>
+            <div class="otp-sent-msg" id="otpSentMsg"></div>
+
+            <div class="otp-input-wrap">
+                <input type="tel" id="otpInput" placeholder="------"
+                    maxlength="6" inputmode="numeric"
+                    oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===6) verifyOTP()">
+            </div>
+            <div class="phone-error" id="phoneError2"></div>
+            <button class="phone-btn" id="verifyOtpBtn" onclick="verifyOTP()">
+                ✅ Tasdiqlash
+            </button>
+            <div class="phone-resend" onclick="resendOTP()">Qaytadan SMS yuborish</div>
+        </div>
+    </div>
+
 </body>
 </html>
