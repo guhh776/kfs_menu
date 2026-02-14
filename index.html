@@ -2854,43 +2854,109 @@
         // ========================
         let cancelTimerInterval = null;
 
-        function placeOrder() {
+        // ── Backend API URL ─────────────────────────────────────
+        const API_URL = 'http://localhost:8000'; // production: Railway/Render URL ga o'zgartiring
+
+        async function placeOrder() {
             const locs = JSON.parse(localStorage.getItem('kfc_locations') || '[]');
             const selId = localStorage.getItem('kfc_selected_location');
             const selLoc = locs.find(l => l.id === selId);
 
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const orderId = Date.now();
+            const orderId = `kfc_${Date.now()}`;
             const now = new Date();
             const dateStr = now.toLocaleDateString('uz-UZ') + ' ' + now.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
 
-            const order = {
+            const orderPayload = {
                 id: orderId,
-                date: dateStr,
+                date: now.toISOString(),
                 timestamp: Date.now(),
-                items: cart.map(i => ({ name: i.fullName || i.name, qty: i.quantity, price: i.price })),
-                address: selLoc ? selLoc.street : '',
-                total: total,
+                items: cart.map(i => ({
+                    name: i.name,
+                    fullName: i.fullName || i.name,
+                    quantity: i.quantity,
+                    price: i.price
+                })),
+                address: selLoc ? [selLoc.street, selLoc.apt ? `kv.${selLoc.apt}` : '', selLoc.floor ? `${selLoc.floor}-qavat` : ''].filter(Boolean).join(', ') : '',
+                total,
                 status: 'pending'
             };
 
-            // Save to localStorage
+            // Confirm tugmasini loading qilish
+            const confirmBtn = document.getElementById('confirmBtn');
+            if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = '⏳ Yuborilmoqda...'; }
+
+            try {
+                // Backend ga yuborish
+                const res = await fetch(`${API_URL}/api/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderPayload),
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Xato');
+                }
+
+                const result = await res.json();
+                const savedId = result.orderId || orderId;
+
+                // localStorage ga ham saqlash (orders.html uchun)
+                const orders = JSON.parse(localStorage.getItem('kfc_orders') || '[]');
+                orders.push({ ...orderPayload, id: savedId, date: dateStr });
+                localStorage.setItem('kfc_orders', JSON.stringify(orders));
+
+                // Savatni tozalash
+                cart = [];
+                updateCartModal();
+                updateBottomCart();
+                renderProducts();
+
+                closeCheckout();
+                closeCart();
+                showSuccessScreen(savedId);
+
+            } catch (err) {
+                console.error('Zakaz yuborishda xato:', err);
+                // Backend ishlamasa ham LOCAL ga saqlaymiz (offline fallback)
+                const orders = JSON.parse(localStorage.getItem('kfc_orders') || '[]');
+                orders.push({ ...orderPayload, date: dateStr });
+                localStorage.setItem('kfc_orders', JSON.stringify(orders));
+
+                cart = [];
+                updateCartModal();
+                updateBottomCart();
+                renderProducts();
+                closeCheckout();
+                closeCart();
+                showSuccessScreen(orderId);
+
+            } finally {
+                if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = t('confirmBtn'); }
+            }
+        }
+
+        async function cancelLastOrder() {
+            if (!window._lastOrderId) return;
+
+            // Backend ga bekor qilish so'rovi
+            try {
+                await fetch(`${API_URL}/api/orders/${window._lastOrderId}/cancel`, {
+                    method: 'PATCH',
+                });
+            } catch (e) { /* offline bo'lsa localStorage bilan ishlaydi */ }
+
+            // localStorage ni ham yangilash
             const orders = JSON.parse(localStorage.getItem('kfc_orders') || '[]');
-            orders.push(order);
-            localStorage.setItem('kfc_orders', JSON.stringify(orders));
+            const idx = orders.findIndex(o => o.id == window._lastOrderId);
+            if (idx !== -1) {
+                orders[idx].status = 'cancelled';
+                localStorage.setItem('kfc_orders', JSON.stringify(orders));
+            }
 
-            // Clear cart
-            cart = [];
-            updateCartModal();
-            updateBottomCart();
-            renderProducts();
-
-            // Close modals
-            closeCheckout();
-            closeCart();
-
-            // Show success screen
-            showSuccessScreen(orderId);
+            if (cancelTimerInterval) clearInterval(cancelTimerInterval);
+            document.getElementById('successOverlay').classList.remove('active');
         }
 
         function showSuccessScreen(orderId) {
