@@ -1700,82 +1700,6 @@
         }
         .lang-option.active-lang .lang-check { display: flex; }
     </style>
-  <!-- Firebase Phone Auth -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCEY4cXlL183nu4-g79uq-ZcOKioiA3mu8",
-      authDomain: "kfc-menu-80a10.firebaseapp.com",
-      projectId: "kfc-menu-80a10",
-      storageBucket: "kfc-menu-80a10.firebasestorage.app",
-      messagingSenderId: "719883913547",
-      appId: "1:719883913547:web:ee9af34086b3a1156080ce"
-    };
-
-    const fbApp = initializeApp(firebaseConfig);
-    const auth = getAuth(fbApp);
-    auth.languageCode = 'uz';
-    let confirmationResult = null;
-
-    window.sendOTP = async function() {
-      const raw = document.getElementById('phoneInput').value.trim().replace(/\D/g,'');
-      const phone = '+998' + raw;
-      if (raw.length < 9) { showPhoneError("Telefon raqamni to'liq kiriting"); return; }
-
-      const btn = document.getElementById('sendOtpBtn');
-      btn.disabled = true; btn.textContent = '⏳ Yuborilmoqda...';
-      hidePhoneError();
-
-      try {
-        if (!window._rcv) {
-          window._rcv = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible', callback: ()=>{} });
-        }
-        confirmationResult = await signInWithPhoneNumber(auth, phone, window._rcv);
-        document.getElementById('phoneStep1').style.display = 'none';
-        document.getElementById('phoneStep2').style.display = 'block';
-        document.getElementById('otpSentMsg').textContent = phone + ' ga SMS yuborildi ✅';
-        setTimeout(()=>document.getElementById('otpInput').focus(), 200);
-      } catch(e) {
-        console.error(e);
-        let msg = 'Xato yuz berdi. Qayta urining.';
-        if (e.code === 'auth/invalid-phone-number') msg = "Telefon raqam noto'g'ri";
-        if (e.code === 'auth/too-many-requests') msg = 'Juda ko'p urinish. Kuting.';
-        showPhoneError(msg);
-        btn.disabled = false; btn.textContent = '📩 SMS yuborish';
-        if (window._rcv) { window._rcv.clear(); window._rcv = null; }
-      }
-    };
-
-    window.verifyOTP = async function() {
-      const code = document.getElementById('otpInput').value.trim();
-      if (code.length < 4) { showPhoneError('Kodni kiriting'); return; }
-      const btn = document.getElementById('verifyOtpBtn');
-      btn.disabled = true; btn.textContent = '⏳ Tekshirilmoqda...';
-      hidePhoneError();
-      try {
-        const result = await confirmationResult.confirm(code);
-        const phone = result.user.phoneNumber;
-        window._verifiedPhone = phone;
-        localStorage.setItem('kfc_verified_phone', phone);
-        closePhoneVerify();
-        window._pendingCheckout && window._pendingCheckout();
-      } catch(e) {
-        let msg = "Noto'g'ri kod.";
-        if (e.code === 'auth/code-expired') msg = "Kod muddati o'tdi. Qayta SMS yuborish.";
-        showPhoneError(msg);
-        btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
-      }
-    };
-
-    window.resendOTP = function() {
-      document.getElementById('phoneStep1').style.display = 'block';
-      document.getElementById('phoneStep2').style.display = 'none';
-      if (window._rcv) { window._rcv.clear(); window._rcv = null; }
-      hidePhoneError();
-    };
-  </script>
 </head>
 <body>
     <!-- HOME PAGE -->
@@ -1989,7 +1913,13 @@
     <div id="sideMenuOverlay" class="side-menu-overlay" onclick="toggleSideMenu()"></div>
     <div id="sideMenu" class="side-menu">
         <div class="side-menu-header">
-            <div class="profile-circle">📷</div>
+            <div id="sideUserInfo">
+                <div class="profile-circle" id="profileInitials">👤</div>
+            </div>
+        </div>
+        <div id="sideUserDetails" style="padding: 0.5rem 1.25rem 0.75rem; display:none;">
+            <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124;"></div>
+            <div id="sideUserPhone" style="font-size:0.82rem; color:#888; margin-top:0.15rem;"></div>
         </div>
         <div class="menu-items">
             <div class="menu-item" onclick="window.location.href='orders.html'; toggleSideMenu();">
@@ -2019,6 +1949,14 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
+            </div>
+            <div class="menu-item" id="logoutBtn" onclick="logoutUser()" style="display:none; border-top: 1px solid #F5F5F5; margin-top:0.5rem;">
+                <div class="menu-item-icon">🚪</div>
+                <div class="menu-item-text" style="color:#E53935;">Chiqish</div>
+            </div>
+            <div class="menu-item" id="loginBtn" onclick="goToRegister()" style="display:none;">
+                <div class="menu-item-icon">👤</div>
+                <div class="menu-item-text" style="color:#FAB95B;">Ro'yxatdan o'tish</div>
             </div>
         </div>
     </div>
@@ -3176,55 +3114,89 @@
                 openLocationSheet();
                 return;
             }
-            openCheckout();
+            openPhoneVerify(openCheckout);
         }
 
         // ========================
         // CHECKOUT SHEET
         // ========================
 
+        // ── User Management ─────────────────────────────────
+        function getUser() {
+            try { return JSON.parse(localStorage.getItem('kfc_user') || 'null'); } 
+            catch(e) { return null; }
+        }
+
+        function isRegistered() {
+            return !!getUser();
+        }
+
+        function goToRegister() {
+            sessionStorage.setItem('reg_from', 'kfc_menu.html');
+            window.location.href = 'register.html';
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('kfc_user');
+            localStorage.removeItem('kfc_verified_phone');
+            toggleSideMenu();
+            updateSideMenu();
+        }
+
+        function updateSideMenu() {
+            const user = getUser();
+            const detailsEl = document.getElementById('sideUserDetails');
+            const nameEl    = document.getElementById('sideUserName');
+            const phoneEl   = document.getElementById('sideUserPhone');
+            const initialsEl = document.getElementById('profileInitials');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loginBtn  = document.getElementById('loginBtn');
+
+            if (user) {
+                const initials = (user.firstName[0] + (user.lastName[0] || '')).toUpperCase();
+                initialsEl.textContent = initials;
+                initialsEl.style.cssText = 'width:54px;height:54px;border-radius:50%;background:#FAB95B;color:#fff;font-size:1.2rem;font-weight:900;display:flex;align-items:center;justify-content:center;';
+                nameEl.textContent = user.firstName + ' ' + user.lastName;
+                phoneEl.textContent = user.phone;
+                detailsEl.style.display = 'block';
+                logoutBtn.style.display = 'flex';
+                loginBtn.style.display  = 'none';
+            } else {
+                initialsEl.textContent = '👤';
+                initialsEl.style.cssText = '';
+                detailsEl.style.display = 'none';
+                logoutBtn.style.display = 'none';
+                loginBtn.style.display  = 'flex';
+            }
+        }
+
+        // toggleSideMenu ni override qilib updateSideMenu chaqiramiz
+        const _origToggleSideMenu = typeof toggleSideMenu !== 'undefined' ? toggleSideMenu : null;
+
+        // ── Checkout auth check ──────────────────────────────
+        function requireAuth(callback) {
+            if (isRegistered()) {
+                callback();
+            } else {
+                goToRegister();
+            }
+        }
+
+        // Sahifa yuklanganda side menyu yangilash
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSideMenu();
+
+            // Register dan qaytdimi?
+            const user = getUser();
+            if (user) {
+                window._verifiedPhone = user.phone;
+            }
+        });
+
         // ── Phone Verification ──────────────────────────────
         function openPhoneVerify(onSuccess) {
-            window._pendingCheckout = onSuccess;
-
-            // Agar avval tasdiqlangan bo'lsa — to'g'ri o'tamiz
-            const saved = localStorage.getItem('kfc_verified_phone');
-            if (saved) {
-                window._verifiedPhone = saved;
-                onSuccess();
-                return;
-            }
-
-            // Reset
-            document.getElementById('phoneStep1').style.display = 'block';
-            document.getElementById('phoneStep2').style.display = 'none';
-            document.getElementById('phoneInput').value = '';
-            document.getElementById('phoneError').textContent = '';
-            document.getElementById('sendOtpBtn').disabled = false;
-            document.getElementById('sendOtpBtn').textContent = '📩 SMS yuborish';
-
-            document.getElementById('phoneOverlay').classList.add('active');
-            document.getElementById('phoneSheet').classList.add('active');
-            setTimeout(() => document.getElementById('phoneInput').focus(), 400);
-        }
-
-        function closePhoneVerify() {
-            document.getElementById('phoneOverlay').classList.remove('active');
-            document.getElementById('phoneSheet').classList.remove('active');
-        }
-
-        function showPhoneError(msg) {
-            const e1 = document.getElementById('phoneError');
-            const e2 = document.getElementById('phoneError2');
-            if (e1) e1.textContent = msg;
-            if (e2) e2.textContent = msg;
-        }
-
-        function hidePhoneError() {
-            const e1 = document.getElementById('phoneError');
-            const e2 = document.getElementById('phoneError2');
-            if (e1) e1.textContent = '';
-            if (e2) e2.textContent = '';
+            // Eski kod — endi requireAuth ishlatiladi
+            requireAuth(onSuccess);
         }
 
         function openCheckout() {
@@ -3331,7 +3303,8 @@
                 total,
                 status: 'pending',
                 tg_user_id: tgUserId,
-                phone: window._verifiedPhone || localStorage.getItem('kfc_verified_phone') || null
+                phone: window._verifiedPhone || localStorage.getItem('kfc_verified_phone') || null,
+                customer_name: (getUser() ? getUser().firstName + ' ' + getUser().lastName : null)
             };
 
             // Confirm tugmasini loading qilish
@@ -3553,55 +3526,16 @@
         }
 
         function toggleSideMenu() {
-            document.getElementById('sideMenuOverlay').classList.toggle('active');
-            document.getElementById('sideMenu').classList.toggle('active');
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('sideMenuOverlay');
+            const isOpening = !menu.classList.contains('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            if (isOpening) updateSideMenu();
         }
 
         init();
     </script>
-
-    <!-- ── Phone Verification Sheet ── -->
-    <div id="recaptcha-container"></div>
-    <div id="phoneOverlay" class="phone-overlay" onclick="closePhoneVerify()"></div>
-    <div id="phoneSheet" class="phone-sheet">
-        <div class="phone-handle"></div>
-
-        <!-- Step 1: Raqam kiritish -->
-        <div id="phoneStep1">
-            <div class="phone-icon">📱</div>
-            <div class="phone-title">Telefon raqamingiz</div>
-            <div class="phone-sub">Buyurtma tasdiqlash uchun SMS yuboramiz</div>
-
-            <div class="phone-input-wrap">
-                <span class="phone-prefix">+998</span>
-                <input type="tel" id="phoneInput" placeholder="90 123 45 67"
-                    maxlength="12" inputmode="numeric"
-                    oninput="this.value=this.value.replace(/[^0-9 ]/g,'')">
-            </div>
-            <div class="phone-error" id="phoneError"></div>
-            <button class="phone-btn" id="sendOtpBtn" onclick="sendOTP()">
-                📩 SMS yuborish
-            </button>
-        </div>
-
-        <!-- Step 2: Kod kiritish -->
-        <div id="phoneStep2" style="display:none;">
-            <div class="phone-icon">🔐</div>
-            <div class="phone-title">Kodni kiriting</div>
-            <div class="otp-sent-msg" id="otpSentMsg"></div>
-
-            <div class="otp-input-wrap">
-                <input type="tel" id="otpInput" placeholder="------"
-                    maxlength="6" inputmode="numeric"
-                    oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===6) verifyOTP()">
-            </div>
-            <div class="phone-error" id="phoneError2"></div>
-            <button class="phone-btn" id="verifyOtpBtn" onclick="verifyOTP()">
-                ✅ Tasdiqlash
-            </button>
-            <div class="phone-resend" onclick="resendOTP()">Qaytadan SMS yuborish</div>
-        </div>
-    </div>
 
 </body>
 </html>
