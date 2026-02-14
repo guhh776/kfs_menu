@@ -2951,6 +2951,10 @@
             const now = new Date();
             const dateStr = now.toLocaleDateString('uz-UZ') + ' ' + now.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
 
+            // Telegram user ID olish
+            const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            const tgUserId = tgUser?.id || null;
+
             const orderPayload = {
                 id: orderId,
                 date: now.toISOString(),
@@ -2963,7 +2967,8 @@
                 })),
                 address: selLoc ? [selLoc.street, selLoc.apt ? `kv.${selLoc.apt}` : '', selLoc.floor ? `${selLoc.floor}-qavat` : ''].filter(Boolean).join(', ') : '',
                 total,
-                status: 'pending'
+                status: 'pending',
+                tg_user_id: tgUserId
             };
 
             // Confirm tugmasini loading qilish
