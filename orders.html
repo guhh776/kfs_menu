@@ -196,6 +196,10 @@ function saveOrders(orders){
 const STEPS = ['pending','confirmed','cooking','delivering','done'];
 const STEP_ICONS = ['📋','✅','🍗','🚗','🎉'];
 
+// ── Backend API ──
+const API_URL = 'http://localhost:8000';
+let statusPollInterval = null;
+
 function stepIndex(status){
   const idx = STEPS.indexOf(status);
   return idx < 0 ? 0 : idx;
@@ -210,12 +214,40 @@ function badgeClass(status){
   return map[status]||'badge-pending';
 }
 
+// ── API dan status yangilash ──
+async function syncOrderStatus(orderId){
+  try {
+    const res = await fetch(`${API_URL}/api/orders/${orderId}`);
+    if(!res.ok) return;
+    const data = await res.json();
+    // localStorage ni yangilash
+    const orders = getOrders();
+    const idx = orders.findIndex(o=>o.id==orderId);
+    if(idx!==-1 && orders[idx].status !== data.status){
+      orders[idx].status = data.status;
+      saveOrders(orders);
+      render(); // ekranni yangilash
+    }
+  } catch(e){ /* server bilan muammo */ }
+}
+
+function startPolling(orderId){
+  if(statusPollInterval) clearInterval(statusPollInterval);
+  statusPollInterval = setInterval(()=>{
+    syncOrderStatus(orderId);
+  }, 5000);
+}
+
+function stopPolling(){
+  if(statusPollInterval){ clearInterval(statusPollInterval); statusPollInterval = null; }
+}
+
 // ── Active order with timer ──
 let timerInterval = null;
 
 function renderActiveBanner(order){
   const now = Date.now();
-  const elapsed = Math.floor((now - order.timestamp) / 1000);
+  const elapsed = Math.floor((now - (order.timestamp || Date.now())) / 1000);
   const remaining = Math.max(0, 60 - elapsed);
   const canCancel = remaining > 0 && order.status === 'pending';
   const si = stepIndex(order.status);
@@ -289,8 +321,16 @@ function renderActiveBanner(order){
   return html;
 }
 
-function cancelOrder(orderId){
+async function cancelOrder(orderId){
   if(timerInterval) clearInterval(timerInterval);
+  stopPolling();
+
+  // Backend ga bekor qilish
+  try {
+    await fetch(`${API_URL}/api/orders/${orderId}/cancel`, { method: 'PATCH' });
+  } catch(e){ /* offline */ }
+
+  // localStorage yangilash
   const orders = getOrders();
   const idx = orders.findIndex(o=>o.id==orderId);
   if(idx!==-1){
@@ -315,6 +355,7 @@ function render(){
         <div class="empty-icon">📦</div>
         <p>${t('noOrders')}</p>
       </div>`;
+    stopPolling();
     return;
   }
 
@@ -328,6 +369,9 @@ function render(){
   // Active banner
   if(activeOrder){
     html += renderActiveBanner(activeOrder);
+    startPolling(activeOrder.id); // API polling boshlash
+  } else {
+    stopPolling();
   }
 
   // Contact box (always visible)
@@ -343,17 +387,15 @@ function render(){
 
   // All orders list
   html += reversed.map(o=>{
-    if(o.status==='done'||o.status==='cancelled'||(activeOrder&&o.id===activeOrder.id&&o.status==='pending')){
-      // Show in list
-    }
     const statusKey = 'status'+o.status.charAt(0).toUpperCase()+o.status.slice(1);
+    const itemsText = o.items.map(i=>`${i.fullName||i.name} × ${i.quantity||i.qty||1}`).join('<br>');
     return `
       <div class="order-card">
         <div class="order-header">
           <span class="order-id">#${o.id.toString().slice(-6)}</span>
           <span class="order-date">${o.date}</span>
         </div>
-        <div class="order-items">${o.items.map(i=>`${i.name} × ${i.qty}`).join('<br>')}</div>
+        <div class="order-items">${itemsText}</div>
         <div class="order-footer">
           <span class="order-total">${o.total.toLocaleString()} UZS</span>
           <span class="badge ${badgeClass(o.status)}">${t(statusKey)}</span>
@@ -364,7 +406,13 @@ function render(){
   el.innerHTML = html;
 }
 
-document.addEventListener('DOMContentLoaded', render);
+document.addEventListener('DOMContentLoaded', ()=>{
+  render();
+  // Darhol API dan sinxronlashtirish
+  const orders = getOrders();
+  const active = orders.slice().reverse().find(o=>o.status!=='done'&&o.status!=='cancelled');
+  if(active) syncOrderStatus(active.id);
+});
 </script>
 </body>
 </html>
