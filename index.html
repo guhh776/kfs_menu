@@ -3145,7 +3145,7 @@
         }
 
         function goToRegister() {
-            sessionStorage.setItem('reg_from', 'kfc_menu.html');
+            const from = sessionStorage.getItem('reg_from') || 'index.html';
             window.location.href = 'register.html';
         }
 
