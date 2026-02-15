@@ -256,9 +256,19 @@
 
         <div class="error-msg" id="err1"></div>
         <!-- Telegram botda topilmadi xabari -->
-        <div id="tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:0.9rem 1rem; margin-bottom:0.75rem; font-size:0.85rem; color:#E65100; line-height:1.6; border: 1px solid #FFE0B2;">
-          ⚠️ Bu raqam Telegram botimizda topilmadi.<br>
-          Yuqoridagi <b>"Botga o'tish"</b> tugmasini bosib raqamingizni tasdiqlang, keyin qayta urining.
+        <div id="tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:1rem 1.1rem; margin-bottom:0.75rem; font-size:0.88rem; color:#BF360C; line-height:1.7; border: 1.5px solid #FFCCBC;">
+          ⚠️ <b>Bu raqam botda topilmadi!</b><br><br>
+          Avval botga boring va raqamingizni yuboring:<br>
+          <span style="color:#E65100; font-weight:800;">1.</span> Quyidagi tugmani bosing<br>
+          <span style="color:#E65100; font-weight:800;">2.</span> Botda <b>/start</b> bosing<br>
+          <span style="color:#E65100; font-weight:800;">3.</span> <b>📱 Telefon raqamni yuborish</b> tugmasini bosing<br>
+          <span style="color:#E65100; font-weight:800;">4.</span> Qaytib kelib qayta urinib ko'ring
+          <a href="https://t.me/demo_kfs_menu_bot" target="_blank"
+            style="display:flex; align-items:center; justify-content:center; gap:0.5rem;
+                   margin-top:0.85rem; background:#29B6F6; color:#fff; border-radius:10px;
+                   padding:0.65rem 1rem; font-size:0.9rem; font-weight:700; text-decoration:none;">
+            ✈️ @demo_kfs_menu_bot ga o'tish
+          </a>
         </div>
         <button class="btn-primary" id="sendBtn" onclick="sendOTP()">
           📲 Telegram orqali kod olish
@@ -381,6 +391,17 @@
 
         const data = await res.json();
 
+        // detail object yoki string bo'lishi mumkin
+        const detail = data?.detail || data;
+        const errMsg = typeof detail === 'object'
+          ? (detail?.message || detail?.error || JSON.stringify(detail))
+          : String(detail);
+        const errCode = typeof detail === 'object' ? detail?.error : null;
+
+        // Botda ro'yxatdan o'tmagan — istalgan ko'rinishda
+        const isNotRegistered = res.status === 404 || errCode === 'not_registered' ||
+          (typeof errMsg === 'string' && errMsg.includes('not_registered'));
+
         if (res.ok) {
           // Muvaffaqiyat — OTP yuborildi
           verifiedPhone = phone;
@@ -391,19 +412,20 @@
           startResendTimer();
           setTimeout(() => document.getElementById('otpInput').focus(), 300);
 
-        } else if (res.status === 404 && data?.error === 'not_registered') {
-          // Foydalanuvchi Telegram botda ro'yxatdan o'tmagan
+        } else if (isNotRegistered) {
+          // Botda ro'yxatdan o'tmagan — ko'k blok ko'rsatish
           document.getElementById('tgBotMsg').style.display = 'block';
+          document.getElementById('tgBotMsg').scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false;
           btn.textContent = '📲 Telegram orqali kod olish';
 
         } else if (res.status === 429) {
-          showErr('err1', data?.message || 'Biroz kuting va qayta urining');
+          showErr('err1', errMsg || 'Biroz kuting va qayta urining');
           btn.disabled = false;
           btn.textContent = '📲 Telegram orqali kod olish';
 
         } else {
-          showErr('err1', data?.message || data?.detail || 'Xato. Qayta urining.');
+          showErr('err1', errMsg || 'Xato. Qayta urining.');
           btn.disabled = false;
           btn.textContent = '📲 Telegram orqali kod olish';
         }
@@ -433,6 +455,10 @@
         });
 
         const data = await res.json();
+        const detail2 = data?.detail || data;
+        const errMsg2 = typeof detail2 === 'object'
+          ? (detail2?.message || detail2?.error || 'Noto\'g\'ri kod')
+          : String(detail2);
 
         if (res.ok && data.success) {
           if (resendTimer) clearInterval(resendTimer);
@@ -442,8 +468,7 @@
           setTimeout(() => document.getElementById('firstName').focus(), 300);
 
         } else {
-          const msg = data?.detail?.message || data?.message || "Noto'g'ri kod. Qayta urining.";
-          showErr('err2', msg);
+          showErr('err2', errMsg2);
           btn.disabled = false;
           btn.textContent = '✅ Tasdiqlash';
         }
