@@ -3145,7 +3145,7 @@
         }
 
         function goToRegister() {
-            const from = sessionStorage.getItem('reg_from') || 'index.html';
+            sessionStorage.setItem('reg_from', 'index.html');
             window.location.href = 'register.html';
         }
 
