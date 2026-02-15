@@ -15,6 +15,7 @@
       flex-direction: column;
     }
 
+    /* ── Header ── */
     .reg-header {
       background: linear-gradient(135deg, #FAB95B 0%, #F5A53A 100%);
       padding: 3rem 1.5rem 2rem;
@@ -30,10 +31,23 @@
       background: #F5F5F5;
       border-radius: 50%;
     }
-    .reg-logo { font-size: 3rem; margin-bottom: 0.75rem; }
-    .reg-brand { font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
-    .reg-tagline { font-size: 0.85rem; color: rgba(255,255,255,0.85); margin-top: 0.25rem; }
+    .reg-logo {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+    .reg-brand {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .reg-tagline {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.85);
+      margin-top: 0.25rem;
+    }
 
+    /* ── Content ── */
     .reg-content {
       flex: 1;
       padding: 2.5rem 1.25rem 2rem;
@@ -42,92 +56,104 @@
       width: 100%;
     }
 
+    /* ── Steps indicator ── */
     .steps {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0; margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 2rem;
     }
     .step-dot {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: #E0E0E0; color: #999;
-      font-size: 0.8rem; font-weight: 800;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #E0E0E0;
+      color: #999;
+      font-size: 0.8rem;
+      font-weight: 800;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.3s; flex-shrink: 0;
+      transition: all 0.3s;
+      flex-shrink: 0;
     }
     .step-dot.active { background: #FAB95B; color: #fff; box-shadow: 0 0 0 4px rgba(250,185,91,0.2); }
     .step-dot.done { background: #4CAF50; color: #fff; }
     .step-line { height: 2px; width: 40px; background: #E0E0E0; transition: background 0.3s; }
     .step-line.done { background: #4CAF50; }
 
+    /* ── Card ── */
     .reg-card {
-      background: #fff; border-radius: 20px;
+      background: #fff;
+      border-radius: 20px;
       padding: 1.75rem 1.25rem;
       box-shadow: 0 2px 16px rgba(0,0,0,0.06);
     }
     .card-icon { font-size: 2.5rem; text-align: center; margin-bottom: 0.75rem; }
-    .card-title { font-size: 1.2rem; font-weight: 800; color: #202124; text-align: center; margin-bottom: 0.4rem; }
-    .card-sub { font-size: 0.83rem; color: #888; text-align: center; margin-bottom: 1.5rem; line-height: 1.5; }
-
-    /* Telegram bot instruksiya box */
-    .tg-box {
-      background: #E3F2FD;
-      border-radius: 14px;
-      padding: 1rem;
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
+    .card-title {
+      font-size: 1.2rem; font-weight: 800;
+      color: #202124; text-align: center;
+      margin-bottom: 0.4rem;
     }
-    .tg-box-icon { font-size: 1.5rem; flex-shrink: 0; }
-    .tg-box-text { font-size: 0.82rem; color: #1565C0; line-height: 1.6; }
-    .tg-box-text b { display: block; margin-bottom: 0.25rem; font-size: 0.88rem; }
-    .tg-link {
-      display: inline-block;
-      margin-top: 0.5rem;
-      background: #2196F3;
-      color: #fff;
-      padding: 0.5rem 1rem;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-decoration: none;
+    .card-sub {
+      font-size: 0.83rem; color: #888;
+      text-align: center; margin-bottom: 1.5rem;
+      line-height: 1.5;
     }
 
+    /* ── Inputs ── */
     .input-group { margin-bottom: 1rem; }
     .input-label {
-      font-size: 0.78rem; font-weight: 700; color: #555;
-      margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 0.78rem; font-weight: 700;
+      color: #555; margin-bottom: 0.4rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
     .input-wrap {
       display: flex; align-items: center;
-      background: #F5F5F5; border-radius: 14px;
-      border: 2px solid transparent; padding: 0 1rem;
+      background: #F5F5F5;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      padding: 0 1rem;
       transition: all 0.2s;
     }
     .input-wrap:focus-within { border-color: #FAB95B; background: #fff; }
-    .input-prefix { font-size: 1rem; font-weight: 700; color: #202124; flex-shrink: 0; margin-right: 0.3rem; }
+    .input-prefix {
+      font-size: 1rem; font-weight: 700;
+      color: #202124; flex-shrink: 0;
+      margin-right: 0.3rem;
+    }
     .input-wrap input, .single-input {
       flex: 1; border: none; background: transparent;
-      font-size: 1rem; font-weight: 600; color: #202124;
-      outline: none; padding: 0.85rem 0; width: 100%;
+      font-size: 1rem; font-weight: 600;
+      color: #202124; outline: none;
+      padding: 0.85rem 0;
+      width: 100%;
     }
     .single-input {
-      background: #F5F5F5; border-radius: 14px;
-      border: 2px solid transparent; padding: 0.85rem 1rem;
+      background: #F5F5F5;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      padding: 0.85rem 1rem;
       transition: all 0.2s;
     }
     .single-input:focus { border-color: #FAB95B; background: #fff; outline: none; }
 
-    .otp-wrap { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+    /* OTP input */
+    .otp-wrap {
+      display: flex; gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
     .otp-wrap input {
       flex: 1; padding: 1rem 0;
-      border: 2px solid #E0E0E0; border-radius: 14px;
+      border: 2px solid #E0E0E0;
+      border-radius: 14px;
       font-size: 1.6rem; font-weight: 800;
       text-align: center; letter-spacing: 4px;
       outline: none; color: #202124;
-      transition: border-color 0.2s; background: #F5F5F5;
+      transition: border-color 0.2s;
+      background: #F5F5F5;
     }
     .otp-wrap input:focus { border-color: #FAB95B; background: #fff; }
 
+    /* ── Buttons ── */
     .btn-primary {
       width: 100%; padding: 1rem;
       background: #FAB95B; color: #fff;
@@ -137,8 +163,9 @@
       margin-top: 0.5rem;
     }
     .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary:disabled { opacity: 0.5; }
 
+    /* ── Error & info ── */
     .error-msg {
       font-size: 0.8rem; color: #E53935;
       text-align: center; min-height: 1.1rem;
@@ -155,14 +182,21 @@
       margin-top: 0.75rem; font-weight: 600;
       text-decoration: underline;
     }
-    .timer-txt { text-align: center; font-size: 0.8rem; color: #999; margin-top: 0.5rem; }
+    .timer-txt {
+      text-align: center; font-size: 0.8rem;
+      color: #999; margin-top: 0.5rem;
+    }
 
+    /* ── Step panels ── */
     .step-panel { display: none; }
     .step-panel.active { display: block; }
+
+    #recaptcha-container { display: none; }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <div class="reg-header">
     <div class="reg-logo">🍗</div>
     <div class="reg-brand">KFC Riston</div>
@@ -170,6 +204,8 @@
   </div>
 
   <div class="reg-content">
+
+    <!-- Steps -->
     <div class="steps">
       <div class="step-dot active" id="dot1">1</div>
       <div class="step-line" id="line1"></div>
@@ -184,20 +220,7 @@
       <div class="step-panel active" id="step1">
         <div class="card-icon">📱</div>
         <div class="card-title">Telefon raqamingiz</div>
-        <div class="card-sub">Telegram orqali tasdiqlash kodi yuboriladi</div>
-
-        <!-- Telegram instruksiya -->
-        <div class="tg-box">
-          <div class="tg-box-icon">💡</div>
-          <div class="tg-box-text">
-            <b>Birinchi marta kirish uchun:</b>
-            Telegram botga boring va <b>/start</b> tugmasini bosib, raqamingizni yuboring.
-            <br>
-            <a class="tg-link" href="https://t.me/demo_kfs_menu_bot" target="_blank">
-              ✈️ Botga o'tish
-            </a>
-          </div>
-        </div>
+        <div class="card-sub">Telegram botimiz orqali tasdiqlash kodi yuboriladi</div>
 
         <div class="input-group">
           <div class="input-label">Telefon raqam</div>
@@ -211,15 +234,20 @@
         </div>
 
         <div class="error-msg" id="err1"></div>
+        <!-- Telegram bot instruction (shown if not registered in bot) -->
+        <div id="tgBotMsg" style="display:none; background:#E3F2FD; border-radius:12px; padding:0.9rem 1rem; margin-bottom:0.75rem; font-size:0.85rem; color:#1565C0; line-height:1.5;">
+          ⚠️ Bu raqam Telegram botimizda topilmadi.<br>
+          Avval <a id="tgBotLink" href="https://t.me/your_bot" target="_blank" style="color:#1565C0; font-weight:700;">@KFC_Riston_bot</a> ga <b>/start</b> yuboring va raqamingizni tasdiqlang, keyin qayta urining.
+        </div>
         <button class="btn-primary" id="sendBtn" onclick="sendOTP()">
-          ✈️ Telegram ga kod yuborish
+          📲 Telegram ga kod yuborish
         </button>
       </div>
 
       <!-- STEP 2: OTP kod -->
       <div class="step-panel" id="step2">
         <div class="card-icon">🔐</div>
-        <div class="card-title">Kodni kiriting</div>
+        <div class="card-title">Telegram kodini kiriting</div>
         <div class="success-msg" id="otpSentMsg"></div>
 
         <div class="otp-wrap">
@@ -233,7 +261,7 @@
           ✅ Tasdiqlash
         </button>
         <div class="resend-btn" id="resendBtn" style="display:none" onclick="resendOTP()">
-          Qaytadan kod yuborish
+          🔄 Qaytadan Telegram ga yuborish
         </div>
         <div class="timer-txt" id="timerTxt"></div>
       </div>
@@ -267,13 +295,13 @@
   </div>
 
   <script>
-    // ── SOZLAMA ────────────────────────────────────────────
-    const API_URL = 'http://localhost:8000'; // production da serveringiz URL
-    // ───────────────────────────────────────────────────────
+    // ── Backend URL (index.html dagi bilan bir xil bo'lishi kerak) ──
+    const API_URL = 'http://localhost:8000';
 
     let verifiedPhone = null;
     let resendTimer = null;
 
+    // ── Bosqich (step) o'tish ────────────────────────────────────────
     function goStep(n) {
       document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
       document.getElementById('step' + n).classList.add('active');
@@ -289,8 +317,9 @@
     }
 
     function showErr(id, msg) { document.getElementById(id).textContent = msg; }
-    function hideErr(id) { document.getElementById(id).textContent = ''; }
+    function hideErr(id)      { document.getElementById(id).textContent = ''; }
 
+    // ── Resend timer ──────────────────────────────────────────────────
     function startResendTimer() {
       let secs = 60;
       const txt = document.getElementById('timerTxt');
@@ -309,12 +338,15 @@
       }, 1000);
     }
 
+    // ── 1-qadam: Telegram orqali OTP yuborish ────────────────────────
     window.sendOTP = async function() {
       const raw = document.getElementById('phoneInput').value.replace(/\D/g, '');
       if (raw.length < 9) { showErr('err1', "Telefon raqamni to'liq kiriting"); return; }
-      const phone = '+998' + raw.slice(-9);
 
+      const phone = '+998' + raw.slice(-9);
       hideErr('err1');
+      document.getElementById('tgBotMsg').style.display = 'none';
+
       const btn = document.getElementById('sendBtn');
       btn.disabled = true;
       btn.textContent = '⏳ Yuborilmoqda...';
@@ -325,39 +357,47 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone })
         });
+
         const data = await res.json();
 
-        if (!res.ok) {
-          if (data.error === 'not_registered') {
-            showErr('err1', "Avval Telegram botga /start yuboring va raqamingizni tasdiqlang ☝️");
-          } else if (data.error === 'too_soon') {
-            showErr('err1', "Biroz kuting va qayta urining");
-          } else {
-            showErr('err1', data.message || 'Xato yuz berdi');
-          }
+        if (res.ok) {
+          // Muvaffaqiyat — OTP yuborildi
+          verifiedPhone = phone;
+          document.getElementById('otpSentMsg').textContent =
+            `✅ ${phone} uchun Telegram ga kod yuborildi`;
+          document.getElementById('otpInput').value = '';
+          goStep(2);
+          startResendTimer();
+          setTimeout(() => document.getElementById('otpInput').focus(), 300);
+
+        } else if (res.status === 404 && data?.error === 'not_registered') {
+          // Foydalanuvchi Telegram botda ro'yxatdan o'tmagan
+          document.getElementById('tgBotMsg').style.display = 'block';
           btn.disabled = false;
-          btn.textContent = '✈️ Telegram ga kod yuborish';
-          return;
+          btn.textContent = '📲 Telegram ga kod yuborish';
+
+        } else if (res.status === 429) {
+          showErr('err1', data?.message || 'Biroz kuting va qayta urining');
+          btn.disabled = false;
+          btn.textContent = '📲 Telegram ga kod yuborish';
+
+        } else {
+          showErr('err1', data?.message || data?.detail || 'Xato. Qayta urining.');
+          btn.disabled = false;
+          btn.textContent = '📲 Telegram ga kod yuborish';
         }
 
-        verifiedPhone = phone;
-        document.getElementById('otpSentMsg').textContent =
-          '✅ Telegram ga kod yuborildi! Ilovangizni oching';
-        document.getElementById('otpInput').value = '';
-        goStep(2);
-        startResendTimer();
-        setTimeout(() => document.getElementById('otpInput').focus(), 300);
-
       } catch(e) {
-        showErr('err1', 'Server bilan aloqa yo\'q. Backend ishlab turibdimi?');
+        showErr('err1', 'Server bilan aloqa yo\'q. Qayta urining.');
         btn.disabled = false;
-        btn.textContent = '✈️ Telegram ga kod yuborish';
+        btn.textContent = '📲 Telegram ga kod yuborish';
       }
     };
 
+    // ── 2-qadam: OTP kodni tekshirish ─────────────────────────────────
     window.verifyOTP = async function() {
       const code = document.getElementById('otpInput').value.trim();
-      if (code.length < 6) { showErr('err2', 'Kodni to\'liq kiriting (6 raqam)'); return; }
+      if (code.length < 4) { showErr('err2', 'Kodni kiriting'); return; }
 
       hideErr('err2');
       const btn = document.getElementById('verifyBtn');
@@ -370,62 +410,45 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: verifiedPhone, code })
         });
+
         const data = await res.json();
 
-        if (!res.ok) {
-          showErr('err2', data.message || "Noto'g'ri kod");
+        if (res.ok && data.success) {
+          if (resendTimer) clearInterval(resendTimer);
+          document.getElementById('firstName').value = '';
+          document.getElementById('lastName').value = '';
+          goStep(3);
+          setTimeout(() => document.getElementById('firstName').focus(), 300);
+
+        } else {
+          const msg = data?.detail?.message || data?.message || "Noto'g'ri kod. Qayta urining.";
+          showErr('err2', msg);
           btn.disabled = false;
           btn.textContent = '✅ Tasdiqlash';
-          return;
         }
 
-        if (resendTimer) clearInterval(resendTimer);
-        document.getElementById('firstName').value = '';
-        document.getElementById('lastName').value = '';
-        goStep(3);
-        setTimeout(() => document.getElementById('firstName').focus(), 300);
-
       } catch(e) {
-        showErr('err2', 'Server bilan aloqa yo\'q');
+        showErr('err2', 'Server bilan aloqa yo\'q.');
         btn.disabled = false;
         btn.textContent = '✅ Tasdiqlash';
       }
     };
 
-    window.resendOTP = async function() {
-      document.getElementById('resendBtn').style.display = 'none';
-      document.getElementById('timerTxt').textContent = '⏳ Yuborilmoqda...';
-      document.getElementById('otpInput').value = '';
-      hideErr('err2');
-
-      try {
-        const res = await fetch(`${API_URL}/api/otp/send`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: verifiedPhone })
-        });
-        if (res.ok) {
-          document.getElementById('otpSentMsg').textContent = '✅ Yangi kod Telegram ga yuborildi!';
-          startResendTimer();
-        } else {
-          const data = await res.json();
-          document.getElementById('timerTxt').textContent = '';
-          document.getElementById('resendBtn').style.display = 'block';
-          showErr('err2', data.message || 'Xato. Qayta urining.');
-        }
-      } catch(e) {
-        document.getElementById('timerTxt').textContent = '';
-        document.getElementById('resendBtn').style.display = 'block';
-        showErr('err2', 'Server bilan aloqa yo\'q');
-      }
+    // ── Qayta yuborish ──────────────────────────────────────────────
+    window.resendOTP = function() {
+      goStep(1);
+      hideErr('err1');
+      document.getElementById('tgBotMsg').style.display = 'none';
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('sendBtn').textContent = '📲 Telegram ga kod yuborish';
     };
 
+    // ── 3-qadam: Ism/familya saqlash ────────────────────────────────
     window.saveProfile = function() {
       const first = document.getElementById('firstName').value.trim();
-      const last = document.getElementById('lastName').value.trim();
-
+      const last  = document.getElementById('lastName').value.trim();
       if (!first) { showErr('err3', "Ismingizni kiriting"); return; }
-      if (!last) { showErr('err3', "Familyangizni kiriting"); return; }
+      if (!last)  { showErr('err3', "Familyangizni kiriting"); return; }
 
       const user = {
         phone: verifiedPhone,
