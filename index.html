@@ -1915,11 +1915,11 @@
         <div class="side-menu-header">
             <div id="sideUserInfo">
                 <div class="profile-circle" id="profileInitials">👤</div>
-                <div id="sideUserDetails" style="display:none; margin-top:0.6rem;">
-                    <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124; line-height:1.3;"></div>
-                    <div id="sideUserPhone" style="font-size:0.83rem; color:#888; margin-top:0.1rem;"></div>
-                </div>
             </div>
+        </div>
+        <div id="sideUserDetails" style="padding: 0.5rem 1.25rem 0.75rem; display:none;">
+            <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124;"></div>
+            <div id="sideUserPhone" style="font-size:0.82rem; color:#888; margin-top:0.15rem;"></div>
         </div>
         <div class="menu-items">
             <div class="menu-item" onclick="window.location.href='orders.html'; toggleSideMenu();">
@@ -2047,17 +2047,6 @@
                     <span style="font-size:1.1rem">⚠️</span>
                     <span class="stale-loc-warn-txt" id="staleLocTxt">Manzil 5 soatdan eski. Siz boshqa joyda bo'lishingiz mumkin.</span>
                     <button class="stale-loc-warn-btn" id="staleLocBtn" onclick="closeCheckout(); openLocationSheet()">Yangilash</button>
-                </div>
-            </div>
-            <!-- Buyer info -->
-            <div class="checkout-section" id="checkoutUserSection" style="display:none;">
-                <div class="checkout-label" id="checkoutUserLabel">Buyurtmachi</div>
-                <div style="display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.75rem;background:#F9F9F9;border-radius:12px;border:1px solid #F0F0F0;">
-                    <span style="font-size:1.3rem;">👤</span>
-                    <div>
-                        <div id="checkoutUserName" style="font-size:0.9rem;font-weight:700;color:#202124;"></div>
-                        <div id="checkoutUserPhone" style="font-size:0.82rem;color:#888;margin-top:0.1rem;"></div>
-                    </div>
                 </div>
             </div>
             <!-- Summary -->
@@ -2341,7 +2330,6 @@
                 checkoutDeliveryFree: "Bepul",
                 checkoutTotalLabel: "Jami to'lov",
                 confirmBtn: "✅ Tasdiqlash",
-                checkoutUserLabel: "Buyurtmachi",
                 heroTitle: "KFC Riston",
                 heroSub: "Tez va mazali taom yetkazish",
                 successTitle: "Buyurtma berildi! 🎉",
@@ -2427,7 +2415,6 @@
                 checkoutDeliveryFree: "Бесплатно",
                 checkoutTotalLabel: "Итого к оплате",
                 confirmBtn: "✅ Подтвердить",
-                checkoutUserLabel: "Покупатель",
                 heroTitle: "KFC Рiston",
                 heroSub: "Быстрая и вкусная доставка еды",
                 successTitle: "Заказ принят! 🎉",
@@ -3213,17 +3200,6 @@
         }
 
         function openCheckout() {
-            // Fill user info
-            const user = getUser();
-            const userSection = document.getElementById('checkoutUserSection');
-            if (user) {
-                document.getElementById('checkoutUserName').textContent = user.firstName + ' ' + user.lastName;
-                document.getElementById('checkoutUserPhone').textContent = user.phone || localStorage.getItem('kfc_verified_phone') || '';
-                userSection.style.display = 'block';
-            } else {
-                userSection.style.display = 'none';
-            }
-
             // Fill address
             const locs = JSON.parse(localStorage.getItem('kfc_locations') || '[]');
             const selId = localStorage.getItem('kfc_selected_location');
@@ -3281,7 +3257,6 @@
             document.getElementById('checkoutDeliveryVal').textContent  = t('checkoutDeliveryFree');
             document.getElementById('checkoutTotalLabel').textContent   = t('checkoutTotalLabel');
             document.getElementById('confirmBtn').textContent           = t('confirmBtn');
-            if (document.getElementById('checkoutUserLabel')) document.getElementById('checkoutUserLabel').textContent = t('checkoutUserLabel');
 
             document.getElementById('checkoutOverlay').classList.add('active');
             document.getElementById('checkoutSheet').classList.add('active');
