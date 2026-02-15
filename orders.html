@@ -190,6 +190,19 @@ function getUser(){
   try{ return JSON.parse(localStorage.getItem('kfc_user')||'null'); }catch{ return null; }
 }
 
+// Telefon bo'yicha cache key — har raqam alohida
+function cacheKey(){
+  const u = getUser();
+  return u?.phone ? 'kfc_orders_' + u.phone.replace(/[^0-9]/g,'') : 'kfc_orders_guest';
+}
+
+function getOrders(){
+  try{ return JSON.parse(localStorage.getItem(cacheKey())||'[]'); }catch{return[];}
+}
+function saveOrders(orders){
+  localStorage.setItem(cacheKey(), JSON.stringify(orders));
+}
+
 // Backend dan telefon bo'yicha zakazlarni olish
 async function fetchOrdersByPhone(){
   const user = getUser();
@@ -200,13 +213,6 @@ async function fetchOrdersByPhone(){
     const data = await res.json();
     return data.orders || [];
   } catch(e){ return null; }
-}
-
-function getOrders(){
-  try{ return JSON.parse(localStorage.getItem('kfc_orders')||'[]'); }catch{return[];}
-}
-function saveOrders(orders){
-  localStorage.setItem('kfc_orders', JSON.stringify(orders));
 }
 
 const STEPS = ['pending','confirmed','cooking','delivering','done'];
@@ -423,46 +429,52 @@ function render(){
 }
 
 document.addEventListener('DOMContentLoaded', async ()=>{
-  // Avval localStorage dan ko'rsatamiz
-  render();
-
-  // Backend dan telefon bo'yicha zakazlarni yuklaymiz
   const user = getUser();
-  if(user && user.phone){
-    const backendOrders = await fetchOrdersByPhone();
-    if(backendOrders && backendOrders.length){
-      // Backend zakazlarini localStorage ga saqlaymiz (merge)
-      const local = getOrders();
-      const localIds = new Set(local.map(o=>o.id));
-      let updated = false;
+  const el = document.getElementById('content');
 
-      // Status yangilash
-      for(const bo of backendOrders){
-        const li = local.findIndex(o=>o.id===bo.id);
-        if(li!==-1){
-          if(local[li].status !== bo.status){ local[li].status = bo.status; updated=true; }
-        } else {
-          // Backend da bor, localda yo'q — qo'shamiz
-          local.push({
-            id: bo.id,
-            date: new Date(bo.created_at||bo.timestamp||Date.now()).toLocaleDateString('uz-UZ'),
-            timestamp: bo.timestamp || Date.now(),
-            items: bo.items || [],
-            address: bo.address || '',
-            total: bo.total || 0,
-            status: bo.status
-          });
-          updated=true;
-        }
-      }
-      if(updated){ saveOrders(local); render(); }
-    }
+  // Kirmaganda
+  if(!user || !user.phone){
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">👤</div>
+        <p>Buyurtmalarni ko'rish uchun avval ro'yxatdan o'ting</p>
+        <button onclick="window.location.href='register.html'"
+          style="margin-top:1rem;padding:0.75rem 1.5rem;background:#FAB95B;color:#fff;
+                 border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;">
+          Ro'yxatdan o'tish
+        </button>
+      </div>`;
+    return;
   }
 
-  // Active zakazni polling qilish
+  // Loading ko'rsatish
+  el.innerHTML = `<div style="text-align:center;padding:3rem;color:#999;font-size:0.95rem;">⏳ Yuklanmoqda...</div>`;
+
+  // Backend dan asosiy ma'lumot olish
+  const backendOrders = await fetchOrdersByPhone();
+
+  if(backendOrders !== null){
+    // Backend zakazlarini normalize qilib cache ga saqlash
+    const normalized = backendOrders.map(bo => ({
+      id: bo.id,
+      date: bo.date || new Date(bo.created_at||bo.timestamp||Date.now()).toLocaleDateString('uz-UZ'),
+      timestamp: bo.timestamp || Date.now(),
+      items: bo.items || [],
+      address: bo.address || '',
+      total: bo.total || 0,
+      status: bo.status,
+      phone: bo.phone
+    }));
+    saveOrders(normalized);
+  }
+
+  // Ko'rsatish (backenddan yoki cacheden)
+  render();
+
+  // Active zakazni polling
   const orders = getOrders();
   const active = orders.slice().reverse().find(o=>o.status!=='done'&&o.status!=='cancelled');
-  if(active) syncOrderStatus(active.id);
+  if(active) startPolling(active.id);
 });
 </script>
 </body>
