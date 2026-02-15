@@ -222,6 +222,27 @@
         <div class="card-title">Telefon raqamingiz</div>
         <div class="card-sub">Telegram botimiz orqali tasdiqlash kodi yuboriladi</div>
 
+        <!-- Telegram bot yo'riqnomasi — DOIM KO'RINADI -->
+        <div style="background: linear-gradient(135deg, #E3F2FD 0%, #E8F5E9 100%); border-radius: 14px; padding: 1rem 1.1rem; margin-bottom: 1.1rem; border: 1.5px solid #BBDEFB;">
+          <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.6rem; font-weight: 600;">📋 Birinchi marta kirishdan oldin:</div>
+          <div style="font-size: 0.83rem; color: #444; line-height: 1.7;">
+            <span style="color:#FAB95B; font-weight:800;">1.</span> Telegram botga boring<br>
+            <span style="color:#FAB95B; font-weight:800;">2.</span> <b>/start</b> tugmasini bosing<br>
+            <span style="color:#FAB95B; font-weight:800;">3.</span> Telefon raqamingizni yuboring<br>
+            <span style="color:#FAB95B; font-weight:800;">4.</span> Qaytib kelib raqamingizni kiriting
+          </div>
+          <a href="https://t.me/your_bot" target="_blank"
+            style="display:flex; align-items:center; justify-content:center; gap:0.5rem;
+                   margin-top:0.85rem; background:#29B6F6; color:#fff; border-radius:10px;
+                   padding:0.6rem 1rem; font-size:0.88rem; font-weight:700; text-decoration:none;
+                   box-shadow: 0 2px 8px rgba(41,182,246,0.3);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.247l-2.01 9.471c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.48l-2.95-.924c-.642-.204-.657-.642.136-.953l11.527-4.448c.535-.194 1.003.131.369.092z"/>
+            </svg>
+            ✈️ Botga o'tish
+          </a>
+        </div>
+
         <div class="input-group">
           <div class="input-label">Telefon raqam</div>
           <div class="input-wrap">
@@ -234,13 +255,13 @@
         </div>
 
         <div class="error-msg" id="err1"></div>
-        <!-- Telegram bot instruction (shown if not registered in bot) -->
-        <div id="tgBotMsg" style="display:none; background:#E3F2FD; border-radius:12px; padding:0.9rem 1rem; margin-bottom:0.75rem; font-size:0.85rem; color:#1565C0; line-height:1.5;">
+        <!-- Telegram botda topilmadi xabari -->
+        <div id="tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:0.9rem 1rem; margin-bottom:0.75rem; font-size:0.85rem; color:#E65100; line-height:1.6; border: 1px solid #FFE0B2;">
           ⚠️ Bu raqam Telegram botimizda topilmadi.<br>
-          Avval <a id="tgBotLink" href="https://t.me/your_bot" target="_blank" style="color:#1565C0; font-weight:700;">@KFC_Riston_bot</a> ga <b>/start</b> yuboring va raqamingizni tasdiqlang, keyin qayta urining.
+          Yuqoridagi <b>"Botga o'tish"</b> tugmasini bosib raqamingizni tasdiqlang, keyin qayta urining.
         </div>
         <button class="btn-primary" id="sendBtn" onclick="sendOTP()">
-          📲 Telegram ga kod yuborish
+          📲 Telegram orqali kod olish
         </button>
       </div>
 
@@ -374,23 +395,23 @@
           // Foydalanuvchi Telegram botda ro'yxatdan o'tmagan
           document.getElementById('tgBotMsg').style.display = 'block';
           btn.disabled = false;
-          btn.textContent = '📲 Telegram ga kod yuborish';
+          btn.textContent = '📲 Telegram orqali kod olish';
 
         } else if (res.status === 429) {
           showErr('err1', data?.message || 'Biroz kuting va qayta urining');
           btn.disabled = false;
-          btn.textContent = '📲 Telegram ga kod yuborish';
+          btn.textContent = '📲 Telegram orqali kod olish';
 
         } else {
           showErr('err1', data?.message || data?.detail || 'Xato. Qayta urining.');
           btn.disabled = false;
-          btn.textContent = '📲 Telegram ga kod yuborish';
+          btn.textContent = '📲 Telegram orqali kod olish';
         }
 
       } catch(e) {
         showErr('err1', 'Server bilan aloqa yo\'q. Qayta urining.');
         btn.disabled = false;
-        btn.textContent = '📲 Telegram ga kod yuborish';
+        btn.textContent = '📲 Telegram orqali kod olish';
       }
     };
 
@@ -440,7 +461,7 @@
       hideErr('err1');
       document.getElementById('tgBotMsg').style.display = 'none';
       document.getElementById('sendBtn').disabled = false;
-      document.getElementById('sendBtn').textContent = '📲 Telegram ga kod yuborish';
+      document.getElementById('sendBtn').textContent = '📲 Telegram orqali kod olish';
     };
 
     // ── 3-qadam: Ism/familya saqlash ────────────────────────────────
