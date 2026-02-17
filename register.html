@@ -451,17 +451,20 @@
         if (res.ok && data.success) {
           if (resendTimer) clearInterval(resendTimer);
           
-          // Allaqachon ro'yxatdan o'tgan bo'lsa — avtomatik login
-          try {
-            const existingUser = JSON.parse(localStorage.getItem('kfc_user') || 'null');
-            if (existingUser && existingUser.phone === verifiedPhone && 
-                existingUser.firstName && existingUser.lastName) {
-              // Mavjud user — darhol kirish
-              const from = sessionStorage.getItem('reg_from') || 'index.html';
-              window.location.replace(from);
-              return;
-            }
-          } catch(e){}
+          // Backend dan user ma'lumoti kelgan bo'lsa — avtomatik login
+          if (data.user && data.user.firstName && data.user.lastName) {
+            // Telegram da allaqachon ism/familya bor — saqlash va kirish
+            localStorage.setItem('kfc_user', JSON.stringify({
+              phone: data.user.phone,
+              firstName: data.user.firstName,
+              lastName: data.user.lastName,
+              registeredAt: new Date().toISOString()
+            }));
+            localStorage.setItem('kfc_verified_phone', data.user.phone);
+            const from = sessionStorage.getItem('reg_from') || 'index.html';
+            window.location.replace(from);
+            return;
+          }
           
           // Yangi user — ism/familya so'rash
           document.getElementById('firstName').value = '';
