@@ -450,6 +450,20 @@
 
         if (res.ok && data.success) {
           if (resendTimer) clearInterval(resendTimer);
+          
+          // Allaqachon ro'yxatdan o'tgan bo'lsa — avtomatik login
+          try {
+            const existingUser = JSON.parse(localStorage.getItem('kfc_user') || 'null');
+            if (existingUser && existingUser.phone === verifiedPhone && 
+                existingUser.firstName && existingUser.lastName) {
+              // Mavjud user — darhol kirish
+              const from = sessionStorage.getItem('reg_from') || 'index.html';
+              window.location.replace(from);
+              return;
+            }
+          } catch(e){}
+          
+          // Yangi user — ism/familya so'rash
           document.getElementById('firstName').value = '';
           document.getElementById('lastName').value = '';
           goStep(3);
