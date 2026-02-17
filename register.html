@@ -350,9 +350,16 @@
           btn.disabled = false;
           btn.textContent = '📲 Telegram orqali kod olish';
         } else if (res.status === 429) {
-          document.getElementById('signup-phone-err').textContent = errMsg || 'Biroz kuting va qayta urining';
-          btn.disabled = false;
-          btn.textContent = '📲 Telegram orqali kod olish';
+          // Server 429 qaytarsa ham kod yuborilgan bo'lishi mumkin — OTP paneliga o'tamiz
+          document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
+          document.getElementById('signup-otp-input').value = '';
+          document.getElementById('signup-otp-err').textContent = '';
+          document.getElementById('signup-verify-btn').disabled = false;
+          document.getElementById('signup-verify-btn').textContent = '✅ Tasdiqlash';
+          renderSteps('signup', 2);
+          showPanel('panel-signup-otp');
+          startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
+          setTimeout(() => document.getElementById('signup-otp-input').focus(), 300);
         } else {
           document.getElementById('signup-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
           btn.disabled = false;
@@ -461,8 +468,17 @@
           document.getElementById('login-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
         } else if (res.status === 429) {
-          document.getElementById('login-phone-err').textContent = errMsg || 'Biroz kuting va qayta urining';
-          btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+          // Server 429 qaytarsa ham kod yuborilgan bo'lishi mumkin — OTP paneliga o'tamiz
+          verifiedPhone = phone;
+          document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
+          document.getElementById('login-otp-input').value = '';
+          document.getElementById('login-otp-err').textContent = '';
+          document.getElementById('login-verify-btn').disabled = false;
+          document.getElementById('login-verify-btn').textContent = '✅ Tasdiqlash';
+          renderSteps('login', 2);
+          showPanel('panel-login-otp');
+          startTimer('loginTimer', 'login-timer', 'login-resend-btn');
+          setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
         } else {
           document.getElementById('login-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
           btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
