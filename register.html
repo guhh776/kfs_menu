@@ -409,12 +409,29 @@
       goHome();
     }
 
-    function saveProfile() {
+    async function saveProfile() {
       const first = document.getElementById('firstName').value.trim();
       const last  = document.getElementById('lastName').value.trim();
       if (!first) { document.getElementById('signup-name-err').textContent = "Ismingizni kiriting"; return; }
       if (!last)  { document.getElementById('signup-name-err').textContent = "Familyangizni kiriting"; return; }
 
+      const btn = document.querySelector('#panel-signup-name .btn-primary');
+      btn.disabled = true;
+      btn.textContent = '⏳ Saqlanmoqda...';
+
+      try {
+        // Backendga saqlash
+        await fetch(`${API_URL}/api/users/profile`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: verifiedPhone, firstName: first, lastName: last })
+        });
+      } catch(e) {
+        // Backend ishlamasa ham davom etamiz — localStorage da saqlanadi
+        console.warn('Profil backendga saqlanmadi:', e);
+      }
+
+      // LocalStorage ga saqlash
       localStorage.setItem('kfc_user', JSON.stringify({
         phone: verifiedPhone, firstName: first, lastName: last,
         registeredAt: new Date().toISOString()
