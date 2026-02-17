@@ -886,6 +886,30 @@
             transform: scale(0.98);
         }
 
+
+        /* ── Coin badge in side menu ── */
+        .coin-badge{display:inline-flex;align-items:center;gap:0.3rem;
+          background:linear-gradient(135deg,#FFF8E1,#FFE0B2);
+          border:1.5px solid #FAB95B;border-radius:20px;
+          padding:0.25rem 0.6rem;font-size:0.78rem;font-weight:800;color:#D08000;
+          margin-top:0.35rem;}
+        /* ── Coin toggle switch ── */
+        .coin-toggle-wrap{display:flex;align-items:center;justify-content:space-between;
+          background:linear-gradient(135deg,#FFF8E1,#FFE0B2);
+          border:1.5px solid #FAB95B;border-radius:14px;
+          padding:0.85rem 1rem;margin-bottom:0.75rem;}
+        .coin-toggle-info{flex:1;}
+        .coin-toggle-title{font-size:0.9rem;font-weight:800;color:#202124;}
+        .coin-toggle-sub{font-size:0.78rem;color:#F5A53A;font-weight:600;margin-top:0.15rem;}
+        .coin-toggle-discount{font-size:0.78rem;color:#4CAF50;font-weight:700;margin-top:0.15rem;display:none;}
+        .toggle-switch{position:relative;width:48px;height:26px;flex-shrink:0;cursor:pointer;}
+        .toggle-switch input{opacity:0;width:0;height:0;}
+        .toggle-slider{position:absolute;inset:0;background:#E0E0E0;border-radius:26px;transition:0.3s;}
+        .toggle-slider:before{content:'';position:absolute;height:20px;width:20px;left:3px;bottom:3px;
+          background:#fff;border-radius:50%;transition:0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+        .toggle-switch input:checked+.toggle-slider{background:#FAB95B;}
+        .toggle-switch input:checked+.toggle-slider:before{transform:translateX(22px);}
+
         .checkout-btn:disabled {
             background: #E0E0E0;
             color: #999;
@@ -1918,6 +1942,7 @@
                 <div id="sideUserDetails" style="display:none; flex:1; min-width:0;">
                     <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
                     <div id="sideUserPhone" style="font-size:0.82rem; color:#888; margin-top:0.15rem;"></div>
+                    <div id="menuCoinBadge" style="display:none;" class="coin-badge">🪙 <span id="menuCoinCount">0</span> coin</div>
                 </div>
             </div>
         </div>
@@ -2091,12 +2116,30 @@
                         <span class="checkout-row-label" id="checkoutDeliveryLabel">Yetkazib berish</span>
                         <span class="checkout-row-val" id="checkoutDeliveryVal">Bepul</span>
                     </div>
+                    <div class="checkout-row" id="coinDiscountRow" style="display:none;">
+                        <span class="checkout-row-label" style="color:#4CAF50;">🪙 Coin chegirma</span>
+                        <span class="checkout-row-val" id="coinDiscountVal" style="color:#4CAF50;"></span>
+                    </div>
                     <div class="checkout-row">
                         <span class="checkout-total-label" id="checkoutTotalLabel">Jami</span>
                         <span class="checkout-total-val" id="checkoutTotalVal">0 UZS</span>
                     </div>
                 </div>
             </div>
+
+            <!-- Coin toggle -->
+            <div class="coin-toggle-wrap" id="coinBlock" style="display:none;">
+                <div class="coin-toggle-info">
+                    <div class="coin-toggle-title">🪙 <span id="coinBalanceLabel">0 coin</span></div>
+                    <div class="coin-toggle-sub" id="coinSubText">Chegirma sifatida ishlatish</div>
+                    <div class="coin-toggle-discount" id="coinDiscountInfo"></div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="useCoinCheck" onchange="toggleCoinUsage()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
             <button class="confirm-btn" id="confirmBtn" onclick="placeOrder()">✅ Tasdiqlash</button>
         </div>
     </div>
@@ -3033,7 +3076,9 @@
 
         function updateBottomCart() {
             const bar = document.getElementById('bottomCartBar');
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const rawTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const coinDiscount = (typeof coinsToUse !== 'undefined' ? coinsToUse : 0) * 1000;
+            const total = Math.max(0, rawTotal - coinDiscount);
             if (cart.length > 0) {
                 document.getElementById('cartBarTotal').textContent = `${total.toLocaleString()} UZS`;
                 bar.classList.add('visible');
@@ -3233,6 +3278,14 @@
         }
 
         function openCheckout() {
+            loadUserCoins();
+            coinsToUse = 0;
+            const cb = document.getElementById('useCoinCheck');
+            if(cb){ cb.checked = false; }
+            const di = document.getElementById('coinDiscountInfo');
+            if(di){ di.style.display = 'none'; }
+            const dr = document.getElementById('coinDiscountRow');
+            if(dr){ dr.style.display = 'none'; }
             // Fill address
             const locs = JSON.parse(localStorage.getItem('kfc_locations') || '[]');
             const selId = localStorage.getItem('kfc_selected_location');
@@ -3308,6 +3361,50 @@
         // ── Backend API URL ─────────────────────────────────────
         const API_URL = 'https://web-production-5aab6.up.railway.app';
 
+        // ── COIN LOGIKASI ──────────────────────────────────────
+        let userCoinBalance = 0;
+        let coinsToUse = 0;
+
+        async function loadUserCoins() {
+            const phone = window._verifiedPhone || localStorage.getItem('kfc_verified_phone');
+            if (!phone) return;
+            try {
+                const res = await fetch(`${API_URL}/api/coins?phone=${encodeURIComponent(phone)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    userCoinBalance = data.balance || 0;
+                    if (userCoinBalance > 0) {
+                        document.getElementById('coinBlock').style.display = 'flex';
+                        document.getElementById('coinBalanceLabel').textContent =
+                            `${userCoinBalance} coin  (${(userCoinBalance * 1000).toLocaleString()} UZS)`;
+                        document.getElementById('coinSubText').textContent = 'Chegirma sifatida ishlatish';
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function toggleCoinUsage() {
+            const checked = document.getElementById('useCoinCheck').checked;
+            const cartTotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            if (checked && userCoinBalance > 0) {
+                coinsToUse = Math.min(userCoinBalance, Math.floor(cartTotal / 1000));
+                const discount = coinsToUse * 1000;
+                const newTotal = Math.max(0, cartTotal - discount);
+                document.getElementById('coinDiscountInfo').textContent = `−${discount.toLocaleString()} UZS chegirma`;
+                document.getElementById('coinDiscountInfo').style.display = 'block';
+                document.getElementById('coinDiscountRow').style.display = 'flex';
+                document.getElementById('coinDiscountVal').textContent = `−${discount.toLocaleString()} UZS`;
+                document.getElementById('checkoutTotalVal').textContent = `${newTotal.toLocaleString()} UZS`;
+            } else {
+                coinsToUse = 0;
+                document.getElementById('coinDiscountInfo').style.display = 'none';
+                document.getElementById('coinDiscountRow').style.display = 'none';
+                document.getElementById('checkoutTotalVal').textContent = `${cartTotal.toLocaleString()} UZS`;
+            }
+        }
+
+
+
         // ── To'lov usuli tanlash ──────────────────────────────
         function selectPayment(type) {
             document.getElementById('selectedPayment').value = type;
@@ -3351,7 +3448,8 @@
                 customer_name: (getUser() ? getUser().firstName + ' ' + getUser().lastName : null),
                 payment: document.getElementById('selectedPayment')?.value || 'naqt',
                 extra_phone: document.getElementById('extraPhone')?.value?.trim() || null,
-                comment: document.getElementById('orderComment')?.value?.trim() || null
+                comment: document.getElementById('orderComment')?.value?.trim() || null,
+                coins_used: (typeof coinsToUse !== 'undefined' ? coinsToUse : 0)
             };
 
             // Confirm tugmasini loading qilish
@@ -3570,6 +3668,25 @@
                 const sectionTop = section.offsetTop - headerHeight - 10;
                 window.scrollTo({ top: sectionTop, behavior: 'smooth' });
             }
+        }
+
+        async function loadMenuCoins(){
+            const phone = window._verifiedPhone || localStorage.getItem('kfc_verified_phone');
+            if(!phone) return;
+            try{
+                const res = await fetch(`${API_URL}/api/coins?phone=${encodeURIComponent(phone)}`);
+                if(res.ok){
+                    const data = await res.json();
+                    const bal = data.balance || 0;
+                    window._menuCoinBalance = bal;
+                    const badge = document.getElementById('menuCoinBadge');
+                    const count = document.getElementById('menuCoinCount');
+                    if(badge && count){
+                        count.textContent = bal;
+                        badge.style.display = bal > 0 ? 'inline-flex' : 'none';
+                    }
+                }
+            } catch(e){}
         }
 
         function toggleSideMenu() {
