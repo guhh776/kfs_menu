@@ -1929,13 +1929,7 @@
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
             </div>
-            <div class="menu-item" onclick="window.location.href='cards.html'; toggleSideMenu();">
-                <div class="menu-item-icon">💳</div>
-                <div class="menu-item-text" data-i18n-menu="myCards">Мои карты</div>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
-                    <path d="M9 18l6-6-6-6"/>
-                </svg>
-            </div>
+
             <div class="menu-item" onclick="window.location.href='addresses.html'; toggleSideMenu();">
                 <div class="menu-item-icon">📍</div>
                 <div class="menu-item-text" data-i18n-menu="myAddresses">Мои адреса</div>
@@ -2049,6 +2043,44 @@
                     <button class="stale-loc-warn-btn" id="staleLocBtn" onclick="closeCheckout(); openLocationSheet()">Yangilash</button>
                 </div>
             </div>
+
+            <!-- To'lov usuli -->
+            <div class="checkout-section">
+                <div class="checkout-label">💳 To'lov usuli</div>
+                <div style="display:flex; gap:0.6rem; margin-top:0.4rem;">
+                    <!-- Naqt -->
+                    <label id="payNaqtLabel" onclick="selectPayment('naqt')" style="flex:1; display:flex; align-items:center; gap:0.5rem; padding:0.75rem; border-radius:12px; border:2px solid #FAB95B; background:#FFF8EE; cursor:pointer; font-size:0.88rem; font-weight:700; color:#202124;">
+                        <span style="font-size:1.2rem;">💵</span> Naqt
+                    </label>
+                    <!-- Karta — bloklangan -->
+                    <label id="payCardLabel" style="flex:1; display:flex; align-items:center; gap:0.5rem; padding:0.75rem; border-radius:12px; border:2px solid #E0E0E0; background:#F5F5F5; cursor:not-allowed; font-size:0.88rem; font-weight:700; color:#BDBDBD; position:relative;" title="Tez kunda">
+                        <span style="font-size:1.2rem;">💳</span> Karta
+                        <span style="position:absolute; top:-8px; right:6px; background:#BDBDBD; color:#fff; font-size:0.65rem; font-weight:800; border-radius:20px; padding:1px 7px;">Tez kunda</span>
+                    </label>
+                </div>
+                <input type="hidden" id="selectedPayment" value="naqt">
+            </div>
+
+            <!-- Qo'shimcha telefon -->
+            <div class="checkout-section">
+                <div class="checkout-label">📞 Qo'shimcha telefon <span style="font-size:0.78rem; color:#999; font-weight:400;">(ixtiyoriy)</span></div>
+                <div style="display:flex; align-items:center; background:#F9F9F9; border:1.5px solid #F0F0F0; border-radius:12px; padding:0.6rem 0.75rem; margin-top:0.4rem; gap:0.5rem;">
+                    <span style="font-size:1rem;">📞</span>
+                    <input type="tel" id="extraPhone" placeholder="+998 90 000 00 00"
+                        inputmode="numeric" maxlength="20"
+                        style="border:none; background:transparent; font-size:0.88rem; font-weight:600; color:#202124; width:100%; outline:none;"
+                        oninput="this.value=this.value.replace(/[^0-9+ ]/g,'')">
+                </div>
+            </div>
+
+            <!-- Izoh -->
+            <div class="checkout-section">
+                <div class="checkout-label">💬 Izoh <span style="font-size:0.78rem; color:#999; font-weight:400;">(ixtiyoriy)</span></div>
+                <textarea id="orderComment" placeholder="Masalan: qo'ng'iroq qilmang, eshik yoniga qo'ying..."
+                    rows="2" maxlength="300"
+                    style="width:100%; margin-top:0.4rem; background:#F9F9F9; border:1.5px solid #F0F0F0; border-radius:12px; padding:0.65rem 0.75rem; font-size:0.88rem; color:#202124; font-family:inherit; resize:none; outline:none; box-sizing:border-box;"></textarea>
+            </div>
+
             <!-- Summary -->
             <div class="checkout-section">
                 <div class="checkout-label" id="checkoutSummaryLabel">Buyurtma</div>
@@ -3276,6 +3308,17 @@
         // ── Backend API URL ─────────────────────────────────────
         const API_URL = 'https://web-production-5aab6.up.railway.app';
 
+        // ── To'lov usuli tanlash ──────────────────────────────
+        function selectPayment(type) {
+            document.getElementById('selectedPayment').value = type;
+            const naqt = document.getElementById('payNaqtLabel');
+            if (type === 'naqt') {
+                naqt.style.border = '2px solid #FAB95B';
+                naqt.style.background = '#FFF8EE';
+                naqt.style.color = '#202124';
+            }
+        }
+
         async function placeOrder() {
             const locs = JSON.parse(localStorage.getItem('kfc_locations') || '[]');
             const selId = localStorage.getItem('kfc_selected_location');
@@ -3305,7 +3348,10 @@
                 status: 'pending',
                 tg_user_id: tgUserId,
                 phone: window._verifiedPhone || localStorage.getItem('kfc_verified_phone') || null,
-                customer_name: (getUser() ? getUser().firstName + ' ' + getUser().lastName : null)
+                customer_name: (getUser() ? getUser().firstName + ' ' + getUser().lastName : null),
+                payment: document.getElementById('selectedPayment')?.value || 'naqt',
+                extra_phone: document.getElementById('extraPhone')?.value?.trim() || null,
+                comment: document.getElementById('orderComment')?.value?.trim() || null
             };
 
             // Confirm tugmasini loading qilish
