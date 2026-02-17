@@ -38,8 +38,8 @@
     .single-input { width: 100%; background: #F5F5F5; border-radius: 14px; border: 2px solid transparent; padding: 0.85rem 1rem; font-size: 1rem; font-weight: 600; color: #202124; outline: none; transition: all 0.2s; }
     .single-input:focus { border-color: #FAB95B; background: #fff; }
 
-    .otp-wrap { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-    .otp-wrap input { flex: 1; padding: 1rem 0; border: 2px solid #E0E0E0; border-radius: 14px; font-size: 1.6rem; font-weight: 800; text-align: center; letter-spacing: 4px; outline: none; color: #202124; transition: border-color 0.2s; background: #F5F5F5; }
+    .otp-wrap { display: flex; justify-content: center; margin-bottom: 0.5rem; }
+    .otp-wrap input { width: 100%; max-width: 260px; padding: 1rem; border: 2px solid #E0E0E0; border-radius: 14px; font-size: 2rem; font-weight: 800; text-align: center; letter-spacing: 0.5rem; text-indent: 0.5rem; outline: none; color: #202124; transition: border-color 0.2s; background: #F5F5F5; box-sizing: border-box; }
     .otp-wrap input:focus { border-color: #FAB95B; background: #fff; }
 
     .btn-primary { width: 100%; padding: 1rem; background: #FAB95B; color: #fff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; }
@@ -58,6 +58,11 @@
     .back-link a { color: #888; font-size: 0.85rem; text-decoration: none; }
     .switch-link { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #666; }
     .switch-link a { color: #FAB95B; font-weight: 700; text-decoration: none; }
+
+    /* Tab switcher */
+    .auth-tabs { display: flex; background: #F5F5F5; border-radius: 14px; padding: 4px; margin-bottom: 1.5rem; }
+    .auth-tab { flex: 1; padding: 0.65rem; border: none; background: transparent; border-radius: 10px; font-size: 0.92rem; font-weight: 700; color: #999; cursor: pointer; transition: all 0.2s; }
+    .auth-tab.active { background: #fff; color: #202124; box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
@@ -77,6 +82,12 @@
     <div class="steps" id="stepsProgress"></div>
 
     <div class="reg-card">
+
+      <!-- Tab switcher -->
+      <div class="auth-tabs" id="authTabs">
+        <button class="auth-tab active" id="tab-signup" onclick="switchTab('signup')">Ro'yxatdan o'tish</button>
+        <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Kirish</button>
+      </div>
 
       <!-- SIGNUP — 1/3: Telefon raqam (Asosiy sahifa) -->
       <div class="step-panel active" id="panel-home">
@@ -106,9 +117,6 @@
           📲 Telegram orqali kod olish
         </button>
 
-        <div class="switch-link">
-          Hisobingiz bormi? <a href="javascript:void(0)" onclick="goLogin()">Kirish</a>
-        </div>
       </div>
 
       <!-- SIGNUP — 2/3: Verify code -->
@@ -182,9 +190,6 @@
           📲 Telegram orqali kod olish
         </button>
 
-        <div class="switch-link">
-          Hisobingiz yo'qmi? <a href="javascript:void(0)" onclick="goHome()">Ro'yxatdan o'tish</a>
-        </div>
       </div>
 
       <!-- LOGIN — 2/2: Verify code -->
@@ -250,6 +255,21 @@
       document.getElementById('stepsProgress').style.display = 'none';
     }
 
+    // ─── Tab switcher ───────────────────────────────────────────────
+    function switchTab(mode) {
+      if (mode === 'signup') {
+        goHome();
+      } else {
+        goLogin();
+      }
+    }
+
+    function setActiveTab(mode) {
+      document.getElementById('tab-signup').classList.toggle('active', mode === 'signup');
+      document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+      // OTP va name panellarida tabni yashirish shart emas, ko'rsatib turadi
+    }
+
     // ─── Navigation helpers ─────────────────────────────────────────
     function goHome() {
       showPanel('panel-home');
@@ -259,6 +279,7 @@
       document.getElementById('signup-tgBotMsg').style.display = 'none';
       document.getElementById('signup-start-btn').disabled = false;
       document.getElementById('signup-start-btn').textContent = '📲 Telegram orqali kod olish';
+      setActiveTab('signup');
     }
 
     function goLogin() {
@@ -269,6 +290,7 @@
       document.getElementById('login-send-btn').textContent = '📲 Telegram orqali kod olish';
       renderSteps('login', 1);
       showPanel('panel-login-phone');
+      setActiveTab('login');
       setTimeout(() => document.getElementById('login-phone').focus(), 300);
     }
 
@@ -477,10 +499,7 @@
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
           setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
         } else if (res.ok) {
-          if (!data.user_exists) {
-            document.getElementById('login-phone-err').textContent = "❌ Bu raqam ro'yxatdan o'tmagan. \"Ro'yxatdan o'tish\" tugmasini bosing.";
-            btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish'; return;
-          }
+          // res.ok = OTP yuborildi, to'g'ridan OTP paneliga o'tamiz
           verifiedPhone = phone;
           document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           document.getElementById('login-otp-input').value = '';
@@ -572,6 +591,7 @@
     // ─── Sahifa ochilganda: steps darhol ko'rsatiladi ──────────────
     document.addEventListener('DOMContentLoaded', function () {
       renderSteps('signup', 1);
+      setActiveTab('signup');
     });
   </script>
 
