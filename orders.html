@@ -21,6 +21,19 @@ body{font-family:'Poppins',-apple-system,sans-serif;background:#F5F5F5;color:#20
 
 .content{padding:1rem}
 
+
+/* ── Coin card ── */
+.coin-card{background:linear-gradient(135deg,#FFF8E1,#FFE0B2);border:1.5px solid #FAB95B;
+  border-radius:16px;padding:1rem 1.2rem;margin-bottom:1rem;
+  display:flex;align-items:center;justify-content:space-between;}
+.coin-card-left{display:flex;align-items:center;gap:0.75rem;}
+.coin-icon-big{font-size:2rem;}
+.coin-card-label{font-size:0.72rem;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
+.coin-card-balance{font-size:1.4rem;font-weight:900;color:#202124;margin-top:0.1rem;}
+.coin-card-sum{font-size:0.82rem;color:#F5A53A;font-weight:700;}
+.coin-card-right{text-align:right;}
+.coin-card-hint{font-size:0.72rem;color:#999;margin-top:0.25rem;}
+
 /* ── Active order banner ── */
 .active-order-banner{
   background:linear-gradient(135deg,#FAB95B,#B71C1C);
@@ -222,6 +235,19 @@ const STEP_ICONS = ['📋','✅','🍗','🚗','🎉'];
 const API_URL = 'https://web-production-5aab6.up.railway.app';
 let statusPollInterval = null;
 
+// ── Coin balansini olish ──
+async function loadCoinBalance(){
+  const user = getUser();
+  if(!user || !user.phone) return 0;
+  try{
+    const res = await fetch(`${API_URL}/api/coins?phone=${encodeURIComponent(user.phone)}`);
+    if(!res.ok) return 0;
+    const data = await res.json();
+    return data.balance || 0;
+  } catch(e){ return 0; }
+}
+
+
 function stepIndex(status){
   const idx = STEPS.indexOf(status);
   return idx < 0 ? 0 : idx;
@@ -370,6 +396,7 @@ function render(){
 
   const orders = getOrders();
   const el = document.getElementById('content');
+  const coinBal = window._coinBalance || 0;
 
   if(!orders.length){
     el.innerHTML = `
@@ -387,6 +414,25 @@ function render(){
   const activeOrder = reversed.find(o=>o.status!=='done'&&o.status!=='cancelled');
 
   let html = '';
+
+  // Coin card
+  if(coinBal > 0){
+    html += `
+      <div class="coin-card">
+        <div class="coin-card-left">
+          <div class="coin-icon-big">🪙</div>
+          <div>
+            <div class="coin-card-label">Mening coinlarim</div>
+            <div class="coin-card-balance">${coinBal} coin</div>
+            <div class="coin-card-sum">${(coinBal * 1000).toLocaleString()} UZS qiymatida</div>
+          </div>
+        </div>
+        <div class="coin-card-right">
+          <div class="coin-card-sum" style="font-size:1rem;">1 🪙 = 1 000 UZS</div>
+          <div class="coin-card-hint">Keyingi zakazda ishlatish<br>mumkin</div>
+        </div>
+      </div>`;
+  }
 
   // Active banner
   if(activeOrder){
@@ -467,6 +513,9 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     }));
     saveOrders(normalized);
   }
+
+  // Coin balansini yuklash
+  window._coinBalance = await loadCoinBalance();
 
   // Ko'rsatish (backenddan yoki cacheden)
   render();
