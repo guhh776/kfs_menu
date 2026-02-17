@@ -2117,21 +2117,22 @@
                         <span class="checkout-row-val" id="checkoutDeliveryVal">Bepul</span>
                     </div>
                     <div class="checkout-row" id="coinDiscountRow" style="display:none;">
-                        <span class="checkout-row-label" style="color:#4CAF50;">🪙 Coin chegirma</span>
-                        <span class="checkout-row-val" id="coinDiscountVal" style="color:#4CAF50;"></span>
+                        <span class="checkout-row-label" style="color:#4CAF50; font-weight:700;">🪙 Coin chegirma</span>
+                        <span class="checkout-row-val" id="coinDiscountVal" style="color:#4CAF50; font-weight:700;"></span>
                     </div>
+                    <div class="checkout-divider" id="coinDivider" style="display:none;"></div>
                     <div class="checkout-row">
-                        <span class="checkout-total-label" id="checkoutTotalLabel">Jami</span>
+                        <span class="checkout-total-label" id="checkoutTotalLabel">Jami to'lov</span>
                         <span class="checkout-total-val" id="checkoutTotalVal">0 UZS</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Coin toggle -->
+            <!-- Coin toggle — "Jami" bilan "Tasdiqlash" orasida -->
             <div class="coin-toggle-wrap" id="coinBlock" style="display:none;">
                 <div class="coin-toggle-info">
-                    <div class="coin-toggle-title">🪙 <span id="coinBalanceLabel">0 coin</span></div>
-                    <div class="coin-toggle-sub" id="coinSubText">Chegirma sifatida ishlatish</div>
+                    <div class="coin-toggle-title">🪙 Coinlarim: <span id="coinBalanceLabel" style="color:#F5A53A;">0</span></div>
+                    <div class="coin-toggle-sub" id="coinSubText"></div>
                     <div class="coin-toggle-discount" id="coinDiscountInfo"></div>
                 </div>
                 <label class="toggle-switch">
@@ -3376,8 +3377,8 @@
                     if (userCoinBalance > 0) {
                         document.getElementById('coinBlock').style.display = 'flex';
                         document.getElementById('coinBalanceLabel').textContent =
-                            `${userCoinBalance} coin  (${(userCoinBalance * 1000).toLocaleString()} UZS)`;
-                        document.getElementById('coinSubText').textContent = 'Chegirma sifatida ishlatish';
+                            `${userCoinBalance} coin = ${(userCoinBalance * 1000).toLocaleString()} UZS`;
+                        document.getElementById('coinSubText').textContent = '';
                     }
                 }
             } catch(e) {}
@@ -3390,15 +3391,16 @@
                 coinsToUse = Math.min(userCoinBalance, Math.floor(cartTotal / 1000));
                 const discount = coinsToUse * 1000;
                 const newTotal = Math.max(0, cartTotal - discount);
-                document.getElementById('coinDiscountInfo').textContent = `−${discount.toLocaleString()} UZS chegirma`;
-                document.getElementById('coinDiscountInfo').style.display = 'block';
+                document.getElementById('coinSubText').textContent = `−${discount.toLocaleString()} UZS chegirma qo'llaniladi`;
                 document.getElementById('coinDiscountRow').style.display = 'flex';
+                document.getElementById('coinDivider').style.display = 'block';
                 document.getElementById('coinDiscountVal').textContent = `−${discount.toLocaleString()} UZS`;
                 document.getElementById('checkoutTotalVal').textContent = `${newTotal.toLocaleString()} UZS`;
             } else {
                 coinsToUse = 0;
-                document.getElementById('coinDiscountInfo').style.display = 'none';
+                document.getElementById('coinSubText').textContent = '';
                 document.getElementById('coinDiscountRow').style.display = 'none';
+                document.getElementById('coinDivider').style.display = 'none';
                 document.getElementById('checkoutTotalVal').textContent = `${cartTotal.toLocaleString()} UZS`;
             }
         }
