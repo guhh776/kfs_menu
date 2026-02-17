@@ -6,202 +6,65 @@
   <title>Ro'yxatdan o'tish</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F5F5F5; min-height: 100vh; display: flex; flex-direction: column; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #F5F5F5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    .reg-header { background: linear-gradient(135deg, #FAB95B 0%, #F5A53A 100%); padding: 3rem 1.5rem 2rem; text-align: center; position: relative; }
+    .reg-header::after { content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; background: #F5F5F5; border-radius: 50%; }
+    .reg-logo { font-size: 3rem; margin-bottom: 0.75rem; }
+    .reg-brand { font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+    .reg-tagline { font-size: 0.85rem; color: rgba(255,255,255,0.85); margin-top: 0.25rem; }
 
-    /* ── Header ── */
-    .reg-header {
-      background: linear-gradient(135deg, #FAB95B 0%, #F5A53A 100%);
-      padding: 3rem 1.5rem 2rem;
-      text-align: center;
-      position: relative;
-    }
-    .reg-header::after {
-      content: '';
-      position: absolute;
-      bottom: -20px; left: 50%;
-      transform: translateX(-50%);
-      width: 40px; height: 40px;
-      background: #F5F5F5;
-      border-radius: 50%;
-    }
-    .reg-logo {
-      font-size: 3rem;
-      margin-bottom: 0.75rem;
-    }
-    .reg-brand {
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -0.5px;
-    }
-    .reg-tagline {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.85);
-      margin-top: 0.25rem;
-    }
+    .reg-content { flex: 1; padding: 2.5rem 1.25rem 2rem; max-width: 480px; margin: 0 auto; width: 100%; }
 
-    /* ── Content ── */
-    .reg-content {
-      flex: 1;
-      padding: 2.5rem 1.25rem 2rem;
-      max-width: 480px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    /* ── Steps indicator ── */
-    .steps {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      margin-bottom: 2rem;
-    }
-    .step-dot {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: #E0E0E0;
-      color: #999;
-      font-size: 0.8rem;
-      font-weight: 800;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.3s;
-      flex-shrink: 0;
-    }
+    /* Steps */
+    .steps { display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; }
+    .step-dot { width: 32px; height: 32px; border-radius: 50%; background: #E0E0E0; color: #999; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; justify-content: center; transition: all 0.3s; flex-shrink: 0; }
     .step-dot.active { background: #FAB95B; color: #fff; box-shadow: 0 0 0 4px rgba(250,185,91,0.2); }
     .step-dot.done { background: #4CAF50; color: #fff; }
     .step-line { height: 2px; width: 40px; background: #E0E0E0; transition: background 0.3s; }
     .step-line.done { background: #4CAF50; }
 
-    /* ── Card ── */
-    .reg-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 1.75rem 1.25rem;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    }
+    .reg-card { background: #fff; border-radius: 20px; padding: 1.75rem 1.25rem; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
     .card-icon { font-size: 2.5rem; text-align: center; margin-bottom: 0.75rem; }
-    .card-title {
-      font-size: 1.2rem; font-weight: 800;
-      color: #202124; text-align: center;
-      margin-bottom: 0.4rem;
-    }
-    .card-sub {
-      font-size: 0.83rem; color: #888;
-      text-align: center; margin-bottom: 1.5rem;
-      line-height: 1.5;
-    }
+    .card-title { font-size: 1.2rem; font-weight: 800; color: #202124; text-align: center; margin-bottom: 0.4rem; }
+    .card-sub { font-size: 0.83rem; color: #888; text-align: center; margin-bottom: 1.5rem; line-height: 1.5; }
 
-    /* ── Inputs ── */
     .input-group { margin-bottom: 1rem; }
-    .input-label {
-      font-size: 0.78rem; font-weight: 700;
-      color: #555; margin-bottom: 0.4rem;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .input-wrap {
-      display: flex; align-items: center;
-      background: #F5F5F5;
-      border-radius: 14px;
-      border: 2px solid transparent;
-      padding: 0 1rem;
-      transition: all 0.2s;
-    }
+    .input-label { font-size: 0.78rem; font-weight: 700; color: #555; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; }
+    .input-wrap { display: flex; align-items: center; background: #F5F5F5; border-radius: 14px; border: 2px solid transparent; padding: 0 1rem; transition: all 0.2s; }
     .input-wrap:focus-within { border-color: #FAB95B; background: #fff; }
-    .input-prefix {
-      font-size: 1rem; font-weight: 700;
-      color: #202124; flex-shrink: 0;
-      margin-right: 0.3rem;
-    }
-    .input-wrap input, .single-input {
-      flex: 1; border: none; background: transparent;
-      font-size: 1rem; font-weight: 600;
-      color: #202124; outline: none;
-      padding: 0.85rem 0;
-      width: 100%;
-    }
-    .single-input {
-      background: #F5F5F5;
-      border-radius: 14px;
-      border: 2px solid transparent;
-      padding: 0.85rem 1rem;
-      transition: all 0.2s;
-    }
-    .single-input:focus { border-color: #FAB95B; background: #fff; outline: none; }
+    .input-prefix { font-size: 1rem; font-weight: 700; color: #202124; flex-shrink: 0; margin-right: 0.3rem; }
+    .input-wrap input { flex: 1; border: none; background: transparent; font-size: 1rem; font-weight: 600; color: #202124; outline: none; padding: 0.85rem 0; width: 100%; }
+    .single-input { width: 100%; background: #F5F5F5; border-radius: 14px; border: 2px solid transparent; padding: 0.85rem 1rem; font-size: 1rem; font-weight: 600; color: #202124; outline: none; transition: all 0.2s; }
+    .single-input:focus { border-color: #FAB95B; background: #fff; }
 
-    /* OTP input */
-    .otp-wrap {
-      display: flex; gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .otp-wrap input {
-      flex: 1; padding: 1rem 0;
-      border: 2px solid #E0E0E0;
-      border-radius: 14px;
-      font-size: 1.6rem; font-weight: 800;
-      text-align: center; letter-spacing: 4px;
-      outline: none; color: #202124;
-      transition: border-color 0.2s;
-      background: #F5F5F5;
-    }
+    .otp-wrap { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .otp-wrap input { flex: 1; padding: 1rem 0; border: 2px solid #E0E0E0; border-radius: 14px; font-size: 1.6rem; font-weight: 800; text-align: center; letter-spacing: 4px; outline: none; color: #202124; transition: border-color 0.2s; background: #F5F5F5; }
     .otp-wrap input:focus { border-color: #FAB95B; background: #fff; }
 
-    /* ── Buttons ── */
-    .btn-primary {
-      width: 100%; padding: 1rem;
-      background: #FAB95B; color: #fff;
-      border: none; border-radius: 14px;
-      font-size: 1rem; font-weight: 800;
-      cursor: pointer; transition: all 0.2s;
-      margin-top: 0.5rem;
-    }
+    .btn-primary { width: 100%; padding: 1rem; background: #FAB95B; color: #fff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; }
     .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
     .btn-primary:disabled { opacity: 0.5; }
 
-    /* ── Error & info ── */
-    .error-msg {
-      font-size: 0.8rem; color: #E53935;
-      text-align: center; min-height: 1.1rem;
-      margin: 0.4rem 0;
-    }
-    .success-msg {
-      font-size: 0.82rem; color: #4CAF50;
-      text-align: center; font-weight: 600;
-      margin-bottom: 0.75rem;
-    }
-    .resend-btn {
-      text-align: center; font-size: 0.82rem;
-      color: #FAB95B; cursor: pointer;
-      margin-top: 0.75rem; font-weight: 600;
-      text-decoration: underline;
-    }
-    .timer-txt {
-      text-align: center; font-size: 0.8rem;
-      color: #999; margin-top: 0.5rem;
-    }
+    .error-msg { font-size: 0.8rem; color: #E53935; text-align: center; min-height: 1.1rem; margin: 0.4rem 0; }
+    .success-msg { font-size: 0.82rem; color: #4CAF50; text-align: center; font-weight: 600; margin-bottom: 0.75rem; }
+    .resend-btn { text-align: center; font-size: 0.82rem; color: #FAB95B; cursor: pointer; margin-top: 0.75rem; font-weight: 600; text-decoration: underline; }
+    .timer-txt { text-align: center; font-size: 0.8rem; color: #999; margin-top: 0.5rem; }
 
-    /* ── Step panels ── */
     .step-panel { display: none; }
     .step-panel.active { display: block; }
 
-    #recaptcha-container { display: none; }
+    .back-link { text-align: center; margin-bottom: 1rem; }
+    .back-link a { color: #888; font-size: 0.85rem; text-decoration: none; }
+    .switch-link { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: #666; }
+    .switch-link a { color: #FAB95B; font-weight: 700; text-decoration: none; }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <div class="reg-header">
-    <button onclick="history.back()" style="position:absolute;top:1rem;left:1rem;background:rgba(255,255,255,0.25);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-        <path d="M19 12H5M5 12l7 7M5 12l7-7"/>
-      </svg>
+    <button onclick="handleBack()" style="position:absolute;top:1rem;left:1rem;background:rgba(255,255,255,0.25);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
     </button>
     <div class="reg-logo">🍗</div>
     <div class="reg-brand">KFC Riston</div>
@@ -210,145 +73,223 @@
 
   <div class="reg-content">
 
-    <!-- Steps -->
-    <div class="steps">
-      <div class="step-dot active" id="dot1">1</div>
-      <div class="step-line" id="line1"></div>
-      <div class="step-dot" id="dot2">2</div>
-      <div class="step-line" id="line2"></div>
-      <div class="step-dot" id="dot3">3</div>
-    </div>
+    <!-- Steps indicator (dinamik) — endi display:none yo'q -->
+    <div class="steps" id="stepsProgress"></div>
 
     <div class="reg-card">
 
-      <!-- STEP 1: Telefon raqam -->
-      <div class="step-panel active" id="step1">
-        <div class="card-icon">📱</div>
-        <div class="card-title">Telefon raqamingiz</div>
-        <div class="card-sub">Telegram botimiz orqali tasdiqlash kodi yuboriladi</div>
+      <!-- SIGNUP — 1/3: Telefon raqam (Asosiy sahifa) -->
+      <div class="step-panel active" id="panel-home">
+        <div class="card-icon" style="font-size:3rem; margin-bottom:1.5rem;">🍗</div>
+        <div class="card-title" style="font-size:1.4rem; margin-bottom:0.5rem;">Ro'yxatdan o'tish</div>
+        <div class="card-sub" style="margin-bottom:1.5rem;">Telefon raqamingizni kiriting</div>
 
         <div class="input-group">
-          <div class="input-label">Telefon raqam</div>
+          <label class="input-label">Telefon raqam</label>
           <div class="input-wrap">
             <span class="input-prefix">+998</span>
-            <input type="tel" id="phoneInput" placeholder="90 123 45 67"
+            <input type="tel" id="signup-phone" placeholder="90 123 45 67"
               maxlength="12" inputmode="numeric"
               oninput="this.value=this.value.replace(/[^0-9 ]/g,'')"
-              onkeydown="if(event.key==='Enter') sendOTP()">
+              onkeydown="if(event.key==='Enter') signupStart()">
           </div>
         </div>
 
-        <div class="error-msg" id="err1"></div>
-        <!-- Telegram botda topilmadi xabari -->
-        <div id="tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:1rem 1.1rem; margin-bottom:0.75rem; font-size:0.88rem; color:#BF360C; line-height:1.7; border: 1.5px solid #FFCCBC;">
+        <div class="error-msg" id="signup-phone-err"></div>
+
+        <div id="signup-tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:1rem 1.1rem; margin-bottom:0.75rem; font-size:0.88rem; color:#BF360C; line-height:1.7; border:1.5px solid #FFCCBC;">
           ⚠️ <b>Telefon raqam botda saqlanmagan!</b><br><br>
-          Avval <a href="https://t.me/demo_kfs_menu_bot" target="_blank" style="color:#1565C0;font-weight:700;">@demo_kfs_menu_bot</a> ga boring va raqamingizni yuboring, keyin qaytib urinib ko'ring.
+          Avval <a href="https://t.me/demo_kfs_menu_bot" target="_blank" style="color:#1565C0;font-weight:700;">@demo_kfs_menu_bot</a> ga boring va raqamingizni yuboring.
         </div>
-          </a>
-        </div>
-        <button class="btn-primary" id="sendBtn" onclick="sendOTP()">
+
+        <button class="btn-primary" id="signup-start-btn" onclick="signupStart()">
           📲 Telegram orqali kod olish
         </button>
+
+        <div class="switch-link">
+          Hisobingiz bormi? <a href="javascript:void(0)" onclick="goLogin()">Kirish</a>
+        </div>
       </div>
 
-      <!-- STEP 2: OTP kod -->
-      <div class="step-panel" id="step2">
+      <!-- SIGNUP — 2/3: Verify code -->
+      <div class="step-panel" id="panel-signup-otp">
         <div class="card-icon">🔐</div>
-        <div class="card-title">Telegram kodini kiriting</div>
-        <div class="success-msg" id="otpSentMsg"></div>
+        <div class="card-title">Kodni kiriting</div>
+        <div class="success-msg" id="signup-otp-msg"></div>
+        <div class="card-sub" style="margin-top:-0.75rem;">Telegram ga yuborilgan 6 xonali kodni kiriting</div>
 
         <div class="otp-wrap">
-          <input type="tel" id="otpInput" placeholder="------"
+          <input type="tel" id="signup-otp-input" placeholder="------"
             maxlength="6" inputmode="numeric"
-            oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===6) verifyOTP()">
+            oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===6) signupVerify()">
         </div>
 
-        <div class="error-msg" id="err2"></div>
-        <button class="btn-primary" id="verifyBtn" onclick="verifyOTP()">
-          ✅ Tasdiqlash
-        </button>
-        <div class="resend-btn" id="resendBtn" style="display:none" onclick="resendOTP()">
-          🔄 Qaytadan Telegram ga yuborish
+        <div class="error-msg" id="signup-otp-err"></div>
+        <button class="btn-primary" id="signup-verify-btn" onclick="signupVerify()">✅ Tasdiqlash</button>
+        <div class="resend-btn" id="signup-resend-btn" style="display:none" onclick="signupResend()">🔄 Qaytadan yuborish</div>
+        <div class="timer-txt" id="signup-timer"></div>
+
+        <div class="back-link" style="margin-top:1rem;">
+          <a href="javascript:void(0)" onclick="goHome()">← Orqaga</a>
         </div>
-        <div class="timer-txt" id="timerTxt"></div>
       </div>
 
-      <!-- STEP 3: Ism familya -->
-      <div class="step-panel" id="step3">
+      <!-- SIGNUP — 3/3: Ism / Familya -->
+      <div class="step-panel" id="panel-signup-name">
         <div class="card-icon">👤</div>
         <div class="card-title">Ismingizni kiriting</div>
         <div class="card-sub">Bu ma'lumot buyurtma uchun ishlatiladi</div>
 
         <div class="input-group">
-          <div class="input-label">Ism</div>
-          <input type="text" class="single-input" id="firstName"
-            placeholder="Masalan: Abdulloh" autocomplete="given-name"
-            onkeydown="if(event.key==='Enter') document.getElementById('lastName').focus()">
+          <label class="input-label">Ism</label>
+          <input type="text" class="single-input" id="firstName" placeholder="Masalan: Abdulloh"
+            autocomplete="given-name" onkeydown="if(event.key==='Enter') document.getElementById('lastName').focus()">
         </div>
         <div class="input-group">
-          <div class="input-label">Familya</div>
-          <input type="text" class="single-input" id="lastName"
-            placeholder="Masalan: Karimov" autocomplete="family-name"
-            onkeydown="if(event.key==='Enter') saveProfile()">
+          <label class="input-label">Familya</label>
+          <input type="text" class="single-input" id="lastName" placeholder="Masalan: Karimov"
+            autocomplete="family-name" onkeydown="if(event.key==='Enter') saveProfile()">
         </div>
 
-        <div class="error-msg" id="err3"></div>
-        <button class="btn-primary" onclick="saveProfile()">
-          ✅ Tasdiqlash va boshlash
+        <div class="error-msg" id="signup-name-err"></div>
+        <button class="btn-primary" onclick="saveProfile()">✅ Tasdiqlash va boshlash</button>
+      </div>
+
+      <!-- LOGIN — 1/2: Telefon raqam -->
+      <div class="step-panel" id="panel-login-phone">
+        <div class="card-icon">🔑</div>
+        <div class="card-title">Kirish</div>
+        <div class="card-sub">Telefon raqamingizni kiriting</div>
+
+        <div class="input-group">
+          <label class="input-label">Telefon raqam</label>
+          <div class="input-wrap">
+            <span class="input-prefix">+998</span>
+            <input type="tel" id="login-phone" placeholder="90 123 45 67"
+              maxlength="12" inputmode="numeric"
+              oninput="this.value=this.value.replace(/[^0-9 ]/g,'')"
+              onkeydown="if(event.key==='Enter') loginSendOTP()">
+          </div>
+        </div>
+
+        <div class="error-msg" id="login-phone-err"></div>
+        <div id="login-tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:1rem 1.1rem; margin-bottom:0.75rem; font-size:0.88rem; color:#BF360C; line-height:1.7; border:1.5px solid #FFCCBC;">
+          ⚠️ <b>Telefon raqam botda saqlanmagan!</b><br><br>
+          Avval <a href="https://t.me/demo_kfs_menu_bot" target="_blank" style="color:#1565C0;font-weight:700;">@demo_kfs_menu_bot</a> ga boring va raqamingizni yuboring.
+        </div>
+
+        <button class="btn-primary" id="login-send-btn" onclick="loginSendOTP()">
+          📲 Telegram orqali kod olish
         </button>
+
+        <div class="switch-link">
+          Hisobingiz yo'qmi? <a href="javascript:void(0)" onclick="goHome()">Ro'yxatdan o'tish</a>
+        </div>
+      </div>
+
+      <!-- LOGIN — 2/2: Verify code -->
+      <div class="step-panel" id="panel-login-otp">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Kodni kiriting</div>
+        <div class="success-msg" id="login-otp-msg"></div>
+        <div class="card-sub" style="margin-top:-0.75rem;">Telegram ga yuborilgan 6 xonali kodni kiriting</div>
+
+        <div class="otp-wrap">
+          <input type="tel" id="login-otp-input" placeholder="------"
+            maxlength="6" inputmode="numeric"
+            oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===6) loginVerify()">
+        </div>
+
+        <div class="error-msg" id="login-otp-err"></div>
+        <button class="btn-primary" id="login-verify-btn" onclick="loginVerify()">✅ Tasdiqlash</button>
+        <div class="resend-btn" id="login-resend-btn" style="display:none" onclick="loginResend()">🔄 Qaytadan yuborish</div>
+        <div class="timer-txt" id="login-timer"></div>
+
+        <div class="back-link" style="margin-top:1rem;">
+          <a href="javascript:void(0)" onclick="goLoginPhone()">← Orqaga</a>
+        </div>
       </div>
 
     </div>
   </div>
 
   <script>
-    // ── Backend URL (index.html dagi bilan bir xil bo'lishi kerak) ──
     const API_URL = 'https://web-production-5aab6.up.railway.app';
-
-    // ── Allaqachon ro'yxatdan o'tgan bo'lsa — o'tkazib yuborish ──
-    (function checkAlreadyRegistered(){
-      try {
-        const user = JSON.parse(localStorage.getItem('kfc_user') || 'null');
-        if(user && user.phone && user.firstName && user.lastName){
-          // Ro'yxatdan o'tgan — qaytish sahifasiga yo'naltirish
-          const from = sessionStorage.getItem('reg_from') || 'index.html';
-          window.location.replace(from);
-        }
-      } catch(e){}
-    })();
-
     let verifiedPhone = null;
-    let resendTimer = null;
+    let signupTimer = null;
+    let loginTimer = null;
 
-    // ── Bosqich (step) o'tish ────────────────────────────────────────
-    function goStep(n) {
+    // ─── Panel ko'rsatish ───────────────────────────────────────────
+    function showPanel(id) {
       document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-      document.getElementById('step' + n).classList.add('active');
-      for (let i = 1; i <= 3; i++) {
-        const dot = document.getElementById('dot' + i);
-        dot.classList.remove('active', 'done');
-        if (i < n) { dot.classList.add('done'); dot.textContent = '✓'; }
-        else if (i === n) dot.classList.add('active');
-      }
-      for (let i = 1; i <= 2; i++) {
-        document.getElementById('line' + i).classList.toggle('done', i < n);
+      document.getElementById(id).classList.add('active');
+    }
+
+    // ─── Steps indicator render qilish ─────────────────────────────
+    // mode: 'signup' (3 ta) yoki 'login' (2 ta)
+    // current: 1-dan boshlab
+    function renderSteps(mode, current) {
+      const wrap = document.getElementById('stepsProgress');
+      const total = mode === 'signup' ? 3 : 2;
+      wrap.style.display = 'flex';
+      wrap.innerHTML = '';
+      for (let i = 1; i <= total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'step-dot' + (i < current ? ' done' : i === current ? ' active' : '');
+        dot.textContent = i < current ? '✓' : i;
+        wrap.appendChild(dot);
+        if (i < total) {
+          const line = document.createElement('div');
+          line.className = 'step-line' + (i < current ? ' done' : '');
+          wrap.appendChild(line);
+        }
       }
     }
 
-    function showErr(id, msg) { document.getElementById(id).textContent = msg; }
-    function hideErr(id)      { document.getElementById(id).textContent = ''; }
+    function hideSteps() {
+      document.getElementById('stepsProgress').style.display = 'none';
+    }
 
-    // ── Resend timer ──────────────────────────────────────────────────
-    function startResendTimer() {
+    // ─── Navigation helpers ─────────────────────────────────────────
+    function goHome() {
+      showPanel('panel-home');
+      renderSteps('signup', 1);
+      document.getElementById('signup-phone').value = '';
+      document.getElementById('signup-phone-err').textContent = '';
+      document.getElementById('signup-tgBotMsg').style.display = 'none';
+      document.getElementById('signup-start-btn').disabled = false;
+      document.getElementById('signup-start-btn').textContent = '📲 Telegram orqali kod olish';
+    }
+
+    function goLogin() {
+      document.getElementById('login-phone').value = '';
+      document.getElementById('login-phone-err').textContent = '';
+      document.getElementById('login-tgBotMsg').style.display = 'none';
+      document.getElementById('login-send-btn').disabled = false;
+      document.getElementById('login-send-btn').textContent = '📲 Telegram orqali kod olish';
+      renderSteps('login', 1);
+      showPanel('panel-login-phone');
+      setTimeout(() => document.getElementById('login-phone').focus(), 300);
+    }
+
+    function goLoginPhone() {
+      if (loginTimer) clearInterval(loginTimer);
+      renderSteps('login', 1);
+      showPanel('panel-login-phone');
+    }
+
+    // ─── Taymerni boshlash ─────────────────────────────────────────
+    function startTimer(timerKey, timerTxtId, resendBtnId, onDone) {
       let secs = 60;
-      const txt = document.getElementById('timerTxt');
-      const btn = document.getElementById('resendBtn');
+      const txt = document.getElementById(timerTxtId);
+      const btn = document.getElementById(resendBtnId);
       btn.style.display = 'none';
       txt.textContent = `${secs} soniyadan keyin qayta yuborish`;
-      resendTimer = setInterval(() => {
+      if (window[timerKey]) clearInterval(window[timerKey]);
+      window[timerKey] = setInterval(() => {
         secs--;
         if (secs <= 0) {
-          clearInterval(resendTimer);
+          clearInterval(window[timerKey]);
           txt.textContent = '';
           btn.style.display = 'block';
         } else {
@@ -357,162 +298,249 @@
       }, 1000);
     }
 
-    // ── 1-qadam: Telegram orqali OTP yuborish ────────────────────────
-    window.sendOTP = async function() {
-      const raw = document.getElementById('phoneInput').value.replace(/\D/g, '');
-      if (raw.length < 9) { showErr('err1', "Telefon raqamni to'liq kiriting"); return; }
+    // ═══════════════════════════════════════════════════════════════
+    // SIGNUP FLOW
+    // ═══════════════════════════════════════════════════════════════
+
+    async function signupStart() {
+      const raw = document.getElementById('signup-phone').value.replace(/\D/g, '');
+      document.getElementById('signup-phone-err').textContent = '';
+      document.getElementById('signup-tgBotMsg').style.display = 'none';
+
+      if (raw.length < 9) {
+        document.getElementById('signup-phone-err').textContent = "Telefon raqamni to'liq kiriting";
+        return;
+      }
 
       const phone = '+998' + raw.slice(-9);
-      hideErr('err1');
-      document.getElementById('tgBotMsg').style.display = 'none';
+      verifiedPhone = phone;
 
-      const btn = document.getElementById('sendBtn');
+      const btn = document.getElementById('signup-start-btn');
       btn.disabled = true;
       btn.textContent = '⏳ Yuborilmoqda...';
 
       try {
         const res = await fetch(`${API_URL}/api/otp/send`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone })
         });
-
         const data = await res.json();
-
-        // detail object yoki string bo'lishi mumkin
-        const detail = data?.detail || data;
-        const errMsg = typeof detail === 'object'
-          ? (detail?.message || detail?.error || JSON.stringify(detail))
-          : String(detail);
-        const errCode = typeof detail === 'object' ? detail?.error : null;
-
-        // Botda ro'yxatdan o'tmagan — istalgan ko'rinishda
-        const isNotRegistered = res.status === 404 || errCode === 'not_registered' ||
-          (typeof errMsg === 'string' && errMsg.includes('not_registered'));
+        const errMsg = getErrMsg(data);
+        const isNotReg = res.status === 404 || errMsg.includes('not_registered');
 
         if (res.ok) {
-          // Muvaffaqiyat — OTP yuborildi
-          verifiedPhone = phone;
-          document.getElementById('otpSentMsg').textContent =
-            `✅ ${phone} uchun Telegram ga kod yuborildi`;
-          document.getElementById('otpInput').value = '';
-          goStep(2);
-          startResendTimer();
-          setTimeout(() => document.getElementById('otpInput').focus(), 300);
-
-        } else if (isNotRegistered) {
-          // Botda ro'yxatdan o'tmagan — ko'k blok ko'rsatish
-          document.getElementById('tgBotMsg').style.display = 'block';
-          document.getElementById('tgBotMsg').scrollIntoView({ behavior: 'smooth' });
+          if (data.user_exists === true) {
+            document.getElementById('signup-phone-err').textContent = "❌ Bu raqam allaqachon ro'yxatdan o'tgan. \"Kirish\" tugmasini bosing.";
+            btn.disabled = false;
+            btn.textContent = '📲 Telegram orqali kod olish';
+            return;
+          }
+          document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
+          document.getElementById('signup-otp-input').value = '';
+          document.getElementById('signup-otp-err').textContent = '';
+          document.getElementById('signup-verify-btn').disabled = false;
+          document.getElementById('signup-verify-btn').textContent = '✅ Tasdiqlash';
+          renderSteps('signup', 2);
+          showPanel('panel-signup-otp');
+          startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
+          setTimeout(() => document.getElementById('signup-otp-input').focus(), 300);
+        } else if (isNotReg) {
+          document.getElementById('signup-tgBotMsg').style.display = 'block';
+          document.getElementById('signup-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false;
           btn.textContent = '📲 Telegram orqali kod olish';
-
         } else if (res.status === 429) {
-          showErr('err1', errMsg || 'Biroz kuting va qayta urining');
+          document.getElementById('signup-phone-err').textContent = errMsg || 'Biroz kuting va qayta urining';
           btn.disabled = false;
           btn.textContent = '📲 Telegram orqali kod olish';
-
         } else {
-          showErr('err1', errMsg || 'Xato. Qayta urining.');
+          document.getElementById('signup-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
           btn.disabled = false;
           btn.textContent = '📲 Telegram orqali kod olish';
         }
-
       } catch(e) {
-        showErr('err1', 'Server bilan aloqa yo\'q. Qayta urining.');
+        document.getElementById('signup-phone-err').textContent = "Server bilan aloqa yo'q. Qayta urining.";
         btn.disabled = false;
         btn.textContent = '📲 Telegram orqali kod olish';
       }
-    };
+    }
 
-    // ── 2-qadam: OTP kodni tekshirish ─────────────────────────────────
-    window.verifyOTP = async function() {
-      const code = document.getElementById('otpInput').value.trim();
-      if (code.length < 4) { showErr('err2', 'Kodni kiriting'); return; }
+    async function signupVerify() {
+      const code = document.getElementById('signup-otp-input').value.trim();
+      if (code.length < 4) { document.getElementById('signup-otp-err').textContent = 'Kodni kiriting'; return; }
+      document.getElementById('signup-otp-err').textContent = '';
 
-      hideErr('err2');
-      const btn = document.getElementById('verifyBtn');
-      btn.disabled = true;
-      btn.textContent = '⏳ Tekshirilmoqda...';
+      const btn = document.getElementById('signup-verify-btn');
+      btn.disabled = true; btn.textContent = '⏳ Tekshirilmoqda...';
 
       try {
         const res = await fetch(`${API_URL}/api/otp/verify`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: verifiedPhone, code })
         });
-
         const data = await res.json();
-        const detail2 = data?.detail || data;
-        const errMsg2 = typeof detail2 === 'object'
-          ? (detail2?.message || detail2?.error || 'Noto\'g\'ri kod')
-          : String(detail2);
 
         if (res.ok && data.success) {
-          if (resendTimer) clearInterval(resendTimer);
-          
-          // Backend dan user ma'lumoti kelgan bo'lsa — avtomatik login
-          if (data.user && data.user.firstName && data.user.lastName) {
-            // Telegram da allaqachon ism/familya bor — saqlash va kirish
-            localStorage.setItem('kfc_user', JSON.stringify({
-              phone: data.user.phone,
-              firstName: data.user.firstName,
-              lastName: data.user.lastName,
-              registeredAt: new Date().toISOString()
-            }));
-            localStorage.setItem('kfc_verified_phone', data.user.phone);
-            const from = sessionStorage.getItem('reg_from') || 'index.html';
-            window.location.replace(from);
-            return;
-          }
-          
-          // Yangi user — ism/familya so'rash
+          if (window.signupTimer) clearInterval(window.signupTimer);
           document.getElementById('firstName').value = '';
           document.getElementById('lastName').value = '';
-          goStep(3);
+          document.getElementById('signup-name-err').textContent = '';
+          renderSteps('signup', 3);
+          showPanel('panel-signup-name');
           setTimeout(() => document.getElementById('firstName').focus(), 300);
-
         } else {
-          showErr('err2', errMsg2);
-          btn.disabled = false;
-          btn.textContent = '✅ Tasdiqlash';
+          document.getElementById('signup-otp-err').textContent = getErrMsg(data) || "Noto'g'ri kod";
+          btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
         }
-
       } catch(e) {
-        showErr('err2', 'Server bilan aloqa yo\'q.');
-        btn.disabled = false;
-        btn.textContent = '✅ Tasdiqlash';
+        document.getElementById('signup-otp-err').textContent = "Server bilan aloqa yo'q.";
+        btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
       }
-    };
+    }
 
-    // ── Qayta yuborish ──────────────────────────────────────────────
-    window.resendOTP = function() {
-      goStep(1);
-      hideErr('err1');
-      document.getElementById('tgBotMsg').style.display = 'none';
-      document.getElementById('sendBtn').disabled = false;
-      document.getElementById('sendBtn').textContent = '📲 Telegram orqali kod olish';
-    };
+    function signupResend() {
+      goHome();
+    }
 
-    // ── 3-qadam: Ism/familya saqlash ────────────────────────────────
-    window.saveProfile = function() {
+    function saveProfile() {
       const first = document.getElementById('firstName').value.trim();
       const last  = document.getElementById('lastName').value.trim();
-      if (!first) { showErr('err3', "Ismingizni kiriting"); return; }
-      if (!last)  { showErr('err3', "Familyangizni kiriting"); return; }
+      if (!first) { document.getElementById('signup-name-err').textContent = "Ismingizni kiriting"; return; }
+      if (!last)  { document.getElementById('signup-name-err').textContent = "Familyangizni kiriting"; return; }
 
-      const user = {
-        phone: verifiedPhone,
-        firstName: first,
-        lastName: last,
+      localStorage.setItem('kfc_user', JSON.stringify({
+        phone: verifiedPhone, firstName: first, lastName: last,
         registeredAt: new Date().toISOString()
-      };
-      localStorage.setItem('kfc_user', JSON.stringify(user));
+      }));
       localStorage.setItem('kfc_verified_phone', verifiedPhone);
+      window.location.href = sessionStorage.getItem('reg_from') || 'index.html';
+    }
 
-      const from = sessionStorage.getItem('reg_from') || 'index.html';
-      window.location.href = from;
-    };
+    // ═══════════════════════════════════════════════════════════════
+    // LOGIN FLOW
+    // ═══════════════════════════════════════════════════════════════
+
+    async function loginSendOTP() {
+      const raw = document.getElementById('login-phone').value.replace(/\D/g, '');
+      if (raw.length < 9) {
+        document.getElementById('login-phone-err').textContent = "Telefon raqamni to'liq kiriting"; return;
+      }
+      const phone = '+998' + raw.slice(-9);
+      document.getElementById('login-phone-err').textContent = '';
+      document.getElementById('login-tgBotMsg').style.display = 'none';
+
+      const btn = document.getElementById('login-send-btn');
+      btn.disabled = true; btn.textContent = '⏳ Yuborilmoqda...';
+
+      try {
+        const res = await fetch(`${API_URL}/api/otp/send`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        const errMsg = getErrMsg(data);
+        const isNotReg = res.status === 404 || errMsg.includes('not_registered');
+
+        if (res.ok) {
+          if (!data.user_exists) {
+            document.getElementById('login-phone-err').textContent = "❌ Bu raqam ro'yxatdan o'tmagan. \"Ro'yxatdan o'tish\" tugmasini bosing.";
+            btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish'; return;
+          }
+          verifiedPhone = phone;
+          document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
+          document.getElementById('login-otp-input').value = '';
+          document.getElementById('login-otp-err').textContent = '';
+          document.getElementById('login-verify-btn').disabled = false;
+          document.getElementById('login-verify-btn').textContent = '✅ Tasdiqlash';
+          renderSteps('login', 2);
+          showPanel('panel-login-otp');
+          startTimer('loginTimer', 'login-timer', 'login-resend-btn');
+          setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
+        } else if (isNotReg) {
+          document.getElementById('login-tgBotMsg').style.display = 'block';
+          document.getElementById('login-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
+          btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+        } else if (res.status === 429) {
+          document.getElementById('login-phone-err').textContent = errMsg || 'Biroz kuting va qayta urining';
+          btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+        } else {
+          document.getElementById('login-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
+          btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+        }
+      } catch(e) {
+        document.getElementById('login-phone-err').textContent = "Server bilan aloqa yo'q. Qayta urining.";
+        btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+      }
+    }
+
+    async function loginVerify() {
+      const code = document.getElementById('login-otp-input').value.trim();
+      if (code.length < 4) { document.getElementById('login-otp-err').textContent = 'Kodni kiriting'; return; }
+      document.getElementById('login-otp-err').textContent = '';
+
+      const btn = document.getElementById('login-verify-btn');
+      btn.disabled = true; btn.textContent = '⏳ Tekshirilmoqda...';
+
+      try {
+        const res = await fetch(`${API_URL}/api/otp/verify`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: verifiedPhone, code })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (window.loginTimer) clearInterval(window.loginTimer);
+          if (data.user && data.user.firstName) {
+            localStorage.setItem('kfc_user', JSON.stringify({
+              phone: data.user.phone, firstName: data.user.firstName,
+              lastName: data.user.lastName || '', registeredAt: new Date().toISOString()
+            }));
+            localStorage.setItem('kfc_verified_phone', data.user.phone);
+            window.location.replace(sessionStorage.getItem('reg_from') || 'index.html');
+          } else {
+            document.getElementById('login-otp-err').textContent = 'Xatolik yuz berdi. Qaytadan urining.';
+            btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+          }
+        } else {
+          document.getElementById('login-otp-err').textContent = getErrMsg(data) || "Noto'g'ri kod";
+          btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+        }
+      } catch(e) {
+        document.getElementById('login-otp-err').textContent = "Server bilan aloqa yo'q.";
+        btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+      }
+    }
+
+    function loginResend() {
+      goLoginPhone();
+      document.getElementById('login-phone-err').textContent = '';
+      document.getElementById('login-tgBotMsg').style.display = 'none';
+      document.getElementById('login-send-btn').disabled = false;
+      document.getElementById('login-send-btn').textContent = '📲 Telegram orqali kod olish';
+    }
+
+    // ─── Yordamchi funksiya ─────────────────────────────────────────
+    function getErrMsg(data) {
+      const detail = data?.detail || data;
+      if (typeof detail === 'object') return detail?.message || detail?.error || JSON.stringify(detail);
+      return String(detail);
+    }
+
+    function handleBack() {
+      const active = document.querySelector('.step-panel.active');
+      if (active && active.id !== 'panel-home') {
+        if (active.id === 'panel-login-otp') { goLoginPhone(); return; }
+        if (active.id === 'panel-login-phone') { goHome(); return; }
+        if (active.id === 'panel-signup-otp') { goHome(); return; }
+        if (active.id === 'panel-signup-name') { goHome(); return; }
+      }
+      history.back();
+    }
+
+    // ─── Sahifa ochilganda: steps darhol ko'rsatiladi ──────────────
+    document.addEventListener('DOMContentLoaded', function () {
+      renderSteps('signup', 1);
+    });
   </script>
 
 </body>
