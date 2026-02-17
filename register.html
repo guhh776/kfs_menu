@@ -446,9 +446,20 @@
         });
         const data = await res.json();
         const errMsg = getErrMsg(data);
-        const isNotReg = res.status === 404 || errMsg.includes('not_registered');
 
-        if (res.ok) {
+        // 429 BIRINCHI tekshiriladi — kod yuborilgan bo'ladi, OTP paneliga o'tamiz
+        if (res.status === 429) {
+          verifiedPhone = phone;
+          document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
+          document.getElementById('login-otp-input').value = '';
+          document.getElementById('login-otp-err').textContent = '';
+          document.getElementById('login-verify-btn').disabled = false;
+          document.getElementById('login-verify-btn').textContent = '✅ Tasdiqlash';
+          renderSteps('login', 2);
+          showPanel('panel-login-otp');
+          startTimer('loginTimer', 'login-timer', 'login-resend-btn');
+          setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
+        } else if (res.ok) {
           if (!data.user_exists) {
             document.getElementById('login-phone-err').textContent = "❌ Bu raqam ro'yxatdan o'tmagan. \"Ro'yxatdan o'tish\" tugmasini bosing.";
             btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish'; return;
@@ -463,22 +474,10 @@
           showPanel('panel-login-otp');
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
           setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
-        } else if (isNotReg) {
+        } else if (res.status === 404 || errMsg.includes('not_registered')) {
           document.getElementById('login-tgBotMsg').style.display = 'block';
           document.getElementById('login-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
-        } else if (res.status === 429) {
-          // Server 429 qaytarsa ham kod yuborilgan bo'lishi mumkin — OTP paneliga o'tamiz
-          verifiedPhone = phone;
-          document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
-          document.getElementById('login-otp-input').value = '';
-          document.getElementById('login-otp-err').textContent = '';
-          document.getElementById('login-verify-btn').disabled = false;
-          document.getElementById('login-verify-btn').textContent = '✅ Tasdiqlash';
-          renderSteps('login', 2);
-          showPanel('panel-login-otp');
-          startTimer('loginTimer', 'login-timer', 'login-resend-btn');
-          setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
         } else {
           document.getElementById('login-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
           btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
