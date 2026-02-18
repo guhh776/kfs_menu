@@ -893,6 +893,21 @@
           border:1.5px solid #FAB95B;border-radius:20px;
           padding:0.25rem 0.6rem;font-size:0.78rem;font-weight:800;color:#D08000;
           margin-top:0.35rem;}
+
+        /* ── Coin pill badge ── */
+        .coin-pill{display:inline-flex;align-items:center;gap:0.3rem;
+          background:#fff;border:1.5px solid #E8E8E8;border-radius:20px;
+          padding:0.3rem 0.7rem;font-size:0.82rem;font-weight:800;color:#202124;
+          box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+        .coin-pill-icon{width:18px;height:18px;}
+
+        /* ── Checkout coin row: toggle LEFT, balance RIGHT ── */
+        .coin-checkout-row{display:flex;align-items:center;justify-content:space-between;
+          padding:0.85rem 0;margin-bottom:0.5rem;}
+        .coin-checkout-left{display:flex;align-items:center;gap:0.6rem;}
+        .coin-checkout-label{font-size:0.9rem;font-weight:700;color:#202124;}
+        .coin-checkout-disc{font-size:0.78rem;color:#4CAF50;font-weight:700;margin-top:0.1rem;display:none;}
+
         /* ── Coin toggle switch ── */
         .coin-toggle-wrap{display:flex;align-items:center;justify-content:space-between;
           background:linear-gradient(135deg,#FFF8E1,#FFE0B2);
@@ -1937,12 +1952,16 @@
     <div id="sideMenuOverlay" class="side-menu-overlay" onclick="toggleSideMenu()"></div>
     <div id="sideMenu" class="side-menu">
         <div class="side-menu-header">
-            <div id="sideUserInfo" style="display:flex; align-items:center; gap:0.85rem; width:100%;">
+            <div id="sideUserInfo" style="display:flex; align-items:center; gap:0.85rem; width:100%; position:relative;">
                 <div class="profile-circle" id="profileInitials">👤</div>
                 <div id="sideUserDetails" style="display:none; flex:1; min-width:0;">
                     <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
                     <div id="sideUserPhone" style="font-size:0.82rem; color:#888; margin-top:0.15rem;"></div>
-                    <div id="menuCoinBadge" style="display:none;" class="coin-badge">🪙 <span id="menuCoinCount">0</span> coin</div>
+
+                </div>
+                <div id="menuCoinBadge" style="display:none;position:absolute;top:0;right:0;" class="coin-pill">
+                    <img class="coin-pill-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23F5A53A'/%3E%3Ccircle cx='18' cy='18' r='14' fill='%23FAB95B'/%3E%3Ccircle cx='18' cy='18' r='10' fill='%23FDD07A'/%3E%3Ctext x='18' y='23' text-anchor='middle' font-size='13' font-weight='bold' fill='%23A0610A'%3E%E2%82%BF%3C/text%3E%3C/svg%3E" alt="">
+                    <span id="menuCoinCount">0</span>
                 </div>
             </div>
         </div>
@@ -2128,17 +2147,22 @@
                 </div>
             </div>
 
-            <!-- Coin toggle — "Jami" bilan "Tasdiqlash" orasida -->
-            <div class="coin-toggle-wrap" id="coinBlock" style="display:none;">
-                <div class="coin-toggle-info">
-                    <div class="coin-toggle-title">🪙 Coinlarim: <span id="coinBalanceLabel" style="color:#F5A53A;">0</span></div>
-                    <div class="coin-toggle-sub" id="coinSubText"></div>
-                    <div class="coin-toggle-discount" id="coinDiscountInfo"></div>
+            <!-- Coin toggle row: chap=toggle, o'ng=balance -->
+            <div class="coin-checkout-row" id="coinBlock" style="display:none;">
+                <div class="coin-checkout-left">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="useCoinCheck" onchange="toggleCoinUsage()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div>
+                        <div class="coin-checkout-label">🪙 Coinlarni ishlatish</div>
+                        <div class="coin-checkout-disc" id="coinDiscountInfo"></div>
+                    </div>
                 </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="useCoinCheck" onchange="toggleCoinUsage()">
-                    <span class="toggle-slider"></span>
-                </label>
+                <div class="coin-pill">
+                    <img class="coin-pill-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23F5A53A'/%3E%3Ccircle cx='18' cy='18' r='14' fill='%23FAB95B'/%3E%3Ccircle cx='18' cy='18' r='10' fill='%23FDD07A'/%3E%3Ctext x='18' y='23' text-anchor='middle' font-size='13' font-weight='bold' fill='%23A0610A'%3E₿%3C/text%3E%3C/svg%3E" alt="">
+                    <span id="coinBalanceLabel">0</span>
+                </div>
             </div>
 
             <button class="confirm-btn" id="confirmBtn" onclick="placeOrder()">✅ Tasdiqlash</button>
@@ -3374,12 +3398,9 @@
                 if (res.ok) {
                     const data = await res.json();
                     userCoinBalance = data.balance || 0;
-                    if (userCoinBalance > 0) {
-                        document.getElementById('coinBlock').style.display = 'flex';
-                        document.getElementById('coinBalanceLabel').textContent =
-                            `${userCoinBalance} coin = ${(userCoinBalance * 1000).toLocaleString()} UZS`;
-                        document.getElementById('coinSubText').textContent = '';
-                    }
+                    // Ro'yxatdan o'tgan bo'lsa coin blokni har doim ko'rsat
+                    document.getElementById('coinBlock').style.display = 'flex';
+                    document.getElementById('coinBalanceLabel').textContent = userCoinBalance;
                 }
             } catch(e) {}
         }
@@ -3387,18 +3408,20 @@
         function toggleCoinUsage() {
             const checked = document.getElementById('useCoinCheck').checked;
             const cartTotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const discInfo = document.getElementById('coinDiscountInfo');
             if (checked && userCoinBalance > 0) {
                 coinsToUse = Math.min(userCoinBalance, Math.floor(cartTotal / 1000));
                 const discount = coinsToUse * 1000;
                 const newTotal = Math.max(0, cartTotal - discount);
-                document.getElementById('coinSubText').textContent = `−${discount.toLocaleString()} UZS chegirma qo'llaniladi`;
+                discInfo.textContent = `−${discount.toLocaleString()} UZS chegirma`;
+                discInfo.style.display = 'block';
                 document.getElementById('coinDiscountRow').style.display = 'flex';
                 document.getElementById('coinDivider').style.display = 'block';
                 document.getElementById('coinDiscountVal').textContent = `−${discount.toLocaleString()} UZS`;
                 document.getElementById('checkoutTotalVal').textContent = `${newTotal.toLocaleString()} UZS`;
             } else {
                 coinsToUse = 0;
-                document.getElementById('coinSubText').textContent = '';
+                discInfo.style.display = 'none';
                 document.getElementById('coinDiscountRow').style.display = 'none';
                 document.getElementById('coinDivider').style.display = 'none';
                 document.getElementById('checkoutTotalVal').textContent = `${cartTotal.toLocaleString()} UZS`;
@@ -3685,8 +3708,10 @@
                     const count = document.getElementById('menuCoinCount');
                     if(badge && count){
                         count.textContent = bal;
-                        badge.style.display = bal > 0 ? 'inline-flex' : 'none';
+                        badge.style.display = 'inline-flex';
                     }
+                    // Checkout coin badge ham yangilash
+                    window._menuCoinBalance = bal;
                 }
             } catch(e){}
         }
