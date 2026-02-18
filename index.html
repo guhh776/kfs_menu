@@ -890,6 +890,43 @@
         }
 
 
+
+        /* ── Login prompt overlay ── */
+        .login-prompt-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 9500;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s;
+        }
+        .login-prompt-overlay.active { opacity: 1; visibility: visible; }
+        .login-prompt-sheet {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #fff;
+            border-radius: 24px 24px 0 0;
+            padding: 1.75rem 1.5rem calc(env(safe-area-inset-bottom,0px) + 1.75rem);
+            z-index: 9600;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
+            text-align: center;
+        }
+        .login-prompt-overlay.active .login-prompt-sheet { transform: translateY(0); }
+        .login-prompt-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .login-prompt-title { font-size: 1.1rem; font-weight: 800; color: #202124; margin-bottom: 0.4rem; }
+        .login-prompt-sub { font-size: 0.85rem; color: #888; margin-bottom: 1.5rem; line-height: 1.5; }
+        .login-prompt-btns { display: flex; gap: 0.75rem; }
+        .login-prompt-yes {
+            flex: 1; padding: 0.85rem; background: #FAB95B; border: none;
+            border-radius: 14px; font-size: 0.95rem; font-weight: 800;
+            color: #fff; cursor: pointer; font-family: 'Poppins', sans-serif;
+        }
+        .login-prompt-no {
+            flex: 1; padding: 0.85rem; background: #F5F5F5; border: none;
+            border-radius: 14px; font-size: 0.95rem; font-weight: 700;
+            color: #888; cursor: pointer; font-family: 'Poppins', sans-serif;
+        }
+
         /* ── Coin badge in side menu ── */
         .coin-badge{display:inline-flex;align-items:center;gap:0.3rem;
           background:linear-gradient(135deg,#FFF8E1,#FFE0B2);
@@ -3737,8 +3774,46 @@
             if (isOpening) { updateSideMenu(); loadMenuCoins(); }
         }
 
+
+        // ── Login prompt (har 1 soatda) ──────────────────────
+        function checkLoginPrompt() {
+            if (getUser()) return; // kirgan bo'lsa ko'rsatma
+            const last = parseInt(localStorage.getItem('kfc_prompt_dismissed') || '0');
+            const ONE_HOUR = 60 * 60 * 1000;
+            if (Date.now() - last >= ONE_HOUR) {
+                setTimeout(() => {
+                    document.getElementById('loginPromptOverlay').classList.add('active');
+                }, 3000); // sahifa ochilgandan 3 sek keyin
+            }
+        }
+        function dismissLoginPrompt() {
+            document.getElementById('loginPromptOverlay').classList.remove('active');
+            localStorage.setItem('kfc_prompt_dismissed', Date.now().toString());
+        }
+        function goToRegister() {
+            dismissLoginPrompt();
+            window.location.href = 'register.html';
+        }
+
         init();
+        checkLoginPrompt();
     </script>
+
+
+    <!-- ── Login prompt ── -->
+    <div class="login-prompt-overlay" id="loginPromptOverlay">
+        <div class="login-prompt-sheet">
+            <div class="login-prompt-icon">👤</div>
+            <div class="login-prompt-title">Profilingizga kiring!</div>
+            <div class="login-prompt-sub">
+                Buyurtma tarixi, coinlar va ko'proq<br>imkoniyatlar uchun ro'yxatdan o'ting.
+            </div>
+            <div class="login-prompt-btns">
+                <button class="login-prompt-yes" onclick="goToRegister()">✅ Kirish / Ro'yxat</button>
+                <button class="login-prompt-no" onclick="dismissLoginPrompt()">Keyinroq</button>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
