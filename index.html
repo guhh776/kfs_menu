@@ -3696,8 +3696,13 @@
         }
 
         async function loadMenuCoins(){
-            const phone = window._verifiedPhone || localStorage.getItem('kfc_verified_phone');
-            if(!phone) return;
+            const user = getUser();
+            const phone = window._verifiedPhone || localStorage.getItem('kfc_verified_phone') || user?.phone;
+            const badge = document.getElementById('menuCoinBadge');
+            const count = document.getElementById('menuCoinCount');
+            // Agar kirgan bo'lsa — doim ko'rsat (avval 0 bilan)
+            if(!phone || !user){ if(badge) badge.style.display='none'; return; }
+            if(badge && count){ count.textContent = '0'; badge.style.display = 'inline-flex'; }
             try{
                 const res = await fetch(`${API_URL}/api/coins?phone=${encodeURIComponent(phone)}`);
                 if(res.ok){
@@ -3722,7 +3727,7 @@
             const isOpening = !menu.classList.contains('active');
             menu.classList.toggle('active');
             overlay.classList.toggle('active');
-            if (isOpening) updateSideMenu();
+            if (isOpening) { updateSideMenu(); loadMenuCoins(); }
         }
 
         init();
