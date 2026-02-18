@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#FFFFFF">
     <title>KFC Menu</title>
     <style>
@@ -16,6 +16,7 @@
         }
         
         body {
+            -webkit-overflow-scrolling: touch;
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #F5F5F5;
             color: #202124;
@@ -26,7 +27,7 @@
         .page {
             display: none;
             min-height: 100vh;
-            padding-bottom: 160px;
+            padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px));
         }
         
         .page.active {
@@ -527,6 +528,7 @@
         
         /* Bottom Cart Bar */
         .bottom-cart-bar {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
             position: fixed;
             bottom: 0;
             left: 0;
@@ -843,6 +845,7 @@
         }
         
         .cart-footer {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
             background: #FFFFFF;
             padding: 1rem;
             border-top: 1px solid #F0F0F0;
@@ -1072,8 +1075,10 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 2rem 1.5rem;
+            justify-content: flex-start;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 2rem 1.5rem calc(env(safe-area-inset-bottom, 16px) + 1.5rem);
             text-align: center;
         }
         .success-overlay.active { display: flex; }
@@ -1332,6 +1337,7 @@
             background: #202124; border: none; border-radius: 14px;
             color: #fff; font-size: 0.95rem; font-weight: 700;
             cursor: pointer; font-family: 'Poppins', sans-serif;
+            flex-shrink: 0; margin-top: auto;
         }
         .go-orders-btn:active { opacity: 0.85; }
 
@@ -2172,6 +2178,7 @@
          SUCCESS OVERLAY
     ======================== -->
     <div id="successOverlay" class="success-overlay">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:0;padding-bottom:1rem;">
         <div class="success-anim" id="successAnim">🎉</div>
         <div class="success-title" id="successTitle">Buyurtma berildi!</div>
         <div class="success-sub" id="successSub">Buyurtmangiz qabul qilindi.<br>Admin tez orada tasdiqlaydi.</div>
@@ -2222,6 +2229,7 @@
         </div>
 
         <button class="go-orders-btn" id="goOrdersBtn" onclick="goToOrders()">Buyurtmalarimga o'tish →</button>
+        </div>
     </div>
 
     <!-- ========================
