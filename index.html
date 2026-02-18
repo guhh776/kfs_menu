@@ -1952,14 +1952,13 @@
     <div id="sideMenuOverlay" class="side-menu-overlay" onclick="toggleSideMenu()"></div>
     <div id="sideMenu" class="side-menu">
         <div class="side-menu-header">
-            <div id="sideUserInfo" style="display:flex; align-items:center; gap:0.85rem; width:100%; position:relative;">
+            <div id="sideUserInfo" style="display:flex; align-items:center; gap:0.85rem; width:100%;">
                 <div class="profile-circle" id="profileInitials">👤</div>
                 <div id="sideUserDetails" style="display:none; flex:1; min-width:0;">
-                    <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+                    <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124; overflow:hidden; text-overflow:ellipsis;"></div>
                     <div id="sideUserPhone" style="font-size:0.82rem; color:#888; margin-top:0.15rem;"></div>
-
                 </div>
-                <div id="menuCoinBadge" style="display:none;position:absolute;top:0;right:0;" class="coin-pill">
+                <div id="menuCoinBadge" style="display:none; flex-shrink:0; margin-left:auto;" class="coin-pill">
                     <img class="coin-pill-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23F5A53A'/%3E%3Ccircle cx='18' cy='18' r='14' fill='%23FAB95B'/%3E%3Ccircle cx='18' cy='18' r='10' fill='%23FDD07A'/%3E%3Ctext x='18' y='23' text-anchor='middle' font-size='13' font-weight='bold' fill='%23A0610A'%3E%E2%82%BF%3C/text%3E%3C/svg%3E" alt="">
                     <span id="menuCoinCount">0</span>
                 </div>
