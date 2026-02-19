@@ -3422,8 +3422,8 @@
                 if (isStale) {
                     const hoursAgo = Math.floor((Date.now() - selLoc.savedAt) / 3600000);
                     staleTxt.textContent = currentLang === 'uz'
-                        ? `⚠️ Manzil ${hoursAgo} soat oldin aniqlangan. Boshqa joyda bo'lishingiz mumkin.`
-                        : `⚠️ Адрес определён ${hoursAgo} ч. назад. Возможно, вы в другом месте.`;
+                        ? `️ Manzil ${hoursAgo} soat oldin aniqlangan. Boshqa joyda bo'lishingiz mumkin.`
+                        : ` Адрес определён ${hoursAgo} ч. назад. Возможно, вы в другом месте.`;
                     staleBtn.textContent = currentLang === 'uz' ? 'Yangilash' : 'Обновить';
                     staleWarn.classList.add('visible');
                 } else {
