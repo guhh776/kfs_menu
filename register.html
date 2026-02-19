@@ -11,7 +11,7 @@
     .reg-header { background: linear-gradient(135deg, #FAB95B 0%, #F5A53A 100%); padding: 3rem 1.5rem 2rem; text-align: center; position: relative; }
     .reg-header::after { content: ''; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; background: #F5F5F5; border-radius: 50%; }
     .reg-logo { font-size: 3rem; margin-bottom: 0.75rem; }
-    .reg-brand { font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+    .reg-brand { font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -0.5px; margin-bottom: 0.2rem; }
     .reg-tagline { font-size: 0.85rem; color: rgba(255,255,255,0.85); margin-top: 0.25rem; }
 
     .reg-content { flex: 1; padding: 2.5rem 1.25rem 2rem; max-width: 480px; margin: 0 auto; width: 100%; }
@@ -25,7 +25,7 @@
     .step-line.done { background: #4CAF50; }
 
     .reg-card { background: #fff; border-radius: 20px; padding: 1.75rem 1.25rem; box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
-    .card-icon { font-size: 2.5rem; text-align: center; margin-bottom: 0.75rem; }
+    .card-icon { font-size: 2.5rem; text-align: center; margin-bottom: 0.75rem; color: #FAB95B; display: flex; justify-content: center; }
     .card-title { font-size: 1.2rem; font-weight: 800; color: #202124; text-align: center; margin-bottom: 0.4rem; }
     .card-sub { font-size: 0.83rem; color: #888; text-align: center; margin-bottom: 1.5rem; line-height: 1.5; }
 
@@ -42,13 +42,13 @@
     .otp-wrap input { flex: 1; padding: 1rem 0; border: 2px solid #E0E0E0; border-radius: 14px; font-size: 1.6rem; font-weight: 800; text-align: center; letter-spacing: 4px; outline: none; color: #202124; transition: border-color 0.2s; background: #F5F5F5; }
     .otp-wrap input:focus { border-color: #FAB95B; background: #fff; }
 
-    .btn-primary { width: 100%; padding: 1rem; background: #FAB95B; color: #fff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; }
+    .btn-primary { width: 100%; padding: 1rem; background: #FAB95B; color: #fff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
     .btn-primary:disabled { opacity: 0.5; }
 
     .error-msg { font-size: 0.8rem; color: #E53935; text-align: center; min-height: 1.1rem; margin: 0.4rem 0; }
     .success-msg { font-size: 0.82rem; color: #4CAF50; text-align: center; font-weight: 600; margin-bottom: 0.75rem; }
-    .resend-btn { text-align: center; font-size: 0.82rem; color: #FAB95B; cursor: pointer; margin-top: 0.75rem; font-weight: 600; text-decoration: underline; }
+    .resend-btn { text-align: center; font-size: 0.82rem; color: #FAB95B; cursor: pointer; margin-top: 0.75rem; font-weight: 600; text-decoration: underline; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .timer-txt { text-align: center; font-size: 0.8rem; color: #999; margin-top: 0.5rem; }
 
     .step-panel { display: none; }
@@ -80,7 +80,9 @@
 
       <!-- SIGNUP — 1/3: Telefon raqam (Asosiy sahifa) -->
       <div class="step-panel active" id="panel-home">
-        <div class="card-icon" style="font-size:3rem; margin-bottom:1.5rem;">🍗</div>
+        <div class="card-icon" style="margin-bottom:1.5rem;">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+        </div>
         <div class="card-title" style="font-size:1.4rem; margin-bottom:0.5rem;">Ro'yxatdan o'tish</div>
         <div class="card-sub" style="margin-bottom:1.5rem;">Telefon raqamingizni kiriting</div>
 
@@ -103,7 +105,8 @@
         </div>
 
         <button class="btn-primary" id="signup-start-btn" onclick="signupStart()">
-          📲 Telegram orqali kod olish
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          Telegram orqali kod olish
         </button>
 
         <div class="switch-link">
@@ -113,7 +116,9 @@
 
       <!-- SIGNUP — 2/3: Verify code -->
       <div class="step-panel" id="panel-signup-otp">
-        <div class="card-icon">🔐</div>
+        <div class="card-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
         <div class="card-title">Kodni kiriting</div>
         <div class="success-msg" id="signup-otp-msg"></div>
         <div class="card-sub" style="margin-top:-0.75rem;">Telegram ga yuborilgan 6 xonali kodni kiriting</div>
@@ -125,8 +130,14 @@
         </div>
 
         <div class="error-msg" id="signup-otp-err"></div>
-        <button class="btn-primary" id="signup-verify-btn" onclick="signupVerify()">✅ Tasdiqlash</button>
-        <div class="resend-btn" id="signup-resend-btn" style="display:none" onclick="signupResend()">🔄 Qaytadan yuborish</div>
+        <button class="btn-primary" id="signup-verify-btn" onclick="signupVerify()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Tasdiqlash
+        </button>
+        <div class="resend-btn" id="signup-resend-btn" style="display:none" onclick="signupResend()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          Qaytadan yuborish
+        </div>
         <div class="timer-txt" id="signup-timer"></div>
 
         <div class="back-link" style="margin-top:1rem;">
@@ -136,7 +147,9 @@
 
       <!-- SIGNUP — 3/3: Ism / Familya -->
       <div class="step-panel" id="panel-signup-name">
-        <div class="card-icon">👤</div>
+        <div class="card-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
         <div class="card-title">Ismingizni kiriting</div>
         <div class="card-sub">Bu ma'lumot buyurtma uchun ishlatiladi</div>
 
@@ -152,12 +165,17 @@
         </div>
 
         <div class="error-msg" id="signup-name-err"></div>
-        <button class="btn-primary" onclick="saveProfile()">✅ Tasdiqlash va boshlash</button>
+        <button class="btn-primary" onclick="saveProfile()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Tasdiqlash va boshlash
+        </button>
       </div>
 
       <!-- LOGIN — 1/2: Telefon raqam -->
       <div class="step-panel" id="panel-login-phone">
-        <div class="card-icon">🔑</div>
+        <div class="card-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+        </div>
         <div class="card-title">Kirish</div>
         <div class="card-sub">Telefon raqamingizni kiriting</div>
 
@@ -179,7 +197,8 @@
         </div>
 
         <button class="btn-primary" id="login-send-btn" onclick="loginSendOTP()">
-          📲 Telegram orqali kod olish
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          Telegram orqali kod olish
         </button>
 
         <div class="switch-link">
@@ -189,7 +208,9 @@
 
       <!-- LOGIN — 2/2: Verify code -->
       <div class="step-panel" id="panel-login-otp">
-        <div class="card-icon">🔐</div>
+        <div class="card-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
         <div class="card-title">Kodni kiriting</div>
         <div class="success-msg" id="login-otp-msg"></div>
         <div class="card-sub" style="margin-top:-0.75rem;">Telegram ga yuborilgan 6 xonali kodni kiriting</div>
@@ -201,8 +222,14 @@
         </div>
 
         <div class="error-msg" id="login-otp-err"></div>
-        <button class="btn-primary" id="login-verify-btn" onclick="loginVerify()">✅ Tasdiqlash</button>
-        <div class="resend-btn" id="login-resend-btn" style="display:none" onclick="loginResend()">🔄 Qaytadan yuborish</div>
+        <button class="btn-primary" id="login-verify-btn" onclick="loginVerify()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Tasdiqlash
+        </button>
+        <div class="resend-btn" id="login-resend-btn" style="display:none" onclick="loginResend()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          Qaytadan yuborish
+        </div>
         <div class="timer-txt" id="login-timer"></div>
 
         <div class="back-link" style="margin-top:1rem;">
@@ -216,6 +243,10 @@
   <script>
     const API_URL = 'https://web-production-5aab6.up.railway.app';
     let verifiedPhone = null;
+    
+    const ICON_SEND = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
+    const ICON_CHECK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
     let signupTimer = null;
     let loginTimer = null;
 
@@ -258,7 +289,7 @@
       document.getElementById('signup-phone-err').textContent = '';
       document.getElementById('signup-tgBotMsg').style.display = 'none';
       document.getElementById('signup-start-btn').disabled = false;
-      document.getElementById('signup-start-btn').textContent = '📲 Telegram orqali kod olish';
+      document.getElementById('signup-start-btn').innerHTML = ICON_SEND + ' Telegram orqali kod olish';
     }
 
     function goLogin() {
@@ -266,7 +297,7 @@
       document.getElementById('login-phone-err').textContent = '';
       document.getElementById('login-tgBotMsg').style.display = 'none';
       document.getElementById('login-send-btn').disabled = false;
-      document.getElementById('login-send-btn').textContent = '📲 Telegram orqali kod olish';
+      document.getElementById('login-send-btn').innerHTML = ICON_SEND + ' Telegram orqali kod olish';
       renderSteps('login', 1);
       showPanel('panel-login-phone');
       setTimeout(() => document.getElementById('login-phone').focus(), 300);
@@ -283,7 +314,7 @@
       let secs = 60;
       const txt = document.getElementById(timerTxtId);
       const btn = document.getElementById(resendBtnId);
-      btn.style.display = 'none';
+      btn.style.display = 'none'; // flex emas, none bo'lishi kerak boshida
       txt.textContent = `${secs} soniyadan keyin qayta yuborish`;
       if (window[timerKey]) clearInterval(window[timerKey]);
       window[timerKey] = setInterval(() => {
@@ -291,7 +322,7 @@
         if (secs <= 0) {
           clearInterval(window[timerKey]);
           txt.textContent = '';
-          btn.style.display = 'block';
+          btn.style.display = 'flex';
         } else {
           txt.textContent = `${secs} soniyadan keyin qayta yuborish`;
         }
@@ -332,14 +363,14 @@
           if (data.user_exists === true) {
             document.getElementById('signup-phone-err').textContent = "❌ Bu raqam allaqachon ro'yxatdan o'tgan. \"Kirish\" tugmasini bosing.";
             btn.disabled = false;
-            btn.textContent = '📲 Telegram orqali kod olish';
+            btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
             return;
           }
           document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           document.getElementById('signup-otp-input').value = '';
           document.getElementById('signup-otp-err').textContent = '';
           document.getElementById('signup-verify-btn').disabled = false;
-          document.getElementById('signup-verify-btn').textContent = '✅ Tasdiqlash';
+          document.getElementById('signup-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('signup', 2);
           showPanel('panel-signup-otp');
           startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
@@ -348,14 +379,14 @@
           document.getElementById('signup-tgBotMsg').style.display = 'block';
           document.getElementById('signup-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false;
-          btn.textContent = '📲 Telegram orqali kod olish';
+          btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         } else if (res.status === 429) {
           // Server 429 qaytarsa ham kod yuborilgan bo'lishi mumkin — OTP paneliga o'tamiz
           document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           document.getElementById('signup-otp-input').value = '';
           document.getElementById('signup-otp-err').textContent = '';
           document.getElementById('signup-verify-btn').disabled = false;
-          document.getElementById('signup-verify-btn').textContent = '✅ Tasdiqlash';
+          document.getElementById('signup-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('signup', 2);
           showPanel('panel-signup-otp');
           startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
@@ -363,12 +394,12 @@
         } else {
           document.getElementById('signup-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
           btn.disabled = false;
-          btn.textContent = '📲 Telegram orqali kod olish';
+          btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         }
       } catch(e) {
         document.getElementById('signup-phone-err').textContent = "Server bilan aloqa yo'q. Qayta urining.";
         btn.disabled = false;
-        btn.textContent = '📲 Telegram orqali kod olish';
+        btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
       }
     }
 
@@ -397,11 +428,11 @@
           setTimeout(() => document.getElementById('firstName').focus(), 300);
         } else {
           document.getElementById('signup-otp-err').textContent = getErrMsg(data) || "Noto'g'ri kod";
-          btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+          btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
         }
       } catch(e) {
         document.getElementById('signup-otp-err').textContent = "Server bilan aloqa yo'q.";
-        btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+        btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
       }
     }
 
@@ -454,7 +485,7 @@
           document.getElementById('login-otp-input').value = '';
           document.getElementById('login-otp-err').textContent = '';
           document.getElementById('login-verify-btn').disabled = false;
-          document.getElementById('login-verify-btn').textContent = '✅ Tasdiqlash';
+          document.getElementById('login-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('login', 2);
           showPanel('panel-login-otp');
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
@@ -462,14 +493,14 @@
         } else if (res.ok) {
           if (!data.user_exists) {
             document.getElementById('login-phone-err').textContent = "❌ Bu raqam ro'yxatdan o'tmagan. \"Ro'yxatdan o'tish\" tugmasini bosing.";
-            btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish'; return;
+            btn.disabled = false; btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish'; return;
           }
           verifiedPhone = phone;
           document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           document.getElementById('login-otp-input').value = '';
           document.getElementById('login-otp-err').textContent = '';
           document.getElementById('login-verify-btn').disabled = false;
-          document.getElementById('login-verify-btn').textContent = '✅ Tasdiqlash';
+          document.getElementById('login-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('login', 2);
           showPanel('panel-login-otp');
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
@@ -477,14 +508,14 @@
         } else if (res.status === 404 || errMsg.includes('not_registered')) {
           document.getElementById('login-tgBotMsg').style.display = 'block';
           document.getElementById('login-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
-          btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+          btn.disabled = false; btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         } else {
           document.getElementById('login-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
-          btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+          btn.disabled = false; btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         }
       } catch(e) {
         document.getElementById('login-phone-err').textContent = "Server bilan aloqa yo'q. Qayta urining.";
-        btn.disabled = false; btn.textContent = '📲 Telegram orqali kod olish';
+        btn.disabled = false; btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
       }
     }
 
@@ -514,15 +545,15 @@
             window.location.replace(sessionStorage.getItem('reg_from') || 'index.html');
           } else {
             document.getElementById('login-otp-err').textContent = 'Xatolik yuz berdi. Qaytadan urining.';
-            btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+            btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
           }
         } else {
           document.getElementById('login-otp-err').textContent = getErrMsg(data) || "Noto'g'ri kod";
-          btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+          btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
         }
       } catch(e) {
         document.getElementById('login-otp-err').textContent = "Server bilan aloqa yo'q.";
-        btn.disabled = false; btn.textContent = '✅ Tasdiqlash';
+        btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
       }
     }
 
@@ -531,7 +562,7 @@
       document.getElementById('login-phone-err').textContent = '';
       document.getElementById('login-tgBotMsg').style.display = 'none';
       document.getElementById('login-send-btn').disabled = false;
-      document.getElementById('login-send-btn').textContent = '📲 Telegram orqali kod olish';
+      document.getElementById('login-send-btn').innerHTML = ICON_SEND + ' Telegram orqali kod olish';
     }
 
     // ─── Yordamchi funksiya ─────────────────────────────────────────
