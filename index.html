@@ -1800,9 +1800,7 @@
                 <!-- Location Button -->
                 <button class="location-btn" onclick="openLocationSheet()">
                     <div class="location-btn-icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#FAB95B">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                        </svg>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FAB95B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                     </div>
                     <div class="location-btn-text">
                         <div class="location-btn-label" id="locationLabel">Manzilni tanlang</div>
@@ -1996,7 +1994,7 @@
     <div id="sideMenu" class="side-menu">
         <div class="side-menu-header">
             <div id="sideUserInfo" style="display:flex; align-items:flex-start; gap:0.85rem; width:100%;">
-                <div class="profile-circle" id="profileInitials" style="margin-top:0;">👤</div>
+                <div class="profile-circle" id="profileInitials" style="margin-top:0;"><img sr class="icon-img" alt="Profil" style="border-radius:50%;"></div>
                 <div id="sideUserDetails" style="display:none; flex:1; min-width:0;">
                     <div id="sideUserName" style="font-size:1rem; font-weight:800; color:#202124; overflow:hidden; text-overflow:ellipsis;"></div>
                     <div id="sideUserPhone" style="font-size:0.82rem; color:#888; margin-top:0.15rem;"></div>
@@ -2009,7 +2007,9 @@
         </div>
         <div class="menu-items">
             <div class="menu-item" onclick="window.location.href='orders.html'; toggleSideMenu();">
-                <div class="menu-item-icon">🛒</div>
+                <div class="menu-item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                </div>
                 <div class="menu-item-text" data-i18n-menu="orders">История заказов</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
                     <path d="M9 18l6-6-6-6"/>
@@ -2017,25 +2017,33 @@
             </div>
 
             <div class="menu-item" onclick="window.location.href='addresses.html'; toggleSideMenu();">
-                <div class="menu-item-icon">📍</div>
+                <div class="menu-item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
                 <div class="menu-item-text" data-i18n-menu="myAddresses">Мои адреса</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
             </div>
             <div class="menu-item" onclick="openLangSheet(); toggleSideMenu();">
-                <div class="menu-item-icon">🌐</div>
+                <div class="menu-item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
                 <div class="menu-item-text" data-i18n-menu="language">Язык</div>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
             </div>
             <div class="menu-item" id="logoutBtn" onclick="logoutUser()" style="display:none; border-top: 1px solid #F5F5F5; margin-top:0.5rem;">
-                <div class="menu-item-icon">🚪</div>
+                <div class="menu-item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                </div>
                 <div class="menu-item-text" style="color:#E53935;">Chiqish</div>
             </div>
             <div class="menu-item" id="loginBtn" onclick="goToRegister()" style="display:none;">
-                <div class="menu-item-icon">👤</div>
+                <div class="menu-item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FAB95B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                </div>
                 <div class="menu-item-text" style="color:#FAB95B;">Ro'yxatdan o'tish</div>
             </div>
         </div>
@@ -2080,7 +2088,9 @@
         </div>
         <div class="cart-items" id="cartItems">
             <div class="empty-state">
-                <div class="empty-icon">🛒</div>
+                <div class="empty-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#DDD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                </div>
                 <p>Корзина пуста</p>
             </div>
         </div>
@@ -2095,7 +2105,9 @@
 
     <!-- GPS small banner (non-blocking) -->
     <div id="gpsNotifyCard" class="gps-notify-card">
-        <span style="font-size:1.1rem">📍</span>
+        <div style="color:#E65100;display:flex;align-items:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        </div>
         <span class="gnc-title" id="gncTitle">Manzil aniqlanmagan — buyurtma berishda kiritasiz</span>
     </div>
 
@@ -2118,13 +2130,17 @@
             <div class="checkout-section">
                 <div class="checkout-label" id="checkoutAddrLabel">Yetkazib berish manzili</div>
                 <div class="checkout-addr-box" id="checkoutAddrBox">
-                    <span class="checkout-addr-icon">📍</span>
+                    <span class="checkout-addr-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAB95B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    </span>
                     <span class="checkout-addr-txt" id="checkoutAddrTxt">Manzil tanlanmagan</span>
                     <button class="checkout-addr-change" onclick="closeCheckout(); openLocationSheet()" id="checkoutAddrChange">O'zgartirish</button>
                 </div>
                 <!-- Stale GPS warning -->
                 <div class="stale-loc-warn" id="staleLocWarn">
-                    <span style="font-size:1.1rem">⚠️</span>
+                    <span style="color:#E65100;display:flex;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </span>
                     <span class="stale-loc-warn-txt" id="staleLocTxt">Manzil 5 soatdan eski. Siz boshqa joyda bo'lishingiz mumkin.</span>
                     <button class="stale-loc-warn-btn" id="staleLocBtn" onclick="closeCheckout(); openLocationSheet()">Yangilash</button>
                 </div>
@@ -2132,15 +2148,17 @@
 
             <!-- To'lov usuli -->
             <div class="checkout-section">
-                <div class="checkout-label">💳 To'lov usuli</div>
+                <div class="checkout-label">
+                    <span style="display:inline-flex;vertical-align:middle;margin-right:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></span> To'lov usuli
+                </div>
                 <div style="display:flex; gap:0.6rem; margin-top:0.4rem;">
                     <!-- Naqt -->
                     <label id="payNaqtLabel" onclick="selectPayment('naqt')" style="flex:1; display:flex; align-items:center; gap:0.5rem; padding:0.75rem; border-radius:12px; border:2px solid #FAB95B; background:#FFF8EE; cursor:pointer; font-size:0.88rem; font-weight:700; color:#202124;">
-                        <span style="font-size:1.2rem;">💵</span> Naqt
+                        <span style="display:flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg></span> Naqt
                     </label>
                     <!-- Karta — bloklangan -->
                     <label id="payCardLabel" style="flex:1; display:flex; align-items:center; gap:0.5rem; padding:0.75rem; border-radius:12px; border:2px solid #E0E0E0; background:#F5F5F5; cursor:not-allowed; font-size:0.88rem; font-weight:700; color:#BDBDBD; position:relative;" title="Tez kunda">
-                        <span style="font-size:1.2rem;">💳</span> Karta
+                        <span style="display:flex;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></span> Karta
                         <span style="position:absolute; top:-8px; right:6px; background:#BDBDBD; color:#fff; font-size:0.65rem; font-weight:800; border-radius:20px; padding:1px 7px;">Tez kunda</span>
                     </label>
                 </div>
@@ -2149,9 +2167,13 @@
 
             <!-- Qo'shimcha telefon -->
             <div class="checkout-section">
-                <div class="checkout-label">📞 Qo'shimcha telefon <span style="font-size:0.78rem; color:#999; font-weight:400;">(ixtiyoriy)</span></div>
+                <div class="checkout-label">
+                    <span style="display:inline-flex;vertical-align:middle;margin-right:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span> Qo'shimcha telefon <span style="font-size:0.78rem; color:#999; font-weight:400;">(ixtiyoriy)</span>
+                </div>
                 <div style="display:flex; align-items:center; background:#F9F9F9; border:1.5px solid #F0F0F0; border-radius:12px; padding:0.6rem 0.75rem; margin-top:0.4rem; gap:0.5rem;">
-                    <span style="font-size:1rem;">📞</span>
+                    <span style="display:flex;align-items:center;color:#999;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </span>
                     <input type="tel" id="extraPhone" placeholder="+998 90 000 00 00"
                         inputmode="numeric" maxlength="20"
                         style="border:none; background:transparent; font-size:0.88rem; font-weight:600; color:#202124; width:100%; outline:none;"
@@ -2161,7 +2183,9 @@
 
             <!-- Izoh -->
             <div class="checkout-section">
-                <div class="checkout-label">💬 Izoh <span style="font-size:0.78rem; color:#999; font-weight:400;">(ixtiyoriy)</span></div>
+                <div class="checkout-label">
+                    <span style="display:inline-flex;vertical-align:middle;margin-right:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span> Izoh <span style="font-size:0.78rem; color:#999; font-weight:400;">(ixtiyoriy)</span>
+                </div>
                 <textarea id="orderComment" placeholder="Masalan: qo'ng'iroq qilmang, eshik yoniga qo'ying..."
                     rows="2" maxlength="300"
                     style="width:100%; margin-top:0.4rem; background:#F9F9F9; border:1.5px solid #F0F0F0; border-radius:12px; padding:0.65rem 0.75rem; font-size:0.88rem; color:#202124; font-family:inherit; resize:none; outline:none; box-sizing:border-box;"></textarea>
@@ -2178,7 +2202,9 @@
                         <span class="checkout-row-val" id="checkoutDeliveryVal">Bepul</span>
                     </div>
                     <div class="checkout-row" id="coinDiscountRow" style="display:none;">
-                        <span class="checkout-row-label" style="color:#4CAF50; font-weight:700;">🪙 Coin chegirma</span>
+                        <span class="checkout-row-label" style="color:#4CAF50; font-weight:700; display:flex; align-items:center; gap:4px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></svg> Coin chegirma
+                        </span>
                         <span class="checkout-row-val" id="coinDiscountVal" style="color:#4CAF50; font-weight:700;"></span>
                     </div>
                     <div class="checkout-divider" id="coinDivider" style="display:none;"></div>
@@ -2197,7 +2223,9 @@
                         <span class="toggle-slider"></span>
                     </label>
                     <div>
-                        <div class="coin-checkout-label">🪙 Coinlarni ishlatish</div>
+                        <div class="coin-checkout-label" style="display:flex; align-items:center; gap:4px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></svg> Coinlarni ishlatish
+                        </div>
                         <div class="coin-checkout-disc" id="coinDiscountInfo"></div>
                     </div>
                 </div>
@@ -2207,7 +2235,10 @@
                 </div>
             </div>
 
-            <button class="confirm-btn" id="confirmBtn" onclick="placeOrder()">✅ Tasdiqlash</button>
+            <button class="confirm-btn" id="confirmBtn" onclick="placeOrder()" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Tasdiqlash
+            </button>
         </div>
     </div>
 
@@ -2216,7 +2247,9 @@
     ======================== -->
     <div id="successOverlay" class="success-overlay">
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:0;padding-bottom:1rem;">
-        <div class="success-anim" id="successAnim">🎉</div>
+        <div class="success-anim" id="successAnim">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
         <div class="success-title" id="successTitle">Buyurtma berildi!</div>
         <div class="success-sub" id="successSub">Buyurtmangiz qabul qilindi.<br>Admin tez orada tasdiqlaydi.</div>
 
@@ -2258,7 +2291,9 @@
         </div>
 
         <div class="contact-box">
-            <div class="contact-icon">📞</div>
+            <div class="contact-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </div>
             <div class="contact-info">
                 <div class="contact-label" id="contactLabel">Muammo bo'lsa bog'laning</div>
                 <div class="contact-phone">+998 71 001 00 01</div>
@@ -2365,7 +2400,9 @@
             </button>
             <!-- GPS retry button -->
             <button id="gpsRetryBtn" class="add-location-btn" onclick="retryGeolocationFromSheet()" style="background:#F0F7FF;margin-top:0.5rem">
-                <div class="add-location-btn-icon" style="background:#E3F2FD;color:#1565C0">📡</div>
+                <div class="add-location-btn-icon" style="background:#E3F2FD;color:#1565C0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                </div>
                 <span class="add-location-btn-text" id="gpsRetryText" style="color:#1565C0">GPS bilan aniqlash</span>
             </button>
         </div>
@@ -2435,7 +2472,7 @@
                 locationSelect: "Manzilni tanlang",
                 locationLoading: "Aniqlanmoqda...",
                 locationDetecting: "Joylashuv aniqlanmoqda",
-                locationGps: "📡 GPS (joriy joylashuv)",
+                locationGps: "GPS (joriy joylashuv)",
                 locationSheet: "Manzillarim",
                 addLocation: "Yangi manzil qo'shish",
                 streetLabel: "Ko'cha va uy raqami",
@@ -2520,7 +2557,7 @@
                 locationSelect: "Выберите адрес",
                 locationLoading: "Определяется...",
                 locationDetecting: "Определяем местоположение",
-                locationGps: "📡 GPS (текущее местоположение)",
+                locationGps: " GPS (текущее местоположение)",
                 locationSheet: "Мои адреса",
                 addLocation: "Добавить новый адрес",
                 streetLabel: "Улица и номер дома",
@@ -2780,7 +2817,7 @@
             savedLocations = savedLocations.filter(l => !l.isGps);
             const gpsLoc = {
                 id: 'gps_' + Date.now(),
-                street: `📡 ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
+                street: ` ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
                 apt: '', floor: '', note: '',
                 isGps: true, lat: latitude, lng: longitude, savedAt: Date.now()
             };
@@ -2897,7 +2934,9 @@
             if (savedLocations.length === 0) {
                 list.innerHTML = `
                     <div class="empty-locations">
-                        <div class="empty-locations-icon">📍</div>
+                        <div class="empty-locations-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DDD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
                         <p>${t('noLocations')}</p>
                     </div>
                 `;
@@ -2906,10 +2945,7 @@
                     <div class="location-item ${loc.id === selectedLocationId ? 'selected' : ''}" onclick="selectLocation('${loc.id}')">
                         <div class="location-item-icon">
                             ${loc.isGps
-                                ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="${loc.id === selectedLocationId ? '#FAB95B' : '#999'}">
-                                    <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-                                    <circle cx="12" cy="12" r="8" fill="none" stroke="${loc.id === selectedLocationId ? '#FAB95B' : '#999'}" stroke-width="2"/>
-                                   </svg>`
+                                ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${loc.id === selectedLocationId ? '#FAB95B' : '#999'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>`
                                 : `<svg width="22" height="22" viewBox="0 0 24 24" fill="${loc.id === selectedLocationId ? '#FAB95B' : '#999'}">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                                    </svg>`
@@ -3169,7 +3205,9 @@
             const cartItems = document.getElementById('cartItems');
             const cartFooter = document.getElementById('cartFooter');
             if (cart.length === 0) {
-                cartItems.innerHTML = `<div class="empty-state"><div class="empty-icon">🛒</div><p>${t('cartEmpty')}</p></div>`;
+                cartItems.innerHTML = `<div class="empty-state"><div class="empty-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#DDD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                </div><p>${t('cartEmpty')}</p></div>`;
                 cartFooter.classList.add('hidden');
             } else {
                 cartItems.innerHTML = cart.map(item => `
@@ -3217,7 +3255,9 @@
                 if (remaining > 0) {
                     warningEl.style.display = 'flex';
                     warningEl.innerHTML = `
-                        <span class="min-icon">⚠️</span>
+                        <span class="min-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E65100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </span>
                         <span class="min-text">${t('minOrderWarn')}</span>
                         <span class="min-need">+${remaining.toLocaleString()} ${t('minOrderNeed')}</span>
                     `;
@@ -3309,7 +3349,7 @@
                 logoutBtn.style.display = 'flex';
                 loginBtn.style.display  = 'none';
             } else {
-                initialsEl.textContent = '👤';
+                initialsEl.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#CCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
                 initialsEl.style.cssText = '';
                 detailsEl.style.display = 'none';
                 logoutBtn.style.display = 'none';
@@ -3645,7 +3685,7 @@
 
             // Done animatsiyasi
             if (status === 'done') {
-                document.getElementById('successAnim').textContent = '🎉';
+                document.getElementById('successAnim').innerHTML = '<svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
                 if (statusPollInterval) { clearInterval(statusPollInterval); statusPollInterval = null; }
             }
         }
@@ -3803,13 +3843,18 @@
     <!-- ── Login prompt ── -->
     <div class="login-prompt-overlay" id="loginPromptOverlay">
         <div class="login-prompt-sheet">
-            <div class="login-prompt-icon">👤</div>
+            <div class="login-prompt-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="#F5F5F5" stroke="#E4002B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
             <div class="login-prompt-title">Profilingizga kiring!</div>
             <div class="login-prompt-sub">
                 Buyurtma tarixi, coinlar va ko'proq<br>imkoniyatlar uchun ro'yxatdan o'ting.
             </div>
             <div class="login-prompt-btns">
-                <button class="login-prompt-yes" onclick="goToRegister()">✅ Kirish / Ro'yxat</button>
+                <button class="login-prompt-yes" onclick="goToRegister()" style="display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Kirish / Ro'yxat
+                </button>
                 <button class="login-prompt-no" onclick="dismissLoginPrompt()">Keyinroq</button>
             </div>
         </div>
