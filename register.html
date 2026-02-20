@@ -263,15 +263,11 @@
     let signupTimer = null;
     let loginTimer = null;
 
-    // ─── Panel ko'rsatish ───────────────────────────────────────────
     function showPanel(id) {
       document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
-    // ─── Steps indicator render qilish ─────────────────────────────
-    // mode: 'signup' (3 ta) yoki 'login' (2 ta)
-    // current: 1-dan boshlab
     function renderSteps(mode, current) {
       const wrap = document.getElementById('stepsProgress');
       const total = mode === 'signup' ? 3 : 2;
@@ -280,7 +276,7 @@
       for (let i = 1; i <= total; i++) {
         const dot = document.createElement('div');
         dot.className = 'step-dot' + (i < current ? ' done' : i === current ? ' active' : '');
-        dot.textContent = i < current ? '✓' : i;
+        dot.textContent = i < current ? '✔' : i;
         wrap.appendChild(dot);
         if (i < total) {
           const line = document.createElement('div');
@@ -294,12 +290,11 @@
       document.getElementById('stepsProgress').style.display = 'none';
     }
 
-    // ─── Navigation helpers ─────────────────────────────────────────
     function goHome() {
       showPanel('panel-home');
       renderSteps('signup', 1);
       document.getElementById('signup-phone').value = '';
-      document.getElementById('signup-phone-err').textContent = '';
+      document.getElementById('signup-phone-err').innerHTML = '';
       document.getElementById('signup-tgBotMsg').style.display = 'none';
       document.getElementById('signup-start-btn').disabled = false;
       document.getElementById('signup-start-btn').innerHTML = ICON_SEND + ' Telegram orqali kod olish';
@@ -322,12 +317,11 @@
       showPanel('panel-login-phone');
     }
 
-    // ─── Taymerni boshlash ─────────────────────────────────────────
-    function startTimer(timerKey, timerTxtId, resendBtnId, onDone) {
+    function startTimer(timerKey, timerTxtId, resendBtnId) {
       let secs = 60;
       const txt = document.getElementById(timerTxtId);
       const btn = document.getElementById(resendBtnId);
-      btn.style.display = 'none'; // flex emas, none bo'lishi kerak boshida
+      btn.style.display = 'none';
       txt.textContent = `${secs} soniyadan keyin qayta yuborish`;
       if (window[timerKey]) clearInterval(window[timerKey]);
       window[timerKey] = setInterval(() => {
@@ -348,7 +342,7 @@
 
     async function signupStart() {
       const raw = document.getElementById('signup-phone').value.replace(/\D/g, '');
-      document.getElementById('signup-phone-err').textContent = '';
+      document.getElementById('signup-phone-err').innerHTML = '';
       document.getElementById('signup-tgBotMsg').style.display = 'none';
 
       if (raw.length < 9) {
@@ -361,7 +355,25 @@
 
       const btn = document.getElementById('signup-start-btn');
       btn.disabled = true;
-      btn.textContent = '⏳ Tekshirilmoqda...';
+      btn.textContent = 'Tekshirilmoqda...';
+
+      // ── 1. Avval telefon raqami mavjudligini tekshir ──
+      try {
+        const checkRes = await fetch(`${API_URL}/api/check-phone?phone=${encodeURIComponent(phone)}`);
+        const checkData = await checkRes.json();
+        if (checkData.exists) {
+          document.getElementById('signup-phone-err').innerHTML =
+            "<span style='color:#E53935;font-weight:700;'>Siz allaqachon ro'yxatdan o'tgansiz.</span> " +
+            "<a href='javascript:void(0)' onclick='goLogin()' style='color:#FAB95B;font-weight:700;text-decoration:underline;'>Kirish →</a>";
+          btn.disabled = false;
+          btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
+          return;
+        }
+      } catch(e) {
+        // check-phone ishlamasa — davom et
+      }
+
+      btn.textContent = 'Yuborilmoqda...';
 
       try {
         const res = await fetch(`${API_URL}/api/otp/send`, {
@@ -382,8 +394,11 @@
           showPanel('panel-signup-otp');
           startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
           setTimeout(() => document.querySelector('#signup-otp-container input').focus(), 300);
-        } else if (res.status === 400 && (errMsg.includes('exists') || data.code === 'user_exists')) {
-          document.getElementById('signup-phone-err').innerHTML = "Siz allaqachon ro'yxatdan o'tgansiz. <a href='#' onclick='goLogin()' style='color:#FAB95B;font-weight:700;text-decoration:underline;'>Kirish</a>";
+        } else if (res.status === 400 && (errMsg.includes('exists') || errMsg.includes('user_already'))) {
+          // Backend dan ham double-check
+          document.getElementById('signup-phone-err').innerHTML =
+            "<span style='color:#E53935;font-weight:700;'>Siz allaqachon ro'yxatdan o'tgansiz.</span> " +
+            "<a href='javascript:void(0)' onclick='goLogin()' style='color:#FAB95B;font-weight:700;text-decoration:underline;'>Kirish →</a>";
           btn.disabled = false;
           btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         } else if (isNotReg) {
@@ -392,7 +407,6 @@
           btn.disabled = false;
           btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         } else if (res.status === 429) {
-          // Server 429 qaytarsa ham kod yuborilgan bo'lishi mumkin — OTP paneliga o'tamiz
           document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           clearOtp('signup-otp-container');
           document.getElementById('signup-otp-err').textContent = '';
@@ -431,8 +445,8 @@
 
         if (res.ok && data.success) {
           if (window.signupTimer) clearInterval(window.signupTimer);
-          document.getElementById('firstName').value = '';
-          document.getElementById('lastName').value = '';
+          document.getElementById('firstName').value = data.user?.firstName || '';
+          document.getElementById('lastName').value = data.user?.lastName || '';
           document.getElementById('signup-name-err').textContent = '';
           renderSteps('signup', 3);
           showPanel('panel-signup-name');
@@ -461,6 +475,11 @@
       if (!first) { document.getElementById('signup-name-err').textContent = "Ismingizni kiriting"; return; }
       if (!last)  { document.getElementById('signup-name-err').textContent = "Familyangizni kiriting"; return; }
 
+      fetch(`${API_URL}/api/users/profile`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: verifiedPhone, firstName: first, lastName: last })
+      }).catch(() => {}); // fire and forget — localStorage yetarli
+
       localStorage.setItem('kfc_user', JSON.stringify({
         phone: verifiedPhone, firstName: first, lastName: last,
         registeredAt: new Date().toISOString()
@@ -483,7 +502,7 @@
       document.getElementById('login-tgBotMsg').style.display = 'none';
 
       const btn = document.getElementById('login-send-btn');
-      btn.disabled = true; btn.textContent = '⏳ Yuborilmoqda...';
+      btn.disabled = true; btn.textContent = 'Yuborilmoqda...';
 
       try {
         const res = await fetch(`${API_URL}/api/otp/send`, {
@@ -493,8 +512,7 @@
         const data = await res.json();
         const errMsg = getErrMsg(data);
 
-        // 429 BIRINCHI tekshiriladi — kod yuborilgan bo'ladi, OTP paneliga o'tamiz
-        if (res.status === 429) {
+        if (res.status === 429 || res.ok) {
           verifiedPhone = phone;
           document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           clearOtp('login-otp-container');
@@ -505,17 +523,12 @@
           showPanel('panel-login-otp');
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
           setTimeout(() => document.querySelector('#login-otp-container input').focus(), 300);
-        } else if (res.ok) {
-          verifiedPhone = phone;
-          document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
-          clearOtp('login-otp-container');
-          document.getElementById('login-otp-err').textContent = '';
-          document.getElementById('login-verify-btn').disabled = false;
-          document.getElementById('login-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
-          renderSteps('login', 2);
-          showPanel('panel-login-otp');
-          startTimer('loginTimer', 'login-timer', 'login-resend-btn');
-          setTimeout(() => document.querySelector('#login-otp-container input').focus(), 300);
+        } else if (res.status === 404 && errMsg.includes('user_not_found')) {
+          // App da ro'yxatdan o'tmagan — ro'yxatdan o'tishga yo'naltirish
+          document.getElementById('login-phone-err').innerHTML =
+            "<span style='color:#E53935;font-weight:700;'>Bu raqam topilmadi.</span> " +
+            "<a href='javascript:void(0)' onclick='goHome()' style='color:#FAB95B;font-weight:700;text-decoration:underline;'>Ro'yxatdan o'tish →</a>";
+          btn.disabled = false; btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         } else if (res.status === 404 || errMsg.includes('not_registered')) {
           document.getElementById('login-tgBotMsg').style.display = 'block';
           document.getElementById('login-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
@@ -580,7 +593,6 @@
       document.getElementById('login-send-btn').innerHTML = ICON_SEND + ' Telegram orqali kod olish';
     }
 
-    // ─── Yordamchi funksiya ─────────────────────────────────────────
     function getErrMsg(data) {
       const detail = data?.detail || data;
       if (typeof detail === 'object') return detail?.message || detail?.error || JSON.stringify(detail);
@@ -604,14 +616,12 @@
       setTimeout(() => el.classList.remove('shake'), 300);
     }
 
-    // ─── Sahifa ochilganda: steps darhol ko'rsatiladi ──────────────
     document.addEventListener('DOMContentLoaded', function () {
       renderSteps('signup', 1);
       setupOtp('signup-otp-container', signupVerify);
       setupOtp('login-otp-container', loginVerify);
     });
 
-    // ─── OTP Input Logic ───────────────────────────────────────────
     function setupOtp(containerId, verifyFunc) {
       const container = document.getElementById(containerId);
       const inputs = container.querySelectorAll('input');
@@ -620,29 +630,19 @@
         input.addEventListener('input', (e) => {
           e.target.value = e.target.value.replace(/[^0-9]/g, '');
           if (e.target.value.length > 1) e.target.value = e.target.value.slice(-1);
-          
           if (e.target.value) {
-            if (index < inputs.length - 1) {
-              inputs[index + 1].focus();
-            } else {
-              verifyFunc();
-            }
+            if (index < inputs.length - 1) inputs[index + 1].focus();
+            else verifyFunc();
           }
         });
-
         input.addEventListener('keydown', (e) => {
-          if (e.key === 'Backspace' && !e.target.value && index > 0) {
-            inputs[index - 1].focus();
-          }
+          if (e.key === 'Backspace' && !e.target.value && index > 0) inputs[index - 1].focus();
         });
-        
         input.addEventListener('paste', (e) => {
           e.preventDefault();
           const data = (e.clipboardData || window.clipboardData).getData('text');
           const digits = data.replace(/\D/g, '').split('').slice(0, 6);
-          digits.forEach((d, i) => {
-            if (index + i < inputs.length) inputs[index + i].value = d;
-          });
+          digits.forEach((d, i) => { if (index + i < inputs.length) inputs[index + i].value = d; });
           const nextIndex = Math.min(index + digits.length, inputs.length - 1);
           inputs[nextIndex].focus();
           if (getOtpVal(containerId).length === 6) verifyFunc();
@@ -652,16 +652,13 @@
 
     function getOtpVal(containerId) {
       const container = document.getElementById(containerId);
-      const inputs = container.querySelectorAll('input');
       let code = '';
-      inputs.forEach(i => code += i.value);
+      container.querySelectorAll('input').forEach(i => code += i.value);
       return code;
     }
     
     function clearOtp(containerId) {
-      const container = document.getElementById(containerId);
-      const inputs = container.querySelectorAll('input');
-      inputs.forEach(i => i.value = '');
+      document.getElementById(containerId).querySelectorAll('input').forEach(i => i.value = '');
     }
   </script>
 
