@@ -385,7 +385,6 @@
         const isNotReg = res.status === 404 || errMsg.includes('not_registered');
 
         if (res.ok) {
-          document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           clearOtp('signup-otp-container');
           document.getElementById('signup-otp-err').textContent = '';
           document.getElementById('signup-verify-btn').disabled = false;
@@ -407,7 +406,6 @@
           btn.disabled = false;
           btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         } else if (res.status === 429) {
-          document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           clearOtp('signup-otp-container');
           document.getElementById('signup-otp-err').textContent = '';
           document.getElementById('signup-verify-btn').disabled = false;
