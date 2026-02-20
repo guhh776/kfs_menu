@@ -37,10 +37,10 @@
     .input-wrap input { flex: 1; border: none; background: transparent; font-size: 1rem; font-weight: 600; color: #202124; outline: none; padding: 0.85rem 0; width: 100%; }
     .single-input { width: 100%; background: #F5F5F5; border-radius: 14px; border: 2px solid transparent; padding: 0.85rem 1rem; font-size: 1rem; font-weight: 600; color: #202124; outline: none; transition: all 0.2s; }
     .single-input:focus { border-color: #FAB95B; background: #fff; }
-
-    .otp-wrap { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-    .otp-wrap input { flex: 1; padding: 1rem 0; border: 2px solid #E0E0E0; border-radius: 14px; font-size: 1.6rem; font-weight: 800; text-align: center; letter-spacing: 4px; outline: none; color: #202124; transition: border-color 0.2s; background: #F5F5F5; }
-    .otp-wrap input:focus { border-color: #FAB95B; background: #fff; }
+    
+    .otp-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 1rem; }
+    .otp-digit { width: 48px; height: 48px; border: 2px solid #E0E0E0; border-radius: 12px; font-size: 1.5rem; font-weight: 700; text-align: center; outline: none; color: #202124; background: #F5F5F5; transition: border-color 0.2s, background 0.2s; padding: 0; }
+    .otp-digit:focus { border-color: #FAB95B; background: #fff; }
 
     .btn-primary { width: 100%; padding: 1rem; background: #FAB95B; color: #fff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
@@ -50,6 +50,13 @@
     .success-msg { font-size: 0.82rem; color: #4CAF50; text-align: center; font-weight: 600; margin-bottom: 0.75rem; }
     .resend-btn { text-align: center; font-size: 0.82rem; color: #FAB95B; cursor: pointer; margin-top: 0.75rem; font-weight: 600; text-decoration: underline; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .timer-txt { text-align: center; font-size: 0.8rem; color: #999; margin-top: 0.5rem; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    .shake { animation: shake 0.3s ease-in-out; }
 
     .step-panel { display: none; }
     .step-panel.active { display: block; }
@@ -123,10 +130,13 @@
         <div class="success-msg" id="signup-otp-msg"></div>
         <div class="card-sub" style="margin-top:-0.75rem;">Telegram ga yuborilgan 6 xonali kodni kiriting</div>
 
-        <div class="otp-wrap">
-          <input type="tel" id="signup-otp-input" placeholder="------"
-            maxlength="6" inputmode="numeric"
-            oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===6) signupVerify()">
+        <div class="otp-container" id="signup-otp-container">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
         </div>
 
         <div class="error-msg" id="signup-otp-err"></div>
@@ -215,10 +225,13 @@
         <div class="success-msg" id="login-otp-msg"></div>
         <div class="card-sub" style="margin-top:-0.75rem;">Telegram ga yuborilgan 6 xonali kodni kiriting</div>
 
-        <div class="otp-wrap">
-          <input type="tel" id="login-otp-input" placeholder="------"
-            maxlength="6" inputmode="numeric"
-            oninput="this.value=this.value.replace(/[^0-9]/g,''); if(this.value.length===6) loginVerify()">
+        <div class="otp-container" id="login-otp-container">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
+          <input type="tel" class="otp-digit" maxlength="1" inputmode="numeric">
         </div>
 
         <div class="error-msg" id="login-otp-err"></div>
@@ -367,14 +380,14 @@
             return;
           }
           document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
-          document.getElementById('signup-otp-input').value = '';
+          clearOtp('signup-otp-container');
           document.getElementById('signup-otp-err').textContent = '';
           document.getElementById('signup-verify-btn').disabled = false;
           document.getElementById('signup-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('signup', 2);
           showPanel('panel-signup-otp');
           startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
-          setTimeout(() => document.getElementById('signup-otp-input').focus(), 300);
+          setTimeout(() => document.querySelector('#signup-otp-container input').focus(), 300);
         } else if (isNotReg) {
           document.getElementById('signup-tgBotMsg').style.display = 'block';
           document.getElementById('signup-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
@@ -383,14 +396,14 @@
         } else if (res.status === 429) {
           // Server 429 qaytarsa ham kod yuborilgan bo'lishi mumkin — OTP paneliga o'tamiz
           document.getElementById('signup-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
-          document.getElementById('signup-otp-input').value = '';
+          clearOtp('signup-otp-container');
           document.getElementById('signup-otp-err').textContent = '';
           document.getElementById('signup-verify-btn').disabled = false;
           document.getElementById('signup-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('signup', 2);
           showPanel('panel-signup-otp');
           startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
-          setTimeout(() => document.getElementById('signup-otp-input').focus(), 300);
+          setTimeout(() => document.querySelector('#signup-otp-container input').focus(), 300);
         } else {
           document.getElementById('signup-phone-err').textContent = errMsg || 'Xato. Qayta urining.';
           btn.disabled = false;
@@ -404,7 +417,7 @@
     }
 
     async function signupVerify() {
-      const code = document.getElementById('signup-otp-input').value.trim();
+      const code = getOtpVal('signup-otp-container');
       if (code.length < 4) { document.getElementById('signup-otp-err').textContent = 'Kodni kiriting'; return; }
       document.getElementById('signup-otp-err').textContent = '';
 
@@ -429,10 +442,14 @@
         } else {
           document.getElementById('signup-otp-err').textContent = getErrMsg(data) || "Noto'g'ri kod";
           btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
+          triggerShake('signup-otp-container');
+          clearOtp('signup-otp-container');
+          document.querySelector('#signup-otp-container input').focus();
         }
       } catch(e) {
         document.getElementById('signup-otp-err').textContent = "Server bilan aloqa yo'q.";
         btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
+        triggerShake('signup-otp-container');
       }
     }
 
@@ -482,14 +499,14 @@
         if (res.status === 429) {
           verifiedPhone = phone;
           document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
-          document.getElementById('login-otp-input').value = '';
+          clearOtp('login-otp-container');
           document.getElementById('login-otp-err').textContent = '';
           document.getElementById('login-verify-btn').disabled = false;
           document.getElementById('login-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('login', 2);
           showPanel('panel-login-otp');
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
-          setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
+          setTimeout(() => document.querySelector('#login-otp-container input').focus(), 300);
         } else if (res.ok) {
           if (!data.user_exists) {
             document.getElementById('login-phone-err').textContent = "❌ Bu raqam ro'yxatdan o'tmagan. \"Ro'yxatdan o'tish\" tugmasini bosing.";
@@ -497,14 +514,14 @@
           }
           verifiedPhone = phone;
           document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
-          document.getElementById('login-otp-input').value = '';
+          clearOtp('login-otp-container');
           document.getElementById('login-otp-err').textContent = '';
           document.getElementById('login-verify-btn').disabled = false;
           document.getElementById('login-verify-btn').innerHTML = ICON_CHECK + ' Tasdiqlash';
           renderSteps('login', 2);
           showPanel('panel-login-otp');
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
-          setTimeout(() => document.getElementById('login-otp-input').focus(), 300);
+          setTimeout(() => document.querySelector('#login-otp-container input').focus(), 300);
         } else if (res.status === 404 || errMsg.includes('not_registered')) {
           document.getElementById('login-tgBotMsg').style.display = 'block';
           document.getElementById('login-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
@@ -520,7 +537,7 @@
     }
 
     async function loginVerify() {
-      const code = document.getElementById('login-otp-input').value.trim();
+      const code = getOtpVal('login-otp-container');
       if (code.length < 4) { document.getElementById('login-otp-err').textContent = 'Kodni kiriting'; return; }
       document.getElementById('login-otp-err').textContent = '';
 
@@ -550,10 +567,14 @@
         } else {
           document.getElementById('login-otp-err').textContent = getErrMsg(data) || "Noto'g'ri kod";
           btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
+          triggerShake('login-otp-container');
+          clearOtp('login-otp-container');
+          document.querySelector('#login-otp-container input').focus();
         }
       } catch(e) {
         document.getElementById('login-otp-err').textContent = "Server bilan aloqa yo'q.";
         btn.disabled = false; btn.innerHTML = ICON_CHECK + ' Tasdiqlash';
+        triggerShake('login-otp-container');
       }
     }
 
@@ -583,10 +604,71 @@
       history.back();
     }
 
+    function triggerShake(id) {
+      const el = document.getElementById(id);
+      el.classList.add('shake');
+      setTimeout(() => el.classList.remove('shake'), 300);
+    }
+
     // ─── Sahifa ochilganda: steps darhol ko'rsatiladi ──────────────
     document.addEventListener('DOMContentLoaded', function () {
       renderSteps('signup', 1);
+      setupOtp('signup-otp-container', signupVerify);
+      setupOtp('login-otp-container', loginVerify);
     });
+
+    // ─── OTP Input Logic ───────────────────────────────────────────
+    function setupOtp(containerId, verifyFunc) {
+      const container = document.getElementById(containerId);
+      const inputs = container.querySelectorAll('input');
+      
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          e.target.value = e.target.value.replace(/[^0-9]/g, '');
+          if (e.target.value.length > 1) e.target.value = e.target.value.slice(-1);
+          
+          if (e.target.value) {
+            if (index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            } else {
+              verifyFunc();
+            }
+          }
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+        
+        input.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const data = (e.clipboardData || window.clipboardData).getData('text');
+          const digits = data.replace(/\D/g, '').split('').slice(0, 6);
+          digits.forEach((d, i) => {
+            if (index + i < inputs.length) inputs[index + i].value = d;
+          });
+          const nextIndex = Math.min(index + digits.length, inputs.length - 1);
+          inputs[nextIndex].focus();
+          if (getOtpVal(containerId).length === 6) verifyFunc();
+        });
+      });
+    }
+
+    function getOtpVal(containerId) {
+      const container = document.getElementById(containerId);
+      const inputs = container.querySelectorAll('input');
+      let code = '';
+      inputs.forEach(i => code += i.value);
+      return code;
+    }
+    
+    function clearOtp(containerId) {
+      const container = document.getElementById(containerId);
+      const inputs = container.querySelectorAll('input');
+      inputs.forEach(i => i.value = '');
+    }
   </script>
 
 </body>
