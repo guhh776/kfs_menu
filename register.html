@@ -107,7 +107,7 @@
         <div class="error-msg" id="signup-phone-err"></div>
 
         <div id="signup-tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:1rem 1.1rem; margin-bottom:0.75rem; font-size:0.88rem; color:#BF360C; line-height:1.7; border:1.5px solid #FFCCBC;">
-           <b>Telefon raqam botda saqlanmagan!</b><br><br>
+          ⚠️ <b>Telefon raqam botda saqlanmagan!</b><br><br>
           Avval <a href="https://t.me/demo_kfs_menu_bot" target="_blank" style="color:#1565C0;font-weight:700;">@demo_kfs_menu_bot</a> ga boring va raqamingizni yuboring.
         </div>
 
@@ -202,7 +202,7 @@
 
         <div class="error-msg" id="login-phone-err"></div>
         <div id="login-tgBotMsg" style="display:none; background:#FFF3E0; border-radius:12px; padding:1rem 1.1rem; margin-bottom:0.75rem; font-size:0.88rem; color:#BF360C; line-height:1.7; border:1.5px solid #FFCCBC;">
-           <b>Telefon raqam botda saqlanmagan!</b><br><br>
+          ⚠️ <b>Telefon raqam botda saqlanmagan!</b><br><br>
           Avval <a href="https://t.me/demo_kfs_menu_bot" target="_blank" style="color:#1565C0;font-weight:700;">@demo_kfs_menu_bot</a> ga boring va raqamingizni yuboring.
         </div>
 
@@ -364,20 +364,9 @@
       btn.textContent = '⏳ Tekshirilmoqda...';
 
       try {
-        // 1. Check if phone exists
-        const checkRes = await fetch(`${API_URL}/api/check-phone?phone=${encodeURIComponent(phone)}`);
-        const checkData = await checkRes.json();
-        if (checkData.exists) {
-          document.getElementById('signup-phone-err').innerHTML = "Siz allaqachon ro'yxatdan o'tgansiz. <a href='#' onclick='goLogin()' style='color:#FAB95B;font-weight:700;text-decoration:underline;'>Kirish</a>";
-          btn.disabled = false;
-          btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
-          return;
-        }
-
-        btn.textContent = '⏳ Yuborilmoqda...';
         const res = await fetch(`${API_URL}/api/otp/send`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone })
+          body: JSON.stringify({ phone, mode: 'signup' })
         });
         const data = await res.json();
         const errMsg = getErrMsg(data);
@@ -393,6 +382,10 @@
           showPanel('panel-signup-otp');
           startTimer('signupTimer', 'signup-timer', 'signup-resend-btn');
           setTimeout(() => document.querySelector('#signup-otp-container input').focus(), 300);
+        } else if (res.status === 400 && (errMsg.includes('exists') || data.code === 'user_exists')) {
+          document.getElementById('signup-phone-err').innerHTML = "Siz allaqachon ro'yxatdan o'tgansiz. <a href='#' onclick='goLogin()' style='color:#FAB95B;font-weight:700;text-decoration:underline;'>Kirish</a>";
+          btn.disabled = false;
+          btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish';
         } else if (isNotReg) {
           document.getElementById('signup-tgBotMsg').style.display = 'block';
           document.getElementById('signup-tgBotMsg').scrollIntoView({ behavior: 'smooth' });
@@ -432,7 +425,7 @@
       try {
         const res = await fetch(`${API_URL}/api/otp/verify`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: verifiedPhone, code })
+          body: JSON.stringify({ phone: verifiedPhone, code, mode: 'signup' })
         });
         const data = await res.json();
 
@@ -495,7 +488,7 @@
       try {
         const res = await fetch(`${API_URL}/api/otp/send`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone })
+          body: JSON.stringify({ phone, mode: 'login' })
         });
         const data = await res.json();
         const errMsg = getErrMsg(data);
@@ -513,10 +506,6 @@
           startTimer('loginTimer', 'login-timer', 'login-resend-btn');
           setTimeout(() => document.querySelector('#login-otp-container input').focus(), 300);
         } else if (res.ok) {
-          if (!data.user_exists) {
-            document.getElementById('login-phone-err').textContent = "❌ Bu raqam ro'yxatdan o'tmagan. \"Ro'yxatdan o'tish\" tugmasini bosing.";
-            btn.disabled = false; btn.innerHTML = ICON_SEND + ' Telegram orqali kod olish'; return;
-          }
           verifiedPhone = phone;
           document.getElementById('login-otp-msg').textContent = `✅ ${phone} uchun Telegram ga kod yuborildi`;
           clearOtp('login-otp-container');
@@ -552,7 +541,7 @@
       try {
         const res = await fetch(`${API_URL}/api/otp/verify`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: verifiedPhone, code })
+          body: JSON.stringify({ phone: verifiedPhone, code, mode: 'login' })
         });
         const data = await res.json();
 
