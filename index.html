@@ -3832,30 +3832,32 @@
 
             document.getElementById('successOverlay').classList.add('active');
 
-            // Start 60-second countdown
-            let seconds = 60;
+            // Timestamp ni localStorage ga saqlash (orders.html bilan sinxron bo'lishi uchun)
+            const orderTimestamp = Date.now();
+            localStorage.setItem('kfc_order_timestamp_' + orderId, orderTimestamp.toString());
+
+            // Start countdown — timestamp asosida (orders.html bilan bir xil logika)
             const circle = document.getElementById('timerCircle');
             const numEl  = document.getElementById('timerNum');
             const totalDash = 201;
 
-            circle.style.strokeDashoffset = 0;
-            numEl.textContent = 60;
-
             if (cancelTimerInterval) clearInterval(cancelTimerInterval);
 
-            cancelTimerInterval = setInterval(() => {
-                seconds--;
-                numEl.textContent = seconds;
-                circle.style.strokeDashoffset = totalDash * (1 - seconds / 60);
+            function tickTimer() {
+                const elapsed = Math.floor((Date.now() - orderTimestamp) / 1000);
+                const remaining = Math.max(0, 60 - elapsed);
+                numEl.textContent = remaining;
+                circle.style.strokeDashoffset = totalDash * (1 - remaining / 60);
 
-                if (seconds <= 0) {
+                if (remaining <= 0) {
                     clearInterval(cancelTimerInterval);
-                    // Timer expired — hide cancel button, show expired text
                     document.getElementById('cancelOrderBtn').style.display = 'none';
                     document.getElementById('cancelExpired').style.display  = 'block';
                     document.getElementById('cancelTimerWrap').style.opacity = '0.5';
                 }
-            }, 1000);
+            }
+            tickTimer();
+            cancelTimerInterval = setInterval(tickTimer, 1000);
 
             // Store current order id for cancel
             window._lastOrderId = orderId;
