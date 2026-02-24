@@ -16,10 +16,16 @@ body{font-family:'Poppins',-apple-system,sans-serif;background:#F5F5F5;color:#20
   display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0}
 .back-btn:active{background:#F5F5F5}
 .page-title{font-size:1.1rem;font-weight:700;flex:1}
-.lang-flag{width:38px;height:38px;border-radius:50%;overflow:hidden;cursor:pointer;flex-shrink:0}
-.lang-flag img{width:100%;height:100%;object-fit:cover;transform:scale(1.12);display:block}
 
-.content{padding:1rem;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 1rem)}
+/* ✅ FIX: data:image flag o'rniga UZ/RU pill (100% ishlaydi) */
+.lang-flag{
+  width:38px;height:38px;border-radius:50%;
+  overflow:hidden;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:#F2F2F2;color:#202124;
+  font-size:14px;font-weight:900;
+  border:1.5px solid #E8E8E8;
+}
 
 /* ── Coin pill ── */
 .coin-pill{display:inline-flex;align-items:center;gap:0.35rem;
@@ -27,6 +33,8 @@ body{font-family:'Poppins',-apple-system,sans-serif;background:#F5F5F5;color:#20
   padding:0.28rem 0.65rem;font-size:0.82rem;font-weight:800;color:#202124;
   box-shadow:0 1px 4px rgba(0,0,0,0.08);}
 .coin-pill img{width:18px;height:18px;}
+
+.content{padding:1rem;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 1rem)}
 
 /* ── Active order banner ── */
 .active-order-banner{
@@ -122,6 +130,7 @@ body{font-family:'Poppins',-apple-system,sans-serif;background:#F5F5F5;color:#20
       <path d="M15 18l-6-6 6-6"/>
     </svg>
   </button>
+
   <h1 class="page-title" id="pageTitle">Buyurtmalarim</h1>
 
   <span class="coin-pill" id="headerCoinPill" style="display:none;">
@@ -129,14 +138,13 @@ body{font-family:'Poppins',-apple-system,sans-serif;background:#F5F5F5;color:#20
     <span id="headerCoinCount">0</span>
   </span>
 
+  <!-- ✅ FIX: data:image emas, UZ/RU -->
   <span class="lang-flag" id="headerFlag" onclick="toggleLang()"></span>
 </header>
 
 <div class="content" id="content"></div>
 
 <script>
-const FLAG_IMGS = { uz:'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABkAKADASIAAhEBAxEB/8QAGwABAAMBAQEBAAAAAAAAAAAAAAQFBgMCAQf/xAAyEAABBAEDAgQFAwQDAAAAAAABAAIDBAUREiExBhNBUWEUIjJxgZEVI0IHFiRSYqH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/TkREBERAREQEREBERARfHODWlzjgDqVze1NpbX3ql+EpVe5jLLmSWi4EOjIGSOvL07IOkRfBIHFwB5tOD81HXvcNOjIYmuM8wODHCCZw3f9IyfsglRc5R7T6dqTyp9Pa3bqMBc+KOUk/kB4VHW7Z6rqcskVCx3EbHlrpDHtBI8cE5IQdeiLyJGGUxBwMjRlzc8wEHqiIgIiICIiAiIgIiICIiAiKv1vVquj6dLdtOw0cGNHNzj0CDjNf8Ai5qNGeSp2ftzTxOLH7YsjBHUbskEqxJqG0e1Ut3Oc2pDKyKNoJ3Skk9OQA5YK47ZXRW9T/SaM0z7dguHdTt3Akku2nAyOMFdpUhbWqQwNztiYGAnqQBjKD5bVqaNhDZ2OJ6/EQtcMr3UhFZhe6Nj87mhwP2wpV2/R2z07VqcPd2apYZAYi0ua8uc5vXkANufpC3IpWTxtkhkbJG4Za5pyCPVBRQUu2aFa3E2OzFHK0DDQ9oOPsV+G0lVzsMdYiJJy4Ru/QY8lSdoNCtdpauTM2tE1j2uihhbkucBjcScADJJ8gqejYZXpRRSNLXgEkHxPUoNiOKKFuI42sHo0AKH2n1M6TYlttDpGtDGDq455Y/VVPa/W5qNOKlVkMc87+8kI6tjHPHqcY+S5bfLW7U/Z2jZjhYbEz5HSTPDS1gA8M89cj3CDSm7a37ELIoJmQsHJ2xrXOPnknJ+Sqrtfu5Y6FGF/8AnzAyO9Gwkqp7L6ZJJK/UriTvWNIgjcCCA7m4jw5cf9VBcuNt6xeukERxOMEX9IwD8zkoPtCjHQqRwM+7csn1J5lbKIgIiICIiAiIgIiICIiCi7WU5J9EfNCC6StI2R2OSWnr9M/NUp0mxqVmKO1CY4ow0nvQQ5znDnw5LsEQad+k2xO6SMNfFIzY+N4y1w8CqKTsz3dqO7WutcX4DqxGS3y4nOPvhXiIItCrLRpMrzuBkA6tzhvsqdvZzSL2rNuT0y6UdWsLiGHyI5H5K2RAXM3X8R9T7MmGraFqOGaSQEi1E04a0dMsJyfULoL1ptCpLaee6xhcfPyWFsrRfGNdHPBLDt5CRuCCPPBQYtjss+v2fs6DqMkMEYIbFITIGHydnOPktMdkbYg7ub00kku57pbJJDifOBxw+WVsInIzgg4IKlLWnAFzSAehIQY2o6FRh7P17FWkyAxsD3tB84GTlU+xdOOjpwhLSD3rjkfJbMUEMJJiijjJ6lrQMqSgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiIP/2Q==', ru:'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABkAKADASIAAhEBAxEB/8QAGgABAAMBAQEAAAAAAAAAAAAAAAMEBQIBBv/EADEQAAIBAwMCBAUEAgMAAAAAAAABAgMEESExBRJBUWETInGBkTIUI0KhsRUkUsH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A+4gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/9k=' };
-
 const TX = {
   uz:{
     pageTitle:"Buyurtmalarim",
@@ -158,8 +166,6 @@ const TX = {
     statusDelivering:"Yo'lda",
     statusDone:"Yetkazildi",
     statusCancelled:"Bekor qilindi",
-    orderId:"Buyurtma",
-    orderTotal:"Jami",
   },
   ru:{
     pageTitle:"История заказов",
@@ -181,17 +187,14 @@ const TX = {
     statusDelivering:"В пути",
     statusDone:"Доставлен",
     statusCancelled:"Отменён",
-    orderId:"Заказ",
-    orderTotal:"Итого",
   }
 };
 
-// ✅ LANG normalize (flag ishlamasligi shu sabab bo'lishi mumkin)
+// ✅ LANG normalize
 let lang = (() => {
   const v = (localStorage.getItem('kfc_lang') || 'uz').trim().toLowerCase();
   return (v === 'uz' || v === 'ru') ? v : 'uz';
 })();
-
 function t(k){ return (TX[lang] && TX[lang][k]) ? TX[lang][k] : k; }
 
 function toggleLang(){
@@ -199,14 +202,6 @@ function toggleLang(){
   localStorage.setItem('kfc_lang', lang);
   render();
 }
-
-window.addEventListener('storage', e=>{
-  if(e.key==='kfc_lang'){
-    const v = (e.newValue || 'uz').trim().toLowerCase();
-    lang = (v === 'uz' || v === 'ru') ? v : 'uz';
-    render();
-  }
-});
 
 function getUser(){
   try{ return JSON.parse(localStorage.getItem('kfc_user')||'null'); }catch{ return null; }
@@ -216,13 +211,15 @@ function cacheKey(){
   const u = getUser();
   return u?.phone ? 'kfc_orders_' + u.phone.replace(/[^0-9]/g,'') : 'kfc_orders_guest';
 }
-
 function getOrders(){
   try{ return JSON.parse(localStorage.getItem(cacheKey())||'[]'); }catch{return[];}
 }
 function saveOrders(orders){
   localStorage.setItem(cacheKey(), JSON.stringify(orders));
 }
+
+const API_URL = 'https://web-production-5aab6.up.railway.app';
+let statusPollInterval = null;
 
 async function fetchOrdersByPhone(){
   const user = getUser();
@@ -235,19 +232,6 @@ async function fetchOrdersByPhone(){
   } catch(e){ return null; }
 }
 
-const STEPS = ['pending','confirmed','cooking','delivering','done'];
-const STEP_ICONS = [
-  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>',
-  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
-  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
-  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2" ry="2"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
-  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
-];
-const CHECK_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-
-const API_URL = 'https://web-production-5aab6.up.railway.app';
-let statusPollInterval = null;
-
 async function loadCoinBalance(){
   const user = getUser();
   if(!user || !user.phone) return 0;
@@ -259,11 +243,20 @@ async function loadCoinBalance(){
   } catch(e){ return 0; }
 }
 
+const STEPS = ['pending','confirmed','cooking','delivering','done'];
+const STEP_ICONS = [
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>',
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2" ry="2"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
+];
+const CHECK_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
 function stepIndex(status){
   const idx = STEPS.indexOf(status);
   return idx < 0 ? 0 : idx;
 }
-
 function badgeClass(status){
   const map = {
     pending:'badge-pending', confirmed:'badge-confirmed',
@@ -278,7 +271,6 @@ async function syncOrderStatus(orderId){
     const res = await fetch(`${API_URL}/api/orders/${orderId}`);
     if(!res.ok) return;
     const data = await res.json();
-
     const orders = getOrders();
     const idx = orders.findIndex(o=>o.id==orderId);
     if(idx!==-1 && orders[idx].status !== data.status){
@@ -293,22 +285,18 @@ function startPolling(orderId){
   if(statusPollInterval) clearInterval(statusPollInterval);
   statusPollInterval = setInterval(()=>{ syncOrderStatus(orderId); }, 5000);
 }
-
 function stopPolling(){
   if(statusPollInterval){ clearInterval(statusPollInterval); statusPollInterval = null; }
 }
 
-// ── Active order with timer ──
+// ── Active order timer ──
 let timerInterval = null;
 
 function renderActiveBanner(order){
-  const now = Date.now();
-
-  // ✅ real timestamp (localStorage -> order.timestamp -> now)
   const stored = localStorage.getItem('kfc_order_timestamp_' + order.id);
   const orderTs = stored ? Number(stored) : (order.timestamp ? Number(order.timestamp) : Date.now());
 
-  const elapsed = Math.floor((now - orderTs) / 1000);
+  const elapsed = Math.floor((Date.now() - orderTs) / 1000);
   const remaining = Math.max(0, 60 - elapsed);
   const canCancel = remaining > 0 && order.status === 'pending';
   const si = stepIndex(order.status);
@@ -329,7 +317,7 @@ function renderActiveBanner(order){
   }).join('');
 
   const cancelHtml = canCancel ? `
-    <div class="cancel-wrap" id="cancelWrap">
+    <div class="cancel-wrap">
       <div class="cancel-ring">
         <svg width="40" height="40" viewBox="0 0 40 40">
           <circle class="bg" cx="20" cy="20" r="18"/>
@@ -354,7 +342,7 @@ function renderActiveBanner(order){
       <div class="aob-top">
         <div>
           <div class="aob-label">${t('activeOrder')}</div>
-          <div class="aob-id">#${order.id.toString()}</div>
+          <div class="aob-id">#${order.id}</div>
         </div>
         <div class="aob-status">${t('status'+order.status.charAt(0).toUpperCase()+order.status.slice(1))}</div>
       </div>
@@ -366,8 +354,7 @@ function renderActiveBanner(order){
     if(timerInterval) clearInterval(timerInterval);
 
     function tickCancel(){
-      const nowTs = Date.now();
-      const elapsedNow = Math.floor((nowTs - orderTs) / 1000);
+      const elapsedNow = Math.floor((Date.now() - orderTs) / 1000);
       const secsLeft = Math.max(0, 60 - elapsedNow);
       const numEl = document.getElementById('cancelNum');
       const prog  = document.getElementById('progCircle');
@@ -390,9 +377,7 @@ async function cancelOrder(orderId){
   if(timerInterval) clearInterval(timerInterval);
   stopPolling();
 
-  try {
-    await fetch(`${API_URL}/api/orders/${orderId}/cancel`, { method: 'PATCH' });
-  } catch(e){}
+  try { await fetch(`${API_URL}/api/orders/${orderId}/cancel`, { method: 'PATCH' }); } catch(e){}
 
   const orders = getOrders();
   const idx = orders.findIndex(o=>o.id==orderId);
@@ -406,11 +391,9 @@ async function cancelOrder(orderId){
 function render(){
   document.getElementById('pageTitle').textContent = t('pageTitle');
 
-  // ✅ flag fail-safe
-  const flagSrc = FLAG_IMGS[lang] || FLAG_IMGS.uz;
-  document.getElementById('headerFlag').innerHTML =
-    `<img src="${flagSrc}" alt="${lang.toUpperCase()}"
-          style="width:100%;height:100%;object-fit:cover;transform:scale(1.12);display:block">`;
+  // ✅ FIX: header flag text
+  const headerFlag = document.getElementById('headerFlag');
+  if(headerFlag) headerFlag.textContent = (lang === 'uz') ? 'UZ' : 'RU';
 
   const orders = getOrders();
   const el = document.getElementById('content');
@@ -418,9 +401,7 @@ function render(){
   if(!orders.length){
     el.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#DDD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-        </div>
+        <div class="empty-icon">📦</div>
         <p>${t('noOrders')}</p>
       </div>`;
     stopPolling();
@@ -441,14 +422,12 @@ function render(){
 
   html += `
     <div class="contact-box">
-      <div class="contact-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-      </div>
+      <div class="contact-icon">📞</div>
       <div class="contact-info">
         <div class="contact-label">${t('contactLabel')}</div>
         <div class="contact-phone">+998 71 001 00 01</div>
       </div>
-      <button class="contact-call" onclick="window.location.href='tel:+998710010001'">Qo'ng'iroq</button>
+      <button class="contact-call" onclick="window.location.href='tel:+998710010001'">${lang==='ru'?'Позвонить':'Qo\\'ng\\'iroq'}</button>
     </div>`;
 
   html += reversed.map(o=>{
@@ -478,15 +457,8 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   if(!user || !user.phone){
     el.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#DDD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        </div>
+        <div class="empty-icon">👤</div>
         <p>Buyurtmalarni ko'rish uchun avval ro'yxatdan o'ting</p>
-        <button onclick="window.location.href='register.html'"
-          style="margin-top:1rem;padding:0.75rem 1.5rem;background:#FAB95B;color:#fff;
-                 border:none;border-radius:12px;font-size:0.95rem;font-weight:700;cursor:pointer;">
-          Ro'yxatdan o'tish
-        </button>
       </div>`;
     return;
   }
@@ -497,11 +469,12 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   if(backendOrders !== null){
     const normalized = backendOrders.map(bo => {
+      // ✅ FIX: created_at asosida real timestamp
       const createdTs = bo.created_at
         ? new Date(bo.created_at).getTime()
         : (bo.timestamp ? Number(bo.timestamp) : Date.now());
 
-      // cancel timer uchun per-order timestamp (1 marta)
+      // ✅ FIX: per-order timestamp 1 marta yoziladi
       const tsKey = 'kfc_order_timestamp_' + bo.id;
       if (!localStorage.getItem(tsKey)) {
         localStorage.setItem(tsKey, String(createdTs));
@@ -515,20 +488,18 @@ document.addEventListener('DOMContentLoaded', async ()=>{
         address: bo.address || '',
         total: Number(bo.total || 0),
         status: bo.status,
-        phone: bo.phone,
-        payment: bo.payment || 'naqt',
-        extra_phone: bo.extra_phone || null,
-        comment: bo.comment || null,
+        phone: bo.phone
       };
     });
 
     saveOrders(normalized);
   }
 
-  window._coinBalance = await loadCoinBalance();
+  // coin pill
+  const bal = await loadCoinBalance();
   const pill = document.getElementById('headerCoinPill');
   const cnt  = document.getElementById('headerCoinCount');
-  if(pill && cnt){ cnt.textContent = window._coinBalance || 0; pill.style.display = 'inline-flex'; }
+  if(pill && cnt){ cnt.textContent = bal || 0; pill.style.display = 'inline-flex'; }
 
   render();
 
