@@ -123,10 +123,12 @@ body{font-family:'Poppins',-apple-system,sans-serif;background:#F5F5F5;color:#20
     </svg>
   </button>
   <h1 class="page-title" id="pageTitle">Buyurtmalarim</h1>
+
   <span class="coin-pill" id="headerCoinPill" style="display:none;">
     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='18' fill='%23F5A53A'/%3E%3Ccircle cx='18' cy='18' r='14' fill='%23FAB95B'/%3E%3Ccircle cx='18' cy='18' r='10' fill='%23FDD07A'/%3E%3Ctext x='18' y='23' text-anchor='middle' font-size='13' font-weight='bold' fill='%23A0610A'%3E%E2%82%BF%3C/text%3E%3C/svg%3E" alt="">
     <span id="headerCoinCount">0</span>
   </span>
+
   <span class="lang-flag" id="headerFlag" onclick="toggleLang()"></span>
 </header>
 
@@ -184,16 +186,26 @@ const TX = {
   }
 };
 
-let lang = localStorage.getItem('kfc_lang') || 'uz';
-function t(k){ return TX[lang][k] || k; }
+// ✅ LANG normalize (flag ishlamasligi shu sabab bo'lishi mumkin)
+let lang = (() => {
+  const v = (localStorage.getItem('kfc_lang') || 'uz').trim().toLowerCase();
+  return (v === 'uz' || v === 'ru') ? v : 'uz';
+})();
+
+function t(k){ return (TX[lang] && TX[lang][k]) ? TX[lang][k] : k; }
 
 function toggleLang(){
-  lang = lang==='uz'?'ru':'uz';
+  lang = (lang === 'uz') ? 'ru' : 'uz';
   localStorage.setItem('kfc_lang', lang);
   render();
 }
+
 window.addEventListener('storage', e=>{
-  if(e.key==='kfc_lang'){ lang=e.newValue||'uz'; render(); }
+  if(e.key==='kfc_lang'){
+    const v = (e.newValue || 'uz').trim().toLowerCase();
+    lang = (v === 'uz' || v === 'ru') ? v : 'uz';
+    render();
+  }
 });
 
 function getUser(){
@@ -266,6 +278,7 @@ async function syncOrderStatus(orderId){
     const res = await fetch(`${API_URL}/api/orders/${orderId}`);
     if(!res.ok) return;
     const data = await res.json();
+
     const orders = getOrders();
     const idx = orders.findIndex(o=>o.id==orderId);
     if(idx!==-1 && orders[idx].status !== data.status){
@@ -278,9 +291,7 @@ async function syncOrderStatus(orderId){
 
 function startPolling(orderId){
   if(statusPollInterval) clearInterval(statusPollInterval);
-  statusPollInterval = setInterval(()=>{
-    syncOrderStatus(orderId);
-  }, 5000);
+  statusPollInterval = setInterval(()=>{ syncOrderStatus(orderId); }, 5000);
 }
 
 function stopPolling(){
@@ -292,9 +303,11 @@ let timerInterval = null;
 
 function renderActiveBanner(order){
   const now = Date.now();
-  // ✅ FIX 1: localStorage dan real timestamp olish
-  const orderTs = parseInt(localStorage.getItem('kfc_order_timestamp_' + order.id))
-                || order.timestamp || Date.now();
+
+  // ✅ real timestamp (localStorage -> order.timestamp -> now)
+  const stored = localStorage.getItem('kfc_order_timestamp_' + order.id);
+  const orderTs = stored ? Number(stored) : (order.timestamp ? Number(order.timestamp) : Date.now());
+
   const elapsed = Math.floor((now - orderTs) / 1000);
   const remaining = Math.max(0, 60 - elapsed);
   const canCancel = remaining > 0 && order.status === 'pending';
@@ -349,8 +362,6 @@ function renderActiveBanner(order){
       ${cancelHtml}
     </div>`;
 
-  // ✅ FIX 2: setInterval o'rniga real timestamp dan hisoblash
-  // Har kirganda 60 dan boshlanmaydi — real vaqt ishlatiladi
   if (canCancel){
     if(timerInterval) clearInterval(timerInterval);
 
@@ -368,7 +379,7 @@ function renderActiveBanner(order){
         render();
       }
     }
-    tickCancel(); // darhol birinchi chizish
+    tickCancel();
     timerInterval = setInterval(tickCancel, 1000);
   }
 
@@ -394,8 +405,12 @@ async function cancelOrder(orderId){
 
 function render(){
   document.getElementById('pageTitle').textContent = t('pageTitle');
+
+  // ✅ flag fail-safe
+  const flagSrc = FLAG_IMGS[lang] || FLAG_IMGS.uz;
   document.getElementById('headerFlag').innerHTML =
-    `<img src="${FLAG_IMGS[lang]}" style="width:100%;height:100%;object-fit:cover;transform:scale(1.12);display:block">`;
+    `<img src="${flagSrc}" alt="${lang.toUpperCase()}"
+          style="width:100%;height:100%;object-fit:cover;transform:scale(1.12);display:block">`;
 
   const orders = getOrders();
   const el = document.getElementById('content');
@@ -438,16 +453,16 @@ function render(){
 
   html += reversed.map(o=>{
     const statusKey = 'status'+o.status.charAt(0).toUpperCase()+o.status.slice(1);
-    const itemsText = o.items.map(i=>`${i.fullName||i.name} × ${i.quantity||i.qty||1}`).join('<br>');
+    const itemsText = (o.items||[]).map(i=>`${i.fullName||i.name} × ${i.quantity||i.qty||1}`).join('<br>');
     return `
       <div class="order-card">
         <div class="order-header">
-          <span class="order-id">#${o.id.toString().slice(-6)}</span>
-          <span class="order-date">${o.date}</span>
+          <span class="order-id">#${o.id}</span>
+          <span class="order-date">${o.date || ''}</span>
         </div>
-        <div class="order-items">${itemsText}</div>
+        <div class="order-items">${itemsText || ''}</div>
         <div class="order-footer">
-          <span class="order-total">${o.total.toLocaleString()} UZS</span>
+          <span class="order-total">${Number(o.total||0).toLocaleString()} UZS</span>
           <span class="badge ${badgeClass(o.status)}">${t(statusKey)}</span>
         </div>
       </div>`;
@@ -481,16 +496,32 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const backendOrders = await fetchOrdersByPhone();
 
   if(backendOrders !== null){
-    const normalized = backendOrders.map(bo => ({
-      id: bo.id,
-      date: bo.date || new Date(bo.created_at||bo.timestamp||Date.now()).toLocaleDateString('uz-UZ'),
-      timestamp: bo.timestamp || Date.now(),
-      items: bo.items || [],
-      address: bo.address || '',
-      total: bo.total || 0,
-      status: bo.status,
-      phone: bo.phone
-    }));
+    const normalized = backendOrders.map(bo => {
+      const createdTs = bo.created_at
+        ? new Date(bo.created_at).getTime()
+        : (bo.timestamp ? Number(bo.timestamp) : Date.now());
+
+      // cancel timer uchun per-order timestamp (1 marta)
+      const tsKey = 'kfc_order_timestamp_' + bo.id;
+      if (!localStorage.getItem(tsKey)) {
+        localStorage.setItem(tsKey, String(createdTs));
+      }
+
+      return {
+        id: bo.id,
+        date: bo.date || new Date(createdTs).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'uz-UZ'),
+        timestamp: createdTs,
+        items: bo.items || [],
+        address: bo.address || '',
+        total: Number(bo.total || 0),
+        status: bo.status,
+        phone: bo.phone,
+        payment: bo.payment || 'naqt',
+        extra_phone: bo.extra_phone || null,
+        comment: bo.comment || null,
+      };
+    });
+
     saveOrders(normalized);
   }
 
